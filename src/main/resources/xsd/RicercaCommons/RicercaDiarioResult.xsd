@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://diarioresult.xml.ws.sacerasi.eng.it/" targetNamespace="http://diarioresult.xml.ws.sacerasi.eng.it/">
+  <xs:element name="ListaValoriDatiSpecifici" type="ListaValoriDatiSpecificiType"/>
+
+
+  <!--  Type per lista valori -->
+
+  <xs:complexType name="ListaValoriDatiSpecificiType">
+       <xs:sequence>
+         <xs:element name="ValoreDatoSpecifico" type="ValoreDatoSpecificoType" minOccurs="1" maxOccurs="unbounded"/>
+       </xs:sequence>
+  </xs:complexType>
+
+
+  <!--  Type per valore -->
+
+  <xs:complexType name="ValoreDatoSpecificoType">
+      <xs:sequence>
+        <xs:element name="DatoSpecifico" type="StringNVMax100Type" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="Valore" type="StringMax4000Type" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+  </xs:complexType>
+
+
+
+                                  <!-- TIPI DATO GENERICI -->
+
+ <xs:simpleType name="StringNVMax100Type">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="StringMax4000Type">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="4000"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="IntMax4DgtType">
+    <xs:restriction base="xs:integer">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="9999"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
+

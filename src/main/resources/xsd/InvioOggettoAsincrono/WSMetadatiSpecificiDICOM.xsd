@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema 	
+    xmlns="http://datispecdicom.xml.ws.sacerasi.eng.it/"	
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"	 
+    targetNamespace="http://datispecdicom.xml.ws.sacerasi.eng.it/">	
+    <xs:element name="DatiSpecifici" type="DatiSpecificiType"/>
+    <xs:complexType name="DatiSpecificiType">
+        <xs:sequence>
+            <xs:element name="VersioneDatiSpecifici" type="TokenNVMax100Type"/>
+            <xs:element name="AETNodoDicom" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="SOPClassList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="SOPClass" type="StringNVMax254Type" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="StudyDate" type="xs:dateTime"  minOccurs="1"/>
+            <xs:element name="AccessionNumber" type="StringNVMax254Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="ModalityInStudyList">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ModalityInStudy" type="StringNVMax254Type" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="InstitutionName" type="StringMax254Type" minOccurs="0"/>     
+            <xs:element name="ReferringPhysicianName" type="StringNVMax254Type" minOccurs="0"/>          
+            <xs:element name="StudyDescription" type="StringMax1024Type" minOccurs="0"  />
+            <xs:element name="PatientName" type="StringMax1024Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="PatientId" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="PatientIdIssuer" type="StringNVMax100Type" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="PatientBirthDate" type="xs:date" maxOccurs="1" minOccurs="0"/>
+            <xs:element name="PatientSex" maxOccurs="1" minOccurs="0">
+                <xs:simpleType>
+                    <xs:restriction base="xs:NMTOKEN">
+                        <xs:enumeration value="M"/>
+                        <xs:enumeration value="F"/>
+                        <xs:enumeration value="U"/>
+                        <xs:enumeration value="O"/>
+                        <xs:enumeration value="N"/>
+                        <xs:enumeration value="_"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="StudyInstanceUID" type="StringNVMax254Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="NumberStudyRelatedSeries" type="IntMax5DgtType" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="NumberStudyRelatedImages" type="IntMax5DgtType" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="StudyID" type="StringMax254Type" minOccurs="0"/>
+            <xs:element name="DataPresaInCarico"  type = "xs:dateTime" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="DCM-hash" type="TokenNVMax254Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="DCM-hash-algo" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="DCM-hash-encoding" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="DCM-hash-Descrizione" type="xs:string" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="GLOBAL-hash"  type="TokenNVMax254Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="GLOBAL-hash-algo" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="GLOBAL-hash-encoding" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="GLOBAL-hash-Descrizione"  type="xs:string" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="FILE-hash" type="TokenNVMax254Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="FILE-hash-algo" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="FILE-hash-encoding" type="StringNVMax100Type" maxOccurs="1" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+ 
+    <!-- TIPI DATO GENERICI -->
+    <!--  -->
+    <xs:simpleType name="TokenNonVuotoType">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="TokenNVMax100Type">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="TokenNVMax254Type">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="254"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="TokenNVMax1024Type">
+        <xs:restriction base="xs:token">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="1024"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringNonVuotoType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringNVMax100Type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringNVMax254Type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="254"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringNVMax1024Type">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="1024"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringMax100Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="100"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringMax254Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="254"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="StringMax1024Type">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="1024"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="IntMax4DgtType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="9999"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="IntMax5DgtType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="99999"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!--  -->
+    <xs:simpleType name="PosIntMax12DgtType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1"/>
+            <xs:maxInclusive value="999999999999"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+	<context:annotation-config />
+	<mvc:annotation-driven />
+	<aop:aspectj-autoproxy />
+	
+	<context:component-scan base-package="it.eng.dpi.controller" />
+	<context:component-scan base-package="it.eng.dpi.business.impl" />
+	<context:component-scan base-package="it.eng.dpi.job" />
+	<context:component-scan base-package="it.eng.dpi.component" />
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+		id="dpiProperties">
+		<property name="locations">
+			<list>
+				<value>file:///${catalina.base}/conf/dpi-${env}/dpi.properties
+				</value>
+				<value>classpath:messaggi.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="paginator" class="it.eng.dpi.paginator.PaginatorImpl"/>
+	<bean name="/View.html" class="it.eng.spagoLite.actions.RedirectAction"
+		scope="prototype" />
+	<!-- aggiunto mapping "/" per definire la default page -->
+	<bean name="/" class="it.eng.spagoLite.actions.security.LoginAction" scope="prototype" />		
+	<bean name="/Login.html" class="it.eng.spagoLite.actions.security.LoginAction"
+		scope="prototype" />
+	<bean name="/Logout.html" class="it.eng.spagoLite.actions.security.LogoutAction"
+		scope="prototype" />
+	<bean name="/SceltaOrganizzazione.html" class="it.eng.dpi.web.action.SceltaOrganizzazioneAction"
+		scope="prototype" />
+	<bean name="/Home.html" class="it.eng.dpi.web.action.HomeAction"
+		scope="prototype" />
+	<bean name="/Monitoraggio.html" class="it.eng.dpi.web.action.MonitoraggioAction"
+		scope="prototype" />
+	<bean name="/AmministrazioneSistema.html" class="it.eng.dpi.web.action.AmministrazioneSistemaAction"
+		scope="prototype" />
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+	<!-- START JOBS CONFIG -->
+
+	<bean id="objectCreatorCoordinatorQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="objectCreatorCoordinatorJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+		<property name="arguments">
+			<list>
+				<value>Creator1</value>
+				<value>Creator2</value>
+				<value>Creator3</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="objectCreatorQJob1"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="objectCreatorJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+		<property name="arguments">
+			<list>
+				<value>Creator1</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="objectCreatorQJob2"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="objectCreatorJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+		<property name="arguments">
+			<list>
+				<value>Creator2</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="objectCreatorQJob3"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="objectCreatorJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+		<property name="arguments">
+			<list>
+				<value>Creator3</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="objectSenderQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="objectSenderJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="FTPTransfertQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="FTPTransfertJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="updateSOPClassQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="updateSOPClassJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="queryPacsPingQJobD"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="queryPacsPingJob" />
+		<property name="targetMethod" value="doDailyWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="queryPacsPingQJobW"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="queryPacsPingJob" />
+		<property name="targetMethod" value="doWeeklyWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="queryPacsPingQJobM"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="queryPacsPingJob" />
+		<property name="targetMethod" value="doMonthlyWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+	<bean id="queryPacsPingQJobInstantly"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="queryPacsPingJob" />
+		<property name="targetMethod" value="doInstantly" />
+		<property name="arguments">
+			<list>
+				<value>0</value>
+				<value>0</value>
+			</list>
+		</property>
+		<property name="group" value="InstantJobs" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="prelievoFTPQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="prelievoFTPJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="notificaPrelievoQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="notificaPrelievoJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="notificaInAttesaPrelievoQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="notificaInAttesaPrelievoJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="puliziaInAttesaFileQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="puliziaInAttesaFileJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="objectCopyQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="objectCopyJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="genericObjectCreatorQJob"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="genericObjectCreatorJob" />
+		<property name="targetMethod" value="doWork" />
+		<property name="concurrent" value="false" />
+	</bean>
+
+	<bean id="cronTrigger0"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="objectCreatorCoordinatorQJob" />
+		<property name="cronExpression" value="${job.creaoggettocoord.cron}" />
+	</bean>
+	<bean id="cronTrigger1a"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="objectCreatorQJob1" />
+		<property name="cronExpression" value="${job.creaoggetto.cron}" />
+	</bean>
+	<bean id="cronTrigger1b"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="objectCreatorQJob2" />
+		<property name="cronExpression" value="${job.creaoggetto.cron}" />
+	</bean>
+	<bean id="cronTrigger1c"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="objectCreatorQJob3" />
+		<property name="cronExpression" value="${job.creaoggetto.cron}" />
+	</bean>
+	<bean id="cronTrigger2"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="objectSenderQJob" />
+		<property name="cronExpression" value="${job.inviaoggetto.cron}" />
+	</bean>
+	<bean id="cronTrigger3"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="FTPTransfertQJob" />
+		<property name="cronExpression" value="${job.trasferimentoftp.cron}" />
+	</bean>
+	<bean id="cronTrigger4"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="updateSOPClassQJob" />
+		<property name="cronExpression" value="${job.allineasopclass.cron}" />
+	</bean>
+	<bean id="cronTrigger5"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="prelievoFTPQJob" />
+		<property name="cronExpression" value="${job.prelievoftp.cron}" />
+	</bean>
+	<bean id="cronTrigger6"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="notificaPrelievoQJob" />
+		<property name="cronExpression" value="${job.notificaprelievo.cron}" />
+	</bean>
+	<bean id="cronTrigger7"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="notificaInAttesaPrelievoQJob" />
+		<property name="cronExpression" value="${job.notificainattesaprelievo.cron}" />
+	</bean>
+	<bean id="cronTrigger8"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="puliziaInAttesaFileQJob" />
+		<property name="cronExpression" value="${job.cleanwarn.cron}" />
+	</bean>
+	<bean id="cronTrigger9"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="objectCopyQJob" />
+		<property name="cronExpression" value="${job.copiaoggetto.cron}" />
+	</bean>
+	<bean id="cronTrigger10"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="genericObjectCreatorQJob" />
+		<property name="cronExpression" value="${job.creaoggettogenerico.cron}" />
+	</bean>
+	<!-- Non modificare il nome del trigger! -->
+	<bean id="cronTriggerDailySyncJob"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryPacsPingQJobD" />
+		<property name="cronExpression" value="${job.querypacs.daily.cron}" />
+	</bean>
+	<!-- Non modificare il nome del trigger! -->
+	<bean id="cronTriggerWeeklySyncJob"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryPacsPingQJobW" />
+		<property name="cronExpression" value="${job.querypacs.weekly.cron}" />
+	</bean>
+	<!-- Non modificare il nome del trigger! -->
+	<bean id="cronTriggerMonthlySyncJob"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="queryPacsPingQJobM" />
+		<property name="cronExpression" value="${job.querypacs.monthly.cron}" />
+	</bean>
+
+	<bean id="scheduler"
+		class="it.eng.dpi.component.PropertyFilteredSchedulerFactoryBean">
+		<property name="waitForJobsToCompleteOnShutdown">
+			<value>true</value>
+		</property>
+		<property name="quartzProperties">
+			<props>
+				<prop key="org.quartz.threadPool.threadCount">20</prop>
+			</props>
+		</property>
+		<property name="triggers">
+			<list>
+				<ref bean="cronTrigger0" />
+				<ref bean="cronTrigger1a" />
+				<ref bean="cronTrigger1b" />
+				<ref bean="cronTrigger1c" />
+				<ref bean="cronTrigger2" />
+				<ref bean="cronTrigger3" />
+				<ref bean="cronTrigger4" />
+				<ref bean="cronTrigger5" />
+				<ref bean="cronTrigger6" />
+				<ref bean="cronTrigger7" />
+				<ref bean="cronTrigger8" />
+				<ref bean="cronTrigger9" />
+				<ref bean="cronTrigger10" />
+				<ref bean="cronTriggerDailySyncJob" />
+				<ref bean="cronTriggerWeeklySyncJob" />
+				<ref bean="cronTriggerMonthlySyncJob" />
+			</list>
+		</property>
+	</bean>
+	<!-- END JOBS CONFIG -->
+
+	<bean name="paginatorAspect" class="it.eng.dpi.paginator.PaginatorAspect"></bean>
+	<bean name="countRecordAspect" class="it.eng.dpi.paginator.CountRecordAspect"></bean>
+
+	<bean name="wsRicercaDiarioAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice" ref="countRecordAspect">
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>ricercaDiario</value>
+				<value>ricercaRestituzioniOggetti</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Per far funzionare la paginazione è necessario che gli ultimi due parametri 
+		dei metodi da paginare siano: int from, int to -->
+	<bean name="ricercaAdvisor"
+		class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">
+		<property name="advice" ref="paginatorAspect">
+		</property>
+		<property name="mappedNames">
+			<list>
+				<value>callRicercaDiarioService</value>
+				<value>callRicercaRestituzioniStudiService</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean name="autoProxyCreator"
+		class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<!-- UTILIZZARE LE MAIUSCOLE!! -->
+		<property name="beanNames" value="RicercaService" />
+		<property name="interceptorNames" value="ricercaAdvisor">
+		</property>
+	</bean>
+
+	<!-- La creazione dei proxy per i WS, che utilizzano come advisor wsRicercaDiarioAdvisor, 
+		è fatta programmaticamente all'interno della classe AbstractWSClientAOP. 
+		Per creare un nuovo WS paginato è necessario estendere AbstractWSClientAOP 
+		e aggiungere il cutpoint in wsRicercaDiarioAdvisor -->
+
+	<!-- END PAGINATOR CONFIG -->
+
+
+</beans>

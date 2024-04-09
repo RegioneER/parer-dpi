@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/error.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	      <!-- daily rollover -->
+	      <fileNamePattern>${catalina.base}/logs/error.%d{yyyy-MM}.log</fileNamePattern>	      
+	      <maxHistory>12</maxHistory>
+	    </rollingPolicy>
+	    <!-- deny all events with a level below INFO, that is TRACE and DEBUG -->
+	    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+	      <level>ERROR</level>
+	    </filter>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>		
+	</appender>
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/dpi.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	      <!-- daily rollover -->
+	      <fileNamePattern>${catalina.base}/logs/dpi.%d{yyyy-MM-dd}.log</fileNamePattern>	      
+	      <maxHistory>365</maxHistory>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>		
+	</appender>
+	
+	
+	<appender name="REVERSE_PROXY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/proxy.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	      <!-- daily rollover -->
+	      <fileNamePattern>${catalina.base}/logs/proxy.%d{yyyy-MM}.log</fileNamePattern>	      
+	      <maxHistory>180</maxHistory>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>		
+	</appender>
+
+	<appender name="DCM4CHE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base}/logs/dicom.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+	      <!-- daily rollover -->
+	      <fileNamePattern>${catalina.base}/logs/dicom.%d{yyyy-MM-dd}.log</fileNamePattern>	      
+	      <maxHistory>180</maxHistory>
+	    </rollingPolicy>
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>		
+	</appender>
+	
+	
+	<appender name="MISSINGSOPCLASSLOG" class="ch.qos.logback.core.FileAppender">
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/MissingSOPClass.log</File>
+	</appender>
+
+	<appender name="UPDATE_SOPCLASS" class="ch.qos.logback.core.FileAppender">
+		<encoder>
+			<pattern>%date [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/UpdateSOPClass.log</File>
+	</appender>
+	
+	<appender name="CONFRONTO_PACS_PREINGEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V0-Job_ConfrontoPACSPreIngest.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V0-Job_ConfrontoPACSPreIngest.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="STORESCP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V1-StorageSCP.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V1-StorageSCP.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="COORDINATORE_CREA_OGGETTO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V2-Job_CoordCreaOggetto.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V2-Job_CoordCreaOggetto.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>	
+
+
+	<appender name="CREA_OGGETTO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V3-Job_CreaOggetto.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V3-Job_CreaOggetto.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>	
+
+	<appender name="INVIO_OGGETTO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V4-Job_InvioOggetto.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V4-Job_InvioOggetto.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>	
+	
+	<appender name="TRASFERIMENTO_FTP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V5-Job_TrasferimentoFTP.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V5-Job_TrasferimentoFTP.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="PULIZIA_IN_ATTESA_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/V6-Job_SistemaInAttesaFile.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/V6-Job_SistemaInAttesaFile.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+	
+	<appender name="NOTIFICA_IN_ATTESA_PRELIEVO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/R1-Job_NotificaAttesaPrelievo.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/R1-Job_NotificaAttesaPrelievo.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+
+	<appender name="PRELIEVO_FTP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/R2-Job_PrelievoFTP.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/R2-Job_PrelievoFTP.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+
+	<appender name="NOTIFICA_PRELIEVO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder>
+			<pattern>%date [%thread] - %msg%n</pattern>
+		</encoder>
+		<File>${catalina.base}/logs/R3-Job_NotificaPrelievo.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">	      
+	      <fileNamePattern>${catalina.base}/logs/R3-Job_NotificaPrelievo.%d{yyyy-MM}.log</fileNamePattern>	      
+	    </rollingPolicy>
+	</appender>
+	
+	<logger name="STORESCP" level="INFO">
+		<appender-ref ref="STORESCP" />
+	</logger>
+	<logger name="CONFRONTO_PACS_PREINGEST" level="INFO">
+		<appender-ref ref="CONFRONTO_PACS_PREINGEST" />
+	</logger>
+	<logger name="COORDINATORE_CREA_OGGETTO" level="INFO">
+		<appender-ref ref="COORDINATORE_CREA_OGGETTO" />
+	</logger>
+	<logger name="CREA_OGGETTO" level="INFO">
+		<appender-ref ref="CREA_OGGETTO" />
+	</logger>
+	<logger name="TRASFERIMENTO_FTP" level="INFO">
+		<appender-ref ref="TRASFERIMENTO_FTP" />
+	</logger>
+	<logger name="INVIO_OGGETTO" level="INFO">
+		<appender-ref ref="INVIO_OGGETTO" />
+	</logger>
+	<logger name="PRELIEVO_FTP" level="INFO">
+		<appender-ref ref="PRELIEVO_FTP" />
+	</logger>
+	<logger name="NOTIFICA_PRELIEVO" level="INFO">
+		<appender-ref ref="NOTIFICA_PRELIEVO" />
+	</logger>
+	<logger name="MISSINGSOPCLASSLOG" level="INFO">
+		<appender-ref ref="MISSINGSOPCLASSLOG" />
+	</logger>
+	<logger name="UPDATE_SOPCLASS" level="INFO">
+		<appender-ref ref="UPDATE_SOPCLASS" />
+	</logger>
+	<logger name="NOTIFICA_IN_ATTESA_PRELIEVO" level="INFO">
+		<appender-ref ref="NOTIFICA_IN_ATTESA_PRELIEVO" />
+	</logger>
+	<logger name="PULIZIA_IN_ATTESA_FILE" level="INFO">
+		<appender-ref ref="PULIZIA_IN_ATTESA_FILE" />
+	</logger>
+	<logger name="org.springframework" level="${log.spring.level}" />	
+	<logger name="org.apache.commons" level="ERROR" />
+	<logger name="org.dcm4che2" level="${log.dcm4che.level}">
+		<appender-ref ref="DCM4CHE" />
+	</logger>
+	<logger name="httpclient.wire" level="ERROR" />
+	<logger name="org.opensaml" level="INFO" />
+	<logger name="org.apache.xml" level="INFO" />
+	<logger name="org.springframework.security" level="DEBUG" />	
+	<logger name="org.quartz" level="${log.quartz.level}" />
+	<logger name="it.eng" level="${log.dpi.level}" />
+	<logger name="net.sf.j2ep" level="${log.dpi.level}"  >
+		<appender-ref  ref="REVERSE_PROXY" />
+	</logger>
+	<root level="DEBUG">		
+		<appender-ref ref="FILE" />
+		${log.appender.stdout}
+		<appender-ref ref="ERROR_FILE" />		
+	</root>
+</configuration>

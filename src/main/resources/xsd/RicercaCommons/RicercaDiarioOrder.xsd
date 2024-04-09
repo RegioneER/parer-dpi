@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://diarioorder.xml.ws.sacerasi.eng.it/" targetNamespace="http://diarioorder.xml.ws.sacerasi.eng.it/">
+  <xs:element name="ListaDatiSpecificiOrder" type="ListaDatiSpecificiOrderType"/>
+
+
+  <!--  Type per lista valori -->
+
+  <xs:complexType name="ListaDatiSpecificiOrderType">
+       <xs:sequence>
+         <xs:element name="DatoSpecificoOrder" type="OrderType" minOccurs="1" maxOccurs="unbounded"/>
+       </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="OrderType">
+      <xs:sequence>
+        <xs:element name="DatoSpecifico" type="StringNVMax100Type" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="TipoOrder" minOccurs="1" maxOccurs="1">
+          <xs:simpleType>
+              <xs:restriction base="xs:NMTOKEN">
+                <xs:enumeration value="ASC"/>
+                <xs:enumeration value="DESC"/>
+              </xs:restriction>
+           </xs:simpleType>
+         </xs:element>
+      </xs:sequence>
+  </xs:complexType>
+
+                                  <!-- TIPI DATO GENERICI -->
+
+<xs:simpleType name="StringNVMax100Type">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
+
+

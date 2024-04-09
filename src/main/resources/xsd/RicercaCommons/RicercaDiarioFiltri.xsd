@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://diariofiltri.xml.ws.sacerasi.eng.it/" targetNamespace="http://diariofiltri.xml.ws.sacerasi.eng.it/">
+  <xs:element name="ListaFiltri" type="ListaFiltriType"/>
+  <!--  Type per lista filtri -->
+  <xs:complexType name="ListaFiltriType">
+    <xs:sequence>
+      <xs:element name="Filtro" type="FiltroType" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--  Type per filtro -->
+  <xs:complexType name="FiltroType">
+    <xs:choice>
+      <xs:element name="FiltroUnValore">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="DatoSpecifico" type="StringNVMax100Type" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="Operatore" minOccurs="1" maxOccurs="1">
+              <xs:simpleType>
+                <xs:restriction base="xs:NMTOKEN">
+                  <xs:enumeration value="UGUALE"/>
+                  <xs:enumeration value="DIVERSO"/>
+                  <xs:enumeration value="MAGGIORE"/>
+                  <xs:enumeration value="MAGGIORE_UGUALE"/>
+                  <xs:enumeration value="MINORE"/>
+                  <xs:enumeration value="MINORE_UGUALE"/>
+                  <xs:enumeration value="INIZIA_PER"/>
+                  <xs:enumeration value="CONTIENE"/>
+                  <xs:enumeration value="NON_CONTIENE"/>
+                  <xs:enumeration value="IN"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="Valore" type="xs:string" minOccurs="1" maxOccurs="1"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="FiltroNullo">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="DatoSpecifico" type="StringNVMax100Type" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="OperatoreNullo" minOccurs="1" maxOccurs="1">
+              <xs:simpleType>
+                <xs:restriction base="xs:NMTOKEN">
+                  <xs:enumeration value="NULLO"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="FiltroDueValori">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="DatoSpecifico" type="StringNVMax100Type" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="OperatoreCompreso" minOccurs="1" maxOccurs="1">
+              <xs:simpleType>
+                <xs:restriction base="xs:NMTOKEN">
+                  <xs:enumeration value="COMPRESO_FRA"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="Valore1" type="StringMax1024Type" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="Valore2" type="StringMax1024Type" minOccurs="0" maxOccurs="1"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <!-- TIPI DATO GENERICI -->
+  <xs:simpleType name="StringNVMax100Type">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="StringMax1024Type">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="1024"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

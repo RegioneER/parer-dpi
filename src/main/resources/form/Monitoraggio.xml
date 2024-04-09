@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Sezione Ricerca" xmlns="http://www.spagoLite.eng.it/xmlbean/form"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema"
+	xsi:noNamespaceSchemaLocation="Form.xsd">
+	<!-- xsi:noNamespaceSchemaLocation="Form.xsd" -->
+
+	<!-- RICERCA DIARIO -->
+
+	<!-- SEZIONI -->
+	<Section Name="DCMSection" Description="" Legend="DCM Hash"
+		ShowButton="true" LoadOpened="false" />
+	<Section Name="GLOBALSection" Description="" Legend="GLOBAL Hash"
+		ShowButton="true" LoadOpened="false" />
+	<Section Name="FILESection" Description="" Legend="Hash del file DICOM"
+		ShowButton="true" LoadOpened="false" />
+	<Section Name="XMLUDSection" Description=""
+		Legend="Indice unita documentaria" ShowButton="true" LoadOpened="false" />
+	<Section Name="XMLPCSection" Description=""
+		Legend="Indice prove conservazione" ShowButton="true" LoadOpened="false" />
+	<Section Name="ModalityInStudySection" Description=""
+		Legend="Lista modality degli studi" ShowButton="true" LoadOpened="false" />
+	<Section Name="SopClassSection" Description="" Legend="Lista SOP Class"
+		ShowButton="true" LoadOpened="false" />
+
+	<Section Name="StudySummarySection" Description=""
+		Legend="Riepilogo studio" ShowButton="false" LoadOpened="true" />
+	<!-- FILTRI -->
+	<Fields Name="RicercaDiario" Description="Filtri ricerca diario">
+		<ComboBox Type="STRING" Description="Ricerca tutte le sessioni"
+			Name="ricerca_ogni_sessione" Required="true" />
+		<ComboBox Type="STRING" Description="Stato studio" Name="ti_stato" />
+		<ComboBox Type="STRING" Description="Nodo Dicom" Name="nodo_dicom" Required="true"/>
+		<Input Type="DATE" Description="Data studi da" Name="dt_study_da" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_study_da"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora" Name="minuti_dt_study_da"
+			MaxLength="2" />
+		<Input Type="DATE" Description="Data studi a" Name="dt_study_a" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_study_a"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora" Name="minuti_dt_study_a"
+			MaxLength="2" />
+
+		<Input Type="DATE" Description="Data presa in carico studi da"
+			Name="dt_presa_in_carico_da" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_presa_in_carico_da"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora" Name="minuti_dt_presa_in_carico_da"
+			MaxLength="2" />
+		<Input Type="DATE" Description="Data presa in carico studi a"
+			Name="dt_presa_in_carico_a" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_presa_in_carico_a"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora" Name="minuti_dt_presa_in_carico_a"
+			MaxLength="2" />
+
+		<Input Type="STRING" Description="Accession number" Name="accession_number" />
+		<Input Type="STRING" Description="Paziente" Name="paziente" />
+		<ComboBox Type="STRING" Description="Filtro paziente" Name="filtro_paziente" />
+		<ComboBox Type="STRING" Description="Sesso" Name="sesso_paziente" />
+		<Input Type="DATE" Description="Data nascita" Name="dt_nascita_paziente" />
+		<Input Type="STRING" Description="Id paziente" Name="id_paziente" />
+		<Input Type="STRING" Description="Issuer id paziente" Name="issuer_id_paziente" />
+		<!-- <Input Type="STRING" Description="Medico" Name="medico" /> -->
+		<ComboBox Type="STRING" Description="Modality degli studi"
+			Name="modality_study" />
+		<Input Type="STRING" Description="UID dello studio" Name="study_uid" />
+		<Input Type="STRING" Description="DCM Hash" Name="dcm_hash" />
+		<Button Name="ricercaDiario" Description="Ricerca" Type="STRING" />
+		<Button Name="chiusuraMultipleWarnings" Description="Chiusura studi in warning"
+			Type="STRING" Hidden="true" />
+		<Button Name="versamentoMultipleWarnings" Description="Versamento studi in warning"
+			Type="STRING" Hidden="true" />
+	</Fields>
+
+	<!-- LISTA -->
+	<List Name="StudiList" Description="Diario" hideInsertButton="true"
+		hideDeleteButton="true" hideUpdateButton="true">
+		<CheckBox Type="STRING" Description="Seleziona Warning" Name="select_warnings"
+			Hidden="true" />
+		<Input Type="STRING" Description="Paziente" Name="ds_patient_name" />
+		<Input Type="STRING" Description="Sesso" Name="ti_patient_sex" />
+		<Input Type="DATE" Description="Data di nascita" Name="dt_patient_birth_date" />
+		<Input Type="DATETIME" Description="Data studio" Name="dt_study_date" />
+		<Input Type="DATETIME" Description="Data presa in carico" Name="dt_presa_in_carico" />
+		<Input Type="STRING" Description="Accession number" Name="ds_accession_number" />
+		<Input Type="STRING" Description="Id paziente" Name="cd_patient_id" />
+		<Input Type="STRING" Description="Issuer Id paziente" Name="cd_patient_id_issuer" />
+		<Input Type="STRING" Description="Lista modality degli studi"
+			Name="dl_lista_modality_in_study" />
+		<Input Type="INTEGER" Description="Id sessione" Name="id_sessione" />
+		<Input Type="STRING" Description="Stato sessione" Name="ti_stato_sessione" />
+		<Input Type="STRING" Description="Codice errore" Name="cd_err" />
+		<Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
+		<Input Type="DATETIME" Description="Data apertura sessione"
+			Name="dt_apertura_sessione" />
+		<Input Type="DATETIME" Description="Data chiusura sessione"
+			Name="dt_chiusura_sessione" />
+		<CheckBox Type="STRING" Description="Sessione con forzatura accettazione"
+			Name="fl_forza_accettazione" Readonly="true" />
+		<CheckBox Type="STRING" Description="Sessione con forzatura warning"
+			Name="fl_forza_warning" Readonly="true" />
+	</List>
+
+	<List Name="ListaGestioneWarning" Description="Lista studi in gestione warning"
+		hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true"
+		hideDetailButton="true">
+		<Input Type="STRING" Description="Paziente" Name="ds_patient_name" />
+		<Input Type="STRING" Description="Sesso" Name="ti_patient_sex" />
+		<Input Type="DATE" Description="Data di nascita" Name="dt_patient_birth_date" />
+		<Input Type="DATETIME" Description="Data studio" Name="dt_study_date" />
+		<Input Type="DATETIME" Description="Data presa in carico" Name="dt_presa_in_carico" />
+		<Input Type="STRING" Description="Accession number" Name="ds_accession_number" />
+		<Input Type="STRING" Description="Id paziente" Name="cd_patient_id" />
+		<Input Type="STRING" Description="Issuer Id paziente" Name="cd_patient_id_issuer" />
+		<Input Type="STRING" Description="Lista modality degli studi"
+			Name="dl_lista_modality_in_study" />
+	</List>
+
+	<Fields Name="GestioneWarning" Description="Gestione warning">
+		<Input Type="STRING" Description="Motivo forza accettazione"
+			Name="dl_motivo_forza_accettazione" />
+		<Input Type="STRING" Description="Motivo chiusura warning" Name="dl_motivo_chiuso_warning" />
+		<ComboBox Type="STRING" Description="Motivo chiusura warning standard"
+			Name="dl_motivo_chiuso_warning_standard" Trigger="true" />
+		<Button Name="confermaVersamentoWarning" Description="Conferma"
+			Type="STRING" />
+		<Button Name="annullaVersamentoWarning" Description="Annulla"
+			Type="STRING" />
+		<Button Name="confermaChiusuraWarning" Description="Conferma"
+			Type="STRING" />
+		<Button Name="annullaChiusuraWarning" Description="Annulla"
+			Type="STRING" />
+	</Fields>
+
+	<Fields Name="TrasferimentoPacs" Description="Trasferimento Pacs">
+		<ComboBox Type="STRING" Description="Nodo a cui inviare lo studio"
+			Name="transfer_node" Required="true" />
+		<Button Name="confermaTrasferimento" Description="Conferma"
+			Type="STRING" />
+		<Button Name="annullaTrasferimento" Description="Annulla" Type="STRING" />
+	</Fields>
+
+	<!-- DETTAGLIO -->
+
+	<Fields Name="RicercaDiarioDettaglio" Description="Dettaglio ricerca diario">
+		<Input Type="STRING" Description="Paziente" Name="ds_patient_name" />
+		<ComboBox Type="STRING" Description="Sesso" Name="ti_patient_sex" />
+		<Input Type="DATE" Description="Data di nascita" Name="dt_patient_birth_date" />
+		<Input Type="DATETIME" Description="Data studio" Name="dt_study_date" />
+		<Input Type="STRING" Description="AET nodo Dicom" Name="cd_aet_nodo_dicom" />
+		<Input Type="STRING" Description="Stato studio" Name="ti_stato_object" />
+		<Input Type="STRING" Description="Codice errore" Name="cd_err" />
+		<Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
+		<Input Type="STRING" Description="Stato ultima sessione di recupero"
+			Name="ti_stato_sessione_recup" />
+		<Input Type="DATETIME" Description="Data ultima sessione di recupero"
+			Name="dt_apertura_sessione_recup" />
+		<CheckBox Type="STRING" Description="Trasferibile al nodo Dicom"
+			Name="fl_transfer_dicom" Readonly="true" />
+		<Input Type="STRING" Description="Unità documentaria generata"
+			Name="chiave_unita_doc" />
+		<Input Type="STRING" Description="Accession number" Name="ds_accession_number" />
+		<Input Type="STRING" Description="Id paziente" Name="cd_patient_id" />
+		<Input Type="STRING" Description="Issuer Id paziente" Name="cd_patient_id_issuer" />
+		<Input Type="STRING" Description="Medico" Name="ds_ref_physician_name" />
+		<Input Type="STRING" Description="Nome istituzione" Name="ds_institution_name" />
+		<Input Type="STRING" Description="Descrizione studio" Name="dl_study_description" />
+		<Input Type="STRING" Description="UID studio" Name="ds_study_instance_uid" />
+		<Input Type="INTEGER" Description="Numero di serie nello studio"
+			Name="ni_study_related_series" />
+		<Input Type="INTEGER" Description="Numero di immagini nello studio"
+			Name="ni_study_related_images" />
+		<Input Type="STRING" Description="Id studio" Name="ds_study_id" />
+		<Input Type="DATETIME" Description="Data presa in carico" Name="dt_presa_in_carico" />
+		<!-- Dati sessione -->
+		<Input Type="INTEGER" Description="Identificatore di sessione"
+			Name="id_sessione" />
+		<Input Type="STRING" Description="Stato sessione" Name="ti_stato_sessione" />
+		<Input Type="DATETIME" Description="Data apertura sessione"
+			Name="dt_apertura_sessione" />
+		<Input Type="DATETIME" Description="Data chiusura sessione"
+			Name="dt_chiusura_sessione" />
+		<CheckBox Type="STRING" Description="Sessione con forza accettazione"
+			Name="fl_forza_accettazione" />
+		<Input Type="STRING" Description="Motivo forza accettazione"
+			Name="dl_motivo_forza_accettazione" />
+		<CheckBox Type="STRING" Description="Sessione con forza warning"
+			Name="fl_forza_warning" />
+		<Input Type="STRING" Description="Motivo chiusura warning" Name="dl_motivo_chiuso_warning" />
+		<!-- <ComboBox Type="STRING" Description="Motivo chiusura warning standard" -->
+		<!-- Name="dl_motivo_chiuso_warning_standard" Trigger="true" /> -->
+		<!-- DCM HASH -->
+		<Input Type="STRING" Description="Valore" Name="ds_dcm_hash" />
+		<Input Type="STRING" Description="Algoritmo di calcolo" Name="ti_algo_dcm_hash" />
+		<Input Type="STRING" Description="Encoding" Name="cd_encoding_dcm_hash" />
+		<TextArea Type="STRING" Description="File" Name="bl_dcm_hash_txt"
+			Rows="20" Cols="500" MaxLength="100000" />
+		<!-- GLOBAL HASH -->
+		<Input Type="STRING" Description="Valore" Name="ds_global_hash" />
+		<Input Type="STRING" Description="Algoritmo di calcolo" Name="ti_algo_global_hash" />
+		<Input Type="STRING" Description="Encoding" Name="cd_encoding_global_hash" />
+		<TextArea Type="STRING" Description="File" Name="bl_global_hash_txt"
+			Rows="20" Cols="500" MaxLength="100000" />
+		<!-- FILE HASH -->
+		<Input Type="STRING" Description="Valore" Name="ds_file_hash" />
+		<Input Type="STRING" Description="Algoritmo di calcolo" Name="ti_algo_file_hash" />
+		<Input Type="STRING" Description="Encoding" Name="cd_encoding_file_hash" />
+		<!-- XML DI INDICE UD -->
+		<TextArea Type="STRING" Description="File" Name="bl_xml_indice_ud"
+			Rows="20" Cols="500" MaxLength="100000" />
+		<!-- XML DI INDICE PC -->
+		<TextArea Type="STRING" Description="File" Name="bl_xml_indice_pc"
+			Rows="20" Cols="500" MaxLength="100000" />
+		<!-- Modality Studi -->
+		<TextArea Type="STRING" Description="Lista modality degli studi"
+			Name="dl_lista_modality_in_study" Rows="20" Cols="500" MaxLength="100000" />
+		<!-- SopClass -->
+		<TextArea Type="STRING" Description="Lista SOP Class" Name="dl_lista_sop_class"
+			Rows="20" Cols="500" MaxLength="100000" />
+	</Fields>
+	<!-- TABS -->
+	<Tab Name="DettaglioTabs" Description="">
+		<TabElement Name="InfoStudio" Description="Info studio"
+			Current="true" />
+		<TabElement Name="InfoRecupero" Description="Info recupero" />
+		<TabElement Name="InfoSessione" Description="Info sessione" />
+	</Tab>
+	<!-- BOTTONI -->
+	<ButtonList Name="DetailButtonList" Description="">
+		<Button Name="chiusuraWarning" Description="Chiusura studio in warning"
+			Type="STRING" />
+		<Button Name="versamentoWarning" Description="Versamento studio in warning"
+			Type="STRING" />
+		<Button Name="restituzioneStudio" Description="Restituzione studio"
+			Type="STRING" />
+		<Button Name="trasferimentoStudio" Description="Trasferimento studio"
+			Type="STRING" />
+		<Button Name="eliminaRecuperoStudio" Description="Elimina recupero studio"
+			Type="STRING" />
+		<Button Name="downloadProveConservazione" Description="Download prove di conservazione"
+			Type="STRING" />
+	</ButtonList>
+
+	<!-- RICERCA RESTITUZIONE OGGETTI -->
+	<!-- FILTRI -->
+	<Fields Name="RicercaRestituzioniStudi" Description="Filtri ricerca restituzioni studi">
+		<Input Type="DATE" Description="Data apertura sessione da" Name="dt_apertura_sessione_da"
+			Required="true" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_apertura_sessione_da"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora"
+			Name="minuti_dt_apertura_sessione_da" MaxLength="2" />
+		<Input Type="DATE" Description="Data apertura sessione a" Name="dt_apertura_sessione_a" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_apertura_sessione_a"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora"
+			Name="minuti_dt_apertura_sessione_a" MaxLength="2" />
+		<ComboBox Type="STRING" Description="Stato studio" Name="ti_stato" />
+		<ComboBox Type="STRING" Description="Nodo Dicom" Name="nodo_dicom" />
+		<Input Type="DATE" Description="Data studi da" Name="dt_study_da" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_study_da"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora" Name="minuti_dt_study_da"
+			MaxLength="2" />
+		<Input Type="DATE" Description="Data studi a" Name="dt_study_a" />
+		<Input Type="INTEGER" Description="Ora" Name="ore_dt_study_a"
+			MaxLength="2" />
+		<Input Type="INTEGER" Description="Ora" Name="minuti_dt_study_a"
+			MaxLength="2" />
+		<Input Type="STRING" Description="Accession number" Name="accession_number" />
+		<Input Type="STRING" Description="Paziente" Name="paziente" />
+		<ComboBox Type="STRING" Description="Filtro paziente" Name="filtro_paziente" />
+		<ComboBox Type="STRING" Description="Sesso" Name="sesso_paziente" />
+		<Input Type="DATE" Description="Data nascita" Name="dt_nascita_paziente" />
+		<Input Type="STRING" Description="Id paziente" Name="id_paziente" />
+		<Input Type="STRING" Description="Issuer id paziente" Name="issuer_id_paziente" />
+		<Input Type="STRING" Description="Medico" Name="medico" />
+		<Input Type="STRING" Description="Modality degli studi" Name="modality_study" />
+		<Input Type="STRING" Description="UID dello studio" Name="study_uid" />
+		<Button Name="ricercaRestituzioniStudi" Description="Ricerca"
+			Type="STRING" />
+	</Fields>
+	<!-- LISTA -->
+	<List Name="RestituzioniStudiList" Description="Lista studi"
+		hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true">
+		<Input Type="STRING" Description="Paziente" Name="ds_patient_name" />
+		<Input Type="STRING" Description="Sesso" Name="ti_patient_sex" />
+		<Input Type="DATE" Description="Data di nascita" Name="dt_patient_birth_date" />
+		<Input Type="DATETIME" Description="Data studio" Name="dt_study_date" />
+		<Input Type="STRING" Description="Accession number" Name="ds_accession_number" />
+		<Input Type="STRING" Description="Id paziente" Name="cd_patient_id" />
+		<Input Type="STRING" Description="Issuer Id paziente" Name="cd_patient_id_issuer" />
+		<Input Type="STRING" Description="Medico" Name="ds_ref_physician_name" />
+		<Input Type="STRING" Description="Lista modality degli studi"
+			Name="dl_lista_modality_in_study" />
+		<Input Type="INTEGER" Description="Id sessione" Name="id_sessione" />
+		<Input Type="STRING" Description="Stato sessione" Name="ti_stato_sessione" />
+		<Input Type="STRING" Description="Codice errore" Name="cd_err" />
+		<Input Type="STRING" Description="Descrizione errore" Name="dl_err" />
+		<Input Type="DATETIME" Description="Data apertura sessione"
+			Name="dt_apertura_sessione" />
+		<Input Type="DATETIME" Description="Data chiusura sessione"
+			Name="dt_chiusura_sessione" />
+	</List>
+	<!-- LANCIA CONFRONTO PACS PRE-INGEST -->
+	<Fields Name="ConfrontoPacsPreIngest" Description="Filtri confronto">
+		<Input Type="DATE" Description="Data confronto da" Name="dt_confronto_da"
+			Required="true" />
+		<Input Type="DATE" Description="Data confronto a" Name="dt_confronto_a"
+			Required="true" />
+		<Input Type="INTEGER" Description="Filtro gg delay" Name="filtro_giorni_delay" />
+		<Input Type="INTEGER" Description="Filtro ore before" Name="filtro_ore_before" />
+		<Input Type="INTEGER" Description="Numero studi Pacs" Name="num_study_pacs" />
+		<Button Name="startConfronto" Description="Avvia confronto"
+			Type="STRING" />
+		<Button Name="confermaConfronto" Description="Ok" Type="STRING" />
+		<Button Name="annullaConfronto" Description="Annulla" Type="STRING" />
+	</Fields>
+
+	<List Name="ConfrontiList" Description="Lista confronti"
+		hideInsertButton="true" hideDeleteButton="true" hideUpdateButton="true" hideDetailButton="true">
+		<Input Type="INTEGER" Description="Numero studi Pre Ingest"
+			Name="num_study_ping" />
+		<Input Type="INTEGER" Description="Numero studi Pacs" Name="num_study_pacs" />
+		<Input Type="STRING" Description="Nodo" Name="pacs_aet" />
+		<Input Type="INTEGER" Description="Numero studi da trasferire"
+			Name="num_study_da_trasferire" />
+	</List>
+</Form>

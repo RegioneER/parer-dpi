@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Form Description="Sezione Ricerca" xmlns="http://www.spagoLite.eng.it/xmlbean/form"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema"
+	xsi:noNamespaceSchemaLocation="Form.xsd">
+
+	<!-- GestioneJob -->
+	<!-- NOTA BENE : I FIELDSETS e i BUTTONS HANNO L'ATTRIBUTO NAME == AI NOMI 
+		DEI JOB PER AVERE UNA MAPPATURA CORRETTA E OTTIMIZZARE IL POPOLAMENTO DELLA 
+		PAGINA : SE VANNO AGGIUNTI ALTRI JOB, LA GESTIONE DEVE ESSERE MEDESIMA PER 
+		FARLO FUNZIONARE -->
+		
+	<!-- CoordinatoreCreaOggetto -->
+	<Fields Name="ObjectCreatorCoordinatorQJob" Description="Coordinatore Crea Oggetto">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startObjectCreatorCoordinatorQJob" Description="Avvia" Type="STRING" />
+		<Button Name="stopObjectCreatorCoordinatorQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+	
+	<!-- CreaOggetto1 -->
+	<Fields Name="ObjectCreatorQJob1" Description="Crea Oggetto 1">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startObjectCreatorQJob1" Description="Avvia" Type="STRING" />
+		<Button Name="stopObjectCreatorQJob1" Description="Ferma" Type="STRING" />
+	</Fields>
+	
+	<!-- CreaOggetto2 -->
+	<Fields Name="ObjectCreatorQJob2" Description="Crea Oggetto 2">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startObjectCreatorQJob2" Description="Avvia" Type="STRING" />
+		<Button Name="stopObjectCreatorQJob2" Description="Ferma" Type="STRING" />
+	</Fields>
+	
+	<!-- CreaOggetto3 -->
+	<Fields Name="ObjectCreatorQJob3" Description="Crea Oggetto 3">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startObjectCreatorQJob3" Description="Avvia" Type="STRING" />
+		<Button Name="stopObjectCreatorQJob3" Description="Ferma" Type="STRING" />
+	</Fields>
+	
+	<!-- InvioOggetto -->
+	<Fields Name="ObjectSenderQJob" Description="Invio Oggetto">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startObjectSenderQJob" Description="Avvia" Type="STRING" />
+		<Button Name="stopObjectSenderQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<!-- TrasferimentoFTP -->
+	<Fields Name="FTPTransfertQJob" Description="Trasferimento FTP">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startFTPTransfertQJob" Description="Avvia" Type="STRING" />
+		<Button Name="stopFTPTransfertQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<!-- UpdateSopClass -->
+	<Fields Name="UpdateSOPClassQJob" Description="Aggiorna lista Sop class">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startUpdateSOPClassQJob" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopUpdateSOPClassQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<!-- ConfrontoPACSPreIngest -->
+	<Fields Name="QueryPacsPingQJobD" Description="Confronto PACS Pre Ingest giornaliero">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startQueryPacsPingQJobD" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopQueryPacsPingQJobD" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<Fields Name="QueryPacsPingQJobW" Description="Confronto PACS Pre Ingest settimanale">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startQueryPacsPingQJobW" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopQueryPacsPingQJobW" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<Fields Name="QueryPacsPingQJobM" Description="Confronto PACS Pre Ingest mensile">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startQueryPacsPingQJobM" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopQueryPacsPingQJobM" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<!-- prelievoFTP -->
+	<Fields Name="PrelievoFTPQJob" Description="Prelievo FTP">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startPrelievoFTPQJob" Description="Avvia" Type="STRING" />
+		<Button Name="stopPrelievoFTPQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<!-- notificaPrelievo -->
+	<Fields Name="NotificaPrelievoQJob" Description="Notifica Prelievo">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startNotificaPrelievoQJob" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopNotificaPrelievoQJob" Description="Ferma"
+			Type="STRING" />
+	</Fields>
+
+	<!-- notificaInAttesaPrelievo -->
+	<Fields Name="NotificaInAttesaPrelievoQJob" Description="Notifica In Attesa Prelievo">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startNotificaInAttesaPrelievoQJob" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopNotificaInAttesaPrelievoQJob" Description="Ferma"
+			Type="STRING" />
+	</Fields>
+	
+	<!-- puliziaInAttesaFile -->
+	<Fields Name="PuliziaInAttesaFileQJob" Description="Pulizia In Attesa File">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startPuliziaInAttesaFileQJob" Description="Avvia"
+			Type="STRING" />
+		<Button Name="stopPuliziaInAttesaFileQJob" Description="Ferma"
+			Type="STRING" />
+	</Fields>
+
+	<!-- CopiaOggetto -->
+	<Fields Name="ObjectCopyQJob" Description="Copia Oggetto">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startObjectCopyQJob" Description="Avvia" Type="STRING" />
+		<Button Name="stopObjectCopyQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<!-- CreaOggettoGenerico -->
+	<Fields Name="GenericObjectCreatorQJob" Description="Crea oggetto generico">
+		<CheckBox Type="STRING" Description="In esecuzione" Name="attivo"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Ultima attivazione" Name="dt_reg_log_job_ini"
+			Readonly="true" />
+		<Input Type="DATETIME" Description="Prossima attivazione" Name="dt_prossima_attivazione"
+			Readonly="true" />
+		<Button Name="startGenericObjectCreatorQJob" Description="Avvia" Type="STRING" />
+		<Button Name="stopGenericObjectCreatorQJob" Description="Ferma" Type="STRING" />
+	</Fields>
+
+	<ButtonList Name="JobButtonList" Description="">
+<!-- 		<Button Name="startAllJobs" Description="Avvia tutti" Type="STRING" /> -->
+		<Button Name="stopAllJobs" Description="Ferma tutti" Type="STRING" />
+	</ButtonList>
+
+	<!-- ConfigurazioneLogger -->
+	<Fields Name="Logger" Description="">
+		<Button Name="applicaLivelli" Description="Applica" Type="STRING" />
+	</Fields>
+</Form>

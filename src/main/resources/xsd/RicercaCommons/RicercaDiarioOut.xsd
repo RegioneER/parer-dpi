@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://diarioout.xml.ws.sacerasi.eng.it/" targetNamespace="http://diarioout.xml.ws.sacerasi.eng.it/">
+  <xs:element name="ListaDatiSpecificiOut" type="ListaDatiSpecificiOutType"/>
+
+
+  <!--  Type per lista valori -->
+
+  <xs:complexType name="ListaDatiSpecificiOutType">
+       <xs:sequence>
+         <xs:element name="DatoSpecificoOut" type="StringNVMax100Type" minOccurs="1" maxOccurs="unbounded"/>
+       </xs:sequence>
+  </xs:complexType>
+
+
+
+
+                                  <!-- TIPI DATO GENERICI -->
+<xs:simpleType name="StringNVMax100Type">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
+

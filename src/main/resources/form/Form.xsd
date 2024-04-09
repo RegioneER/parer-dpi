@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.spagoLite.eng.it/xmlbean/form"
+	targetNamespace="http://www.spagoLite.eng.it/xmlbean/form"
+	elementFormDefault="qualified">
+
+
+	<element name="Form" type="tns:Form"></element>
+
+	<complexType name="Form">
+		<choice maxOccurs="unbounded" minOccurs="0">
+			<element name="Fields" type="tns:Fields" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+			<element name="Tab" type="tns:Tab" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+			<element name="List" type="tns:List" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+
+			<element name="NestedList" type="tns:NestedList" maxOccurs="unbounded"
+				minOccurs="0"></element>
+			<element name="Grids" type="tns:Grid" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+			<element name="Section" type="tns:Section" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="Wizard" type="tns:Wizard" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+			<element name="Panel" type="string" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+
+			<element name="ButtonList" type="tns:ButtonList" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+
+			<element name="Tree" type="tns:Tree" maxOccurs="unbounded"
+				minOccurs="0">
+			</element>
+		</choice>
+
+
+		<attribute name="Description" type="string"></attribute>
+	</complexType>
+
+	<complexType name="Tab">
+		<complexContent>
+			<extension base="tns:Element">
+				<sequence>
+					<element name="TabElement" type="tns:TabElement" maxOccurs="unbounded"
+						minOccurs="1"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="TabElement">
+		<complexContent>
+			<extension base="tns:Element">
+				<attribute name="Current" type="boolean"></attribute>
+				<attribute name="Hidden" type="boolean"></attribute>
+				<attribute name="Disabled" type="boolean"></attribute>
+				<attribute name="IconUrl" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Element">
+		<attribute name="Name" type="string" use="required"></attribute>
+		<attribute name="Description" type="string" use="required"></attribute>
+	</complexType>
+
+	<complexType name="Fields">
+		<complexContent>
+			<extension base="tns:Element">
+				<choice minOccurs="1" maxOccurs="unbounded">
+					<element name="Input" type="tns:Input"></element>
+
+					<element name="ComboBox" type="tns:ComboBox"></element>
+					<element name="MultiSelect" type="tns:MultiSelect"></element>
+					<element name="CheckBox" type="tns:CheckBox"></element>
+					<element name="Button" type="tns:Button"></element>
+					<element name="Radio" type="tns:Radio"></element>
+					<element name="TextArea" type="tns:TextArea"></element>
+					<element name="Semaphore" type="tns:Semaphore"></element>
+					<element name="MultiSemaphore" type="tns:MultiSemaphore"></element>
+					<element name="Link" type="tns:Link"></element>
+				</choice>
+
+
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ComboBox">
+		<complexContent>
+			<extension base="tns:Field">
+
+				<attribute name="AddBlank" type="boolean"></attribute>
+				<attribute name="MaxLength" type="int"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Field">
+		<complexContent>
+			<extension base="tns:Element">
+				<attribute name="Alias" type="string"></attribute>
+				<attribute name="Type" use="required">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="STRING"></enumeration>
+							<enumeration value="CAP"></enumeration>
+							<enumeration value="EMAIL"></enumeration>
+							<enumeration value="CODFISCALE"></enumeration>
+							<enumeration value="TELEFONO"></enumeration>
+							<enumeration value="DATE"></enumeration>
+							<enumeration value="FILE"></enumeration>
+							<enumeration value="DATETIME"></enumeration>
+							<enumeration value="INTEGER"></enumeration>
+							<enumeration value="DECIMAL"></enumeration>
+							<enumeration value="CURRENCY"></enumeration>
+							<enumeration value="PARTITAIVA"></enumeration>
+							<enumeration value="CODFISCPIVA"></enumeration>
+							<enumeration value="PREFISSOTEL"></enumeration>
+							<enumeration value="DATATERMINE"></enumeration>
+							<enumeration value="ULTIMOPERIODO"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="Format" type="string"></attribute>
+
+				<attribute name="Required" type="boolean"></attribute>
+				<attribute name="Readonly" type="boolean"></attribute>
+				<attribute name="Hidden" type="boolean"></attribute>
+				<attribute name="Trigger" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Input">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="MaxLength" type="int"></attribute>
+				<attribute name="ForceCase">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="UPPER"></enumeration>
+							<enumeration value="LOWER"></enumeration>
+							<enumeration value="INITCAP"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="ForceTrim">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="LTRIM"></enumeration>
+							<enumeration value="RTRIM"></enumeration>
+							<enumeration value="TRIM"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="RegExp" type="string"></attribute>
+				<attribute name="GroupingDecimal" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="List">
+		<complexContent>
+			<extension base="tns:ElementGroup">
+				<sequence>
+
+				</sequence>
+				<attribute name="hideDetailButton" type="boolean"></attribute>
+				<attribute name="hideUpdateButton" type="boolean"></attribute>
+				<attribute name="hideDeleteButton" type="boolean"></attribute>
+				<attribute name="hideInsertButton" type="boolean"></attribute>
+				<attribute name="title" type="string"></attribute>
+				<attribute name="hidden" type="boolean"></attribute>
+				<attribute name="editable" type="boolean"></attribute>
+				<attribute name="masterList" type="boolean"></attribute>
+				<attribute name="readOnly" type="boolean"></attribute>
+				<attribute name="visibilityProperty" type="string"></attribute>
+				<attribute name="filterValidRecords" type="boolean"></attribute>
+				<attribute name="excelFileName" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="NestedList">
+		<complexContent>
+			<extension base="tns:ElementGroup">
+				<attribute name="hideDetailButton" type="boolean"></attribute>
+				<attribute name="hideUpdateButton" type="boolean"></attribute>
+				<attribute name="hideDeleteButton" type="boolean"></attribute>
+				<attribute name="hideInsertButton" type="boolean"></attribute>
+				<attribute name="title" type="string"></attribute>
+				<attribute name="hidden" type="boolean"></attribute>
+
+				<attribute name="masterList" type="boolean"></attribute>
+				<attribute name="primaryTableFields" type="string"></attribute>
+				<attribute name="secondaryTableFields" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="CheckBox">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="ValueChecked" type="string"></attribute>
+				<attribute name="ValueUnchecked" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="MultiSelect">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="MaxLength" type="int"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="MultiSemaphore">
+		<annotation>
+			<documentation>
+				Componente per filtri con più semafori
+			</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="tns:Field">
+
+				<attribute name="GreenChecked" type="boolean" default="true"></attribute>
+				<attribute name="YellowChecked" type="boolean" default="true"></attribute>
+				<attribute name="RedChecked" type="boolean" default="true"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+	<complexType name="TextArea">
+		<complexContent>
+			<extension base="tns:Field">
+
+				<sequence>
+
+				</sequence>
+				<attribute name="Rows" type="int" use="required"></attribute>
+				<attribute name="Cols" type="int" use="required"></attribute>
+				<attribute name="MaxLength" type="int" use="required"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Radio">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="GroupName" type="string" use="required"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="Grid">
+		<complexContent>
+			<extension base="tns:Element">
+				<sequence>
+					<element name="RowsHierachy" type="tns:ElementGroup"></element>
+					<element name="ColumnsHierachy" type="tns:ElementGroup"></element>
+					<element name="Values" type="tns:ElementGroup"></element>
+				</sequence>
+
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="ElementGroup">
+		<complexContent>
+			<extension base="tns:Element">
+				<choice maxOccurs="unbounded" minOccurs="1">
+					<element name="Input" type="tns:Input"></element>
+					<element name="ComboBox" type="tns:ComboBox"></element>
+					<element name="CheckBox" type="tns:CheckBox"></element>
+					<element name="Radio" type="tns:Radio"></element>
+					<element name="Button" type="tns:Button"></element>
+					<element name="Link" type="tns:Link"></element>
+
+					<element name="Semaphore" type="tns:Semaphore"></element>
+				</choice>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Button">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="Classic" type="boolean"></attribute>
+				<attribute name="Secure" default="true" type="boolean"></attribute>
+				<attribute name="DisableHourGlass" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Link">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="Tooltip" type="string" use="required"></attribute>
+				<attribute name="Target" type="string" use="required"></attribute>
+				<attribute name="isTargetList" type="boolean" default="true"></attribute>
+				<attribute name="VisibilityProperty" type="string"></attribute>
+				<attribute name="ExternalLinkParamApplic" type="string"></attribute>
+				<attribute name="ExternalLinkParamId" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Section">
+		<complexContent>
+			<extension base="tns:Element">
+				<attribute name="Legend" type="string"></attribute>
+				<attribute name="Hidden" type="boolean"></attribute>
+				<attribute name="BorderHidden" type="boolean"></attribute>
+				<attribute name="ShowButton" type="boolean"></attribute>
+				<attribute name="LoadOpened" type="boolean"></attribute>
+
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Wizard">
+		<complexContent>
+			<extension base="tns:Element">
+				<sequence>
+					<element name="Step" type="tns:Step" maxOccurs="unbounded"
+						minOccurs="1"></element>
+					<element name="EndPage" type="tns:EndPage" maxOccurs="1"
+						minOccurs="0"></element>
+				</sequence>
+
+				<attribute name="HideStepCount" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Step">
+		<complexContent>
+			<extension base="tns:Element">
+				<attribute name="Summary" type="boolean"></attribute>
+				<attribute name="Current" type="boolean"></attribute>
+				<attribute name="Hidden" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+
+	</complexType>
+
+	<simpleType name="TypeType">
+		<restriction base="string"></restriction>
+	</simpleType>
+
+	<complexType name="EndPage">
+		<complexContent>
+			<extension base="tns:Element">
+				<attribute name="HideBar" type="boolean"></attribute>
+
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Semaphore">
+		<complexContent>
+			<extension base="tns:Field">
+				<attribute name="State">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="GREEN"></enumeration>
+							<enumeration value="YELLOW"></enumeration>
+							<enumeration value="RED"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="GreenDescription" type="string"></attribute>
+				<attribute name="YellowDescription" type="string"></attribute>
+				<attribute name="RedDescription" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+
+	<complexType name="ButtonList">
+		<complexContent>
+			<extension base="tns:Element">
+				<choice maxOccurs="unbounded" minOccurs="1">
+					<element name="Button" type="tns:Button"></element>
+				</choice>
+				<attribute name="DisableAll" type="boolean"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="Tree">
+		<complexContent>
+			<extension base="tns:TreeElementGroup">
+				<attribute name="hideCreateNodeButton" type="boolean"
+					default="false"></attribute>
+				<attribute name="useDefaultCreateNodeButton" type="boolean"
+					default="true"></attribute>
+				<attribute name="hideDeleteNodeButton" type="boolean"
+					default="false"></attribute>
+				<attribute name="useDefaultDeleteNodeButton" type="boolean"
+					default="true"></attribute>
+				<attribute name="hideRenameNodeButton" type="boolean"
+					default="false"></attribute>
+				<attribute name="useDefaultRenameNodeButton" type="boolean"
+					default="true"></attribute>
+				<attribute name="checkable" type="boolean" default="false"></attribute>
+				<attribute name="editable" type="boolean"></attribute>
+				<attribute name="draggable" type="boolean"></attribute>
+				<attribute name="sorted" type="boolean"></attribute>
+				<attribute name="activeContextMenu" type="boolean" default="false"></attribute>
+				<attribute name="coloredIcons" type="boolean" default="false"></attribute>
+				<attribute name="title" type="string"></attribute>
+				<attribute name="hidden" type="boolean" default="false"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TreeElementGroup">
+		<complexContent>
+			<extension base="tns:Element">
+				<sequence>
+					<element name="TreeElement" type="tns:TreeElement"
+						maxOccurs="3" minOccurs="1"></element>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+
+	<complexType name="TreeElement">
+		<complexContent>
+			<extension base="tns:Element">
+				<attribute name="Alias" type="string"></attribute>
+				<attribute name="Type" use="required">
+					<simpleType>
+						<restriction base="string">
+							<enumeration value="ID"></enumeration>
+							<enumeration value="ID_PARENT"></enumeration>
+							<enumeration value="NAME"></enumeration>
+						</restriction>
+					</simpleType>
+				</attribute>
+				<attribute name="Icon" type="string"></attribute>
+			</extension>
+		</complexContent>
+	</complexType>
+</schema>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<display-name>DPI</display-name>
+	<!-- SPRING CONTEXT ROOT -->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>it.eng.dpi.service.DPIConfigInitializer</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- END SPRING CONTEXT ROOT -->
+	<filter>
+		<filter-name>Charset filter</filter-name>
+		<filter-class>it.eng.spagoCore.util.CharsetFilter</filter-class>
+		<init-param>
+			<param-name>requestEncoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>Charset filter</filter-name>
+		<url-pattern>*.html</url-pattern>
+	</filter-mapping>
+	<filter>
+        <filter-name>URI Encoding filter</filter-name>
+        <filter-class>it.eng.spagoCore.util.UriEcondingFilter</filter-class>
+        <init-param>
+            <param-name>uriEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>URI Encoding filter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+	<filter>
+		<filter-name>ProxyFilter</filter-name>
+		<filter-class>net.sf.j2ep.ProxyFilter</filter-class>
+		<init-param>
+			<param-name>dataUrl</param-name>
+			<param-value>/WEB-INF/reverse-proxy.xml</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>ProxyFilter</filter-name>
+		<url-pattern>/ws/sacer/VersamentoSync</url-pattern>
+		<url-pattern>/ws/sacerpre/VersamentoSync</url-pattern>
+		<url-pattern>/ws/sacerbeta/VersamentoSync</url-pattern>
+		<url-pattern>/ws/sacerdev/VersamentoSync</url-pattern>
+	</filter-mapping>
+	<!-- J2EP FINE -->
+
+	<servlet>
+		<servlet-name>ConfigServlet</servlet-name>
+		<servlet-class>it.eng.spagoCore.configuration.ConfigServlet</servlet-class>
+		<init-param>
+			<param-name>enableHelpOnline</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<init-param>
+			<param-name>disableSecurity</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<!-- UI customizzazione DEFAULT BEING -->
+		<init-param>
+			<param-name>titolo_applicativo</param-name>
+			<param-value>DPI</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logoApp_title</param-name>
+			<param-value>Applicazione - Polo Archivistico Regionale dell'Emilia-Romagna</param-value>
+		</init-param>		
+		<init-param>
+			<param-name>logoApp_alt</param-name>
+			<param-value>Polo Archivistico Regionale dell'Emilia-Romagna</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logo1_title</param-name>
+			<param-value>ParER - Polo Archivistico Regionale dell'Emilia-Romagna</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logo1_url</param-name>
+			<param-value>https://poloarchivistico.regione.emilia-romagna.it/</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logo2_title</param-name>
+			<param-value>Regione Emilia-Romagna</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logo2_alt</param-name>
+			<param-value>Regione Emilia-Romagna</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logoApp_relativePath</param-name>
+			<param-value>/img/logos/logo_app.png</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logo1_relativePath</param-name>
+			<param-value>/img/logos/logo1.png</param-value>
+		</init-param>
+		<init-param>
+			<param-name>logo2_relativePath</param-name>
+			<param-value>/img/logos/logo2.png</param-value>
+		</init-param>
+		<!-- END UI customizzazione DEFAULT -->
+		
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<!-- SPRING DPI-SPRING APP CONTEXT -->
+	<servlet>
+		<servlet-name>dpi-spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>		
+      	<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dpi-spring</servlet-name>
+		<!-- <url-pattern>/NotificaDisponibilita</url-pattern> -->
+		<url-pattern>*.do</url-pattern>
+		<url-pattern>*.html</url-pattern>
+		<url-pattern>/config</url-pattern>
+	</servlet-mapping>
+	<!-- END SPRING DPI-SPRING APP CONTEXT -->
+	
+	<!-- SSO CONFIGURATION -->
+	<filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<session-config>
+        <session-timeout>60</session-timeout>
+          <cookie-config>
+            <http-only>${web.session-config.cookie-config.http-only}</http-only>
+            <secure>${web.session-config.cookie-config.secure}</secure>
+          </cookie-config>
+          <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+	<!-- SSO CONFIGURATION FINE -->
+	
+	<welcome-file-list>
+		<welcome-file>Login.html</welcome-file>
+	</welcome-file-list>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>JSP webapp</web-resource-name>
+			<url-pattern>/jsp/*</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint />
+	</security-constraint>
+ 	<error-page>
+        <error-code>401</error-code>
+        <location>/jsp/login/notAuthorized.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>403</error-code>
+ 		<location>/jsp/notAuthorizedError.jsp</location>
+     </error-page>
+    <error-page>
+        <error-code>405</error-code>
+        <location>/jsp/notAllowedError.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/jsp/genericError.jsp</location>
+    </error-page>
+</web-app>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation= "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- *** AGGIUNTA PER SPID *** -->
+    <!-- samlRelayState DEVE essere definito prima dell'import che lo usa altrimenti non funziona nulla! -->
+    <!-- Serve per far funzionare l'integrazione con FEDERA -->
+    <bean id="spEntityId" class="java.lang.String">
+        <constructor-arg value="${securityContext.xml_defaultSPEntityID}"/>
+    </bean>
+    <!-- Estrae dall'entityId la parte dell'url del server e della porta escludendo l'ultimo slash -->
+    <bean id="serverUrl" class="java.lang.String">
+        <constructor-arg value="#{ spEntityId.substring(0, spEntityId.indexOf('/',9) ) }"/>
+    </bean>
+    <!-- Deve controllare che nell'entityId viene tornato così com'è altrimenti se c'è un alias lo toglie! -->
+    <bean id="urlRitorno" class="java.lang.String">
+        <constructor-arg value="#{  (spEntityId).indexOf('/saml/metadata')>0 ? (spEntityId).substring(0, (spEntityId).indexOf('/saml/metadata') ) : (spEntityId) }"/>
+    </bean>
+    <!-- Url di ritorno encodata in Base64 lo vuole federa! -->
+    <bean id="samlRelayState" class="java.lang.String">
+        <constructor-arg value="#{ T(java.util.Base64).getEncoder().encodeToString( ( urlRitorno  ).getBytes()) }"/>
+    </bean>
+    <!-- SpagoLite User detail bean Spostato qui e viene usato nel baseContext.xml -->
+    <bean id="sliteUserDetail" class="it.eng.dpi.web.security.DpiSAMLUserDetail" />
+    <!-- *** FINE AGGIUNTA PER SPID -->
+    
+    <!-- common settings -->
+    <import resource="classpath:security/baseSecurityContext.xml"/>
+
+	
+    <!-- Use the following for interpreting RelayState coming from unsolicited response as redirect URL: <bean id="successRedirectHandler" 
+    class="org.springframework.security.saml.SAMLRelayStateSuccessHandler"> <property name="defaultTargetUrl" value="/" 
+    /> </bean> -->
+
+	
+    <!-- Central storage of cryptographic keys -->
+    <bean id="keyManager" class="org.springframework.security.saml.key.JKSKeyManager">
+        <constructor-arg value="file:///${catalina.base}/conf/dpi-${env}/samlKeystore.jks" />
+        <constructor-arg type="java.lang.String" value="${securityContext.xml_KeyManagerPasswd}" />
+        <constructor-arg>
+            <map>
+                <entry key="dpi" value="${securityContext.xml_KeyManagerPasswd}" />
+            </map>
+        </constructor-arg>
+        <constructor-arg type="java.lang.String" value="dpi" />
+    </bean>
+
+		
+    <!-- Filter automatically generates default SP metadata 
+    <bean id="metadataGeneratorFilter" class="org.springframework.security.saml.metadata.MetadataGeneratorFilter">
+            <constructor-arg>
+                    <bean class="org.springframework.security.saml.metadata.MetadataGenerator">
+                            <property name="entityBaseURL" value="http://localhost:8080/dpi" />
+                            <property name="entityAlias" value="dpi" />
+                            <property name="signMetadata" value="true" />
+                            <property name="signingKey" value="dpi" />
+                            <property name="includeDiscovery" value="false" />
+                            <property name="bindingsSSO">
+                                    <list>
+                                            <value>REDIRECT</value>
+                                            <value>POST</value>
+                                    </list>
+                            </property>
+                    </bean>
+            </constructor-arg>
+    </bean>
+    -->
+	
+    <!-- IDP Metadata configuration - paths to metadata of IDPs in circle of trust is here -->
+    <!-- Do no forget to call iniitalize method on providers -->
+    <bean id="metadata" class="it.eng.spagoLite.security.saml.ReloadableCachingMetadataManager">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.saml.metadata.ExtendedMetadataDelegate">
+                    <constructor-arg>
+                        <bean class="org.opensaml.saml2.metadata.provider.FileBackedHTTPMetadataProvider">
+                            <!-- URL containing the metadata -->
+                            <constructor-arg>
+								
+                                <value type="java.lang.String">${securityContext.xml_fedmetadataURL}</value>
+                            </constructor-arg>
+                            <!-- Timeout per la connessione durante una richiesta di metadati (in ms) -->
+                            <constructor-arg>
+                                <value type="int">10000</value>
+                            </constructor-arg>
+                            <constructor-arg> 
+                                <value type="java.lang.String">/tmp/tmp-dpi-fedmetadata.xml</value> 
+                            </constructor-arg>
+                            <property name="parserPool" ref="parserPool" />
+                        </bean>
+                    </constructor-arg>
+                    <constructor-arg>
+                        <map>
+                            <entry key="${securityContext.xml_defaultSPEntityID}">
+                                <bean class="org.springframework.security.saml.metadata.ExtendedMetadata">
+                                    <property name="local" value="true" />
+                                    <property name="alias" value="dpi" />
+                                    <property name="securityProfile" value="pkix" />
+                                    <property name="sslSecurityProfile" value="pkix" />
+                                    <property name="signingKey" value="dpi" />
+                                    <property name="encryptionKey" value="dpi" />
+                                    <property name="requireArtifactResolveSigned" value="true" />
+                                    <property name="requireLogoutRequestSigned" value="true" />
+                                    <property name="requireLogoutResponseSigned" value="false" />
+                                    <property name="idpDiscoveryEnabled" value="false" />
+                                </bean>
+                            </entry>
+                            <entry key="${securityContext.xml_defaultIDPEntityID}">
+                                <bean class="org.springframework.security.saml.metadata.ExtendedMetadata"/>
+                            </entry>
+                        </map>
+                    </constructor-arg>
+                </bean>
+
+            </list>
+        </constructor-arg>
+        <!-- OPTIONAL used when one of the metadata files contains information about this service provider -->
+        <property name="hostedSPName" value="${securityContext.xml_defaultSPEntityID}" />
+        <!-- OPTIONAL property: can tell the system which IDP should be used for authenticating user by default. -->
+        <property name="defaultIDP" value="${securityContext.xml_defaultIDPEntityID}" />
+        <!-- Intervallo di refresh dei metadati -->
+        <property name="refreshCheckInterval" value="600000"/>
+    </bean>
+
+</beans>

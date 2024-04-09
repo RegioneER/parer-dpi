@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<server className="net.sf.j2ep.servers.BaseServer" domainName="parer.regione.emilia-romagna.it:443" path="/sacer" isRewriting="true">
+		<rule className="net.sf.j2ep.rules.DirectoryRule" directory="/ws/sacer" />
+	</server>
+	<server className="net.sf.j2ep.servers.BaseServer" domainName="ibc3815" path="/sacer" isRewriting="true">
+		<rule className="net.sf.j2ep.rules.DirectoryRule" directory="/ws/sacerdev" />
+	</server>
+	<server className="net.sf.j2ep.servers.BaseServer" domainName="parerlab.regione.emilia-romagna.it:443" path="/sacerpre" isRewriting="true">
+		<rule className="net.sf.j2ep.rules.DirectoryRule" directory="/ws/sacerpre" />
+	</server>
+	<server className="net.sf.j2ep.servers.BaseServer" domainName="parerlab.regione.emilia-romagna.it:443" path="/sacerbeta" isRewriting="true">
+		<rule className="net.sf.j2ep.rules.DirectoryRule" directory="/ws/sacerbeta" />
+	</server>
+</config>
