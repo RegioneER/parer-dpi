@@ -5,7 +5,9 @@
                             http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
                             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-
+    <!-- rest service (no SAML auth) -->
+    <security:http security="none" pattern="/admin/**" />
+    
     <!-- *** AGGIUNTA PER SPID *** -->
     <!-- samlRelayState DEVE essere definito prima dell'import che lo usa altrimenti non funziona nulla! -->
     <!-- Serve per far funzionare l'integrazione con FEDERA -->

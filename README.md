@@ -13,16 +13,137 @@ Il modulo software DPI (Digital Preservation Interface), sviluppato e manutenuto
 Requisiti minimi per installazione: 
 
 - Sistema operativo : consigliato Linux server (in alternativa compatibilità con Windows server);
-- Java versione 11 (OpenJDK / Oracle);
+- Java versione 8 (OpenJDK / Oracle);
 - Tomcat 9.
   
 ## Instalazione JDK 
 
 Consigliata adozione della OpenJDK alla versione 11, guida all'installazione https://openjdk.org/install/.
 
+## Connettività
+
+Il server su cui è installato il DPI deve essere abilitato a raggiungere gli host che ospitano determinati servizi esposti in Internet. Deve essere possibile raggiungere un server ftp e gli URL che espongono i contesti applicativi che occorrono al corretto funzionamento del DPI alle porte specificate, ad esempio:
+- host: ftp-parer.regione.emilia-romagna.it porte: 21, 60000 - 60100 (ftps)
+- host: parer.regione.emilia-romagna.it porta: 443 TCP (https)
+- host: parer-pre.regione.emilia-romagna.it  porta: 443 TCP (https)
+
+E' consigliata la disponibilità di un DNS per la risoluzione degli indirizzi specificati.
+
+Il DPI necessita inoltre di comunicare con il PACS e viceversa tramite protocollo TCP/DICOM. 
+
+Solitamente vengono utilizzate le porte 104 (DPI --> PACS) e 11112 (PACS --> DPI).
+
+L’IP del PACS varia a seconda dell'installazione e deve essere comunicato di volta in volta.
+
 ## Setup application server (Tomcat 9)
 
-TODO
+Installare Tomcat 9 all'ultimo update disponibile.
+
+Abilitare il connettore https.
+
+### Settaggio variabili d’avvio JVM Tomcat
+
+Nelle installazioni di test sono state utilizzate le seguenti configurazioni di system.d. 
+
+In particolare, si riporta un esempio del file tomcat-dpi-AMBIENTE.service presente nella directory /etc/systemd/system/ . Il valore di AMBIENTE viene comunicato in fase di installazione.
+
+Contenuto del file:
+
+```
+[Unit]
+Description=Apache Tomcat 9 DPI AMBIENTE
+After=syslog.target
+
+[Service]
+User=tomcat
+Group=tomcat
+UMask=0002
+TimeoutSec=5m
+WorkingDirectory=/opt/tomcat/tomcat-dpi-AMBIENTE/
+
+Environment="JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk"
+Environment="CATALINA_BASE=/opt/tomcat/tomcat-dpi-AMBIENTE"
+Environment="CATALINA_HOME=/opt/tomcat/tomcat-dpi-AMBIENTE"
+Environment="CATALINA_PID=/opt/tomcat/tomcat-dpi-AMBIENTE/tomcat.pid"
+Environment="CATALINA_OPTS=-server -Xss1M -XX:MaxPermSize=256M -XX:+UseConcMarkSweepGC -Xms2G -Xmx2G -Denv=AMBIENTE -Dhttps.protocols=TLSv1.2"
+
+ExecStart=/bin/bash /opt/tomcat/tomcat-dpi-AMBIENTE/bin/startup.sh
+ExecStop=/bin/bash /opt/tomcat/tomcat-dpi-AMBIENTE/bin/shutdown.sh
+
+PIDFile=/opt/tomcat/tomcat-dpi-AMBIENTE/tomcat.pid
+SyslogIdentifier=tomcat-dpi
+SuccessExitStatus=143
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Per il corretto funzionamento del DPI è necessario impostare a 65536 il limite di fd che il processo Tomcat può mantenere aperti.
+
+Questo comportamento viene configurato nella riga `LimitNOFILE=65535` del file tomcat-dpi-AMBIENTE.service mostrato sopra.
+
+Se la macchina dispone di soli 4gb settare la variabile dell’heap a Xmx2g.
+
+Assicurarsi dell’esistenza della variabile d'ambiente `catalina.base` e che punti alla directory contente la cartella ./conf 
+
+Aggiungere il parametro `–Denv` e valorizzarlo con il nome dell’AMBIENTE (comunicato in fase di installazione).
+
+Per disabilitare la serializzazione dell'oggetto Session durante i restart di Tomcat verificare che il file conf/context.xml abbia la stringa: 
+
+`<Manager pathname="" /> `
+
+NON commentata. 
+
+### Settaggio configurazione
+
+Creare all’interno di `${catalina.base}`/conf/ una cartella con il nome dpi-AMBIENTE (il valore di AMBIENTE viene comunicato in fase di installazione) e copiarci dentro i file `dpi.properties`, `samlKeystore.jks` e `securityContext.xml` generati mediante l'apposito progetto **DPI-Config**, ricordandosi di settare i permessi.
+
+Se nel file `dpi.properties` sono valorizzate le seguenti proprietà:
+```
+tipoObj.1=<tipo_oggetto>
+tipoObj.input_path.1=<input_dir>
+```
+allora è necessario creare una cartella:
+```
+<input_dir>/<tipo_oggetto>
+```
+
+### Settaggio cartella di storage
+
+1. Montare lo storage su `/dpicache`;
+2. creare in `/dpicache` una cartella `dpi` e assegnare i permessi rwx all’utente oltre che l’owning a chi esegue Tomcat;
+3. creare le cartelle `dpi_test` e `dpi_prod` dentro a `/dpicache/dpi/` in modo da poter passare facilmente da test a produzione semplicemente cambiando il parametro `dpi.work_path` dal file di conf del dpi.
+
+Il risultato finale deve essere: 
+```
+/dpicache/dpi/dpi_test
+/dpicache/dpi/dpi_prod
+```
+
+### Configurazione cartella log
+
+1.	Spostare la vecchia cartella `logs` in `logs_OLD`;
+2.	creare una cartella `logs_prod`;
+3.	creare una cartella `logs_test`;
+4.	creare un _link simbolico_ chiamato `logs` che punti alla cartella di log in base alla configurazione di test o produzione che si vuole attivare. 
+
+Il risultato finale deve essere:
+```
+lrwxrwxrwx 1 tomcat tomcat 10 Mar 10 19:36 logs -> logs_test/ 
+drwxr-xr-x 2 tomcat tomcat 4096 Mar 10 16:52 logs_OLD 
+drwxrwxr-x 2 tomcat tomcat 4096 Mar 10 19:35 logs_prod 
+drwxrwxr-x 2 tomcat tomcat 4096 Apr 11 17:51 logs_test 
+```
+
+### Deploy applicazione
+
+1.	Creare la cartella `$CATALINA_HOME`/wars;
+2.	copiare il .war in `$CATALINA_HOME`/wars;
+3.	pulire le cartelle `$CATALINA_HOME`/work `$CATALINA_HOME`/tmp;
+4.	assicurarsi di aver messo i file di configurazione `dpi.properties`, `samlKeystore.jks` e `securityContext.xml` nella cartella conf;
+5.	in `$CATALINA_HOME`/webapps creare un nuovo link simbolico con il comando `ln -sf ../wars/dpi-VERS.war ./dpi.war`;
+6.	avviare il processo tomcat.
 
 
 # Utilizzo
@@ -32,6 +153,24 @@ DPI implementa funzionalità di versamento per specifiche tipologie di SIP. In p
 DPI può operare con logiche sia push che pull, ricevendo o estraendo dati e documenti dai sistemi del Produttore per poi versarli nel Sistema, richiamando gli opportuni servizi di PING.   
 
 Inoltre, DPI fornisce strumenti di monitoraggio dei versamenti effettuati a disposizione dell’Ente produttore. 
+
+
+## Ricerca diario
+
+Il sistema offre una pagina di ricerca degli studi diagnostici: 
+
+<img src="src/docs/img/ricerca_diario.png"> 
+
+<img src="src/docs/img/ricerca_diario2.png"> 
+
+## Rircerca restituzione studi
+
+Il sistema offre una pagina di recupero degli studi diagnostici versati:
+
+<img src="src/docs/img/ricerca_studi.png"> 
+
+<img src="src/docs/img/ricerca_studi2.png"> 
+
 
 
 # Librerie utilizzate

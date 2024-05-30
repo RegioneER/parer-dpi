@@ -39,11 +39,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.xadisk.bridge.proxies.interfaces.Session;
 import org.xadisk.bridge.proxies.interfaces.XAFileSystem;
@@ -63,8 +60,11 @@ import it.eng.dpi.exception.XAGenericException;
 import it.eng.dpi.service.EchoService;
 import it.eng.dpi.service.QueryMoveService;
 import it.eng.dpi.service.SendService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class TestController {
 
     @Autowired
@@ -94,8 +94,11 @@ public class TestController {
 
     private static final Logger log = LoggerFactory.getLogger(TestController.class);
 
-    @RequestMapping("/qr.do")
-    public @ResponseBody Map<String, Object> qr(final HttpServletResponse res,
+    public static final String HEADER_NAME = "Custom-Header";
+    public static final String HEADER_VALUES = "Value";
+
+    @GetMapping("/qr.do")
+    public ResponseEntity<Map<String, Object>> qr(final HttpServletResponse res,
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet,
@@ -105,7 +108,7 @@ public class TestController {
             @RequestParam(value = "extkey", required = false) String ext)
             throws IOException, ConfigurationException, InterruptedException {
 
-        Map<String, Object> response = new TreeMap<String, Object>();
+        Map<String, Object> response = new TreeMap<>();
         QueryBean query = new QueryBean(qrlevel.equals("P") ? QueryRetrieveLevel.PATIENT : (qrlevel.equals("SSR")
                 ? QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST : QueryRetrieveLevel.STUDY_PAT_ROOT_FIRST));
         if (ext != null) {
@@ -128,12 +131,12 @@ public class TestController {
             response.put("result", res1);
         }
 
-        return response;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
 
     }
 
-    @RequestMapping("/move.do")
-    public @ResponseBody Map<String, String> move(final HttpServletResponse res,
+    @GetMapping("/move.do")
+    public ResponseEntity<Map<String, String>> move(final HttpServletResponse res,
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet,
@@ -158,66 +161,66 @@ public class TestController {
         qrService.doCFindCMove(query, hostname, port, aet);
         Map<String, String> response = new TreeMap<String, String>();
         response.put("message", "Trasferiti :" + query.getCompleted() + " - Falliti :" + query.getFailed());
-        return response;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
 
     }
 
-    @RequestMapping("/echo.do")
-    public @ResponseBody Map<String, String> echo(final HttpServletResponse res,
+    @GetMapping("/echo.do")
+    public ResponseEntity<Map<String, String>> echo(final HttpServletResponse res,
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet)
             throws IOException, ConfigurationException, InterruptedException {
         String result = echoService.echo(hostname, port, aet, 1);
-        Map<String, String> response = new TreeMap<String, String>();
+        Map<String, String> response = new TreeMap<>();
         response.put("message", result);
-        return response;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
     }
 
-    @RequestMapping("/sendtx.do")
-    public @ResponseBody Map<String, String> sendTx(final HttpServletResponse res,
+    @GetMapping("/sendtx.do")
+    public ResponseEntity<Map<String, String>> sendTx(final HttpServletResponse res,
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet,
             @RequestParam(value = "studyRoot", required = true) String studyRoot) throws IOException,
             ConfigurationException, InterruptedException, XAGenericException, NoTransactionAssociatedException {
-        Map<String, String> response = new TreeMap<String, String>();
+        Map<String, String> response = new TreeMap<>();
         File studyRootDir = new File(studyRoot);
         if (!studyRootDir.isDirectory()) {
             response.put("message", "Il percorso indicato non esiste");
-            return response;
+            return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
         }
         Session session = xaDiskNativeFS.createSessionForLocalTransaction();
         CStoreBean result = sendService.doTxCStore(hostname, port, aet, studyRootDir, session);
         session.commit();
         response.put("message",
                 "Inviate " + result.getTransferedImagesInStudy() + " immagini su " + result.getNumImagesInStudy());
-        return response;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
     }
 
-    @RequestMapping("/send.do")
-    public @ResponseBody Map<String, String> send(final HttpServletResponse res,
+    @GetMapping("/send.do")
+    public ResponseEntity<Map<String, String>> send(final HttpServletResponse res,
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet,
             @RequestParam(value = "studyRoot", required = true) String studyRoot) throws IOException,
             ConfigurationException, InterruptedException, XAGenericException, NoTransactionAssociatedException {
-        Map<String, String> response = new TreeMap<String, String>();
+        Map<String, String> response = new TreeMap<>();
         File studyRootDir = new File(studyRoot);
         if (!studyRootDir.isDirectory()) {
             response.put("message", "Il percorso indicato non esiste");
-            return response;
+            return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
         }
 
         CStoreBean result = sendService.doCStore(hostname, port, aet, studyRootDir);
 
         response.put("message",
                 "Inviate " + result.getTransferedImagesInStudy() + " immagini su " + result.getNumImagesInStudy());
-        return response;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
     }
 
     @RequestMapping("/warn.do")
-    public @ResponseBody void sendStudiWarning(final HttpServletResponse res,
+    public void sendStudiWarning(final HttpServletResponse res,
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet)
@@ -225,8 +228,8 @@ public class TestController {
         sender.processWarnFolder();
     }
 
-    @RequestMapping("/stopJobs.do")
-    public @ResponseBody Map<String, String> stopJobs(final HttpServletResponse res) throws SchedulerException {
+    @GetMapping("/stopJobs.do")
+    public ResponseEntity<Map<String, String>> stopJobs(final HttpServletResponse res) throws SchedulerException {
         Scheduler sched = scheduler.getScheduler();
         for (String groupName : sched.getTriggerGroupNames()) {
             Set<TriggerKey> keys = sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(groupName));
@@ -237,10 +240,10 @@ public class TestController {
         return infoJobs(res);
     }
 
-    @RequestMapping("/infoJobs.do")
-    public @ResponseBody Map<String, String> infoJobs(final HttpServletResponse res) throws SchedulerException {
+    @GetMapping("/infoJobs.do")
+    public ResponseEntity<Map<String, String>> infoJobs(final HttpServletResponse res) throws SchedulerException {
         Scheduler sched = scheduler.getScheduler();
-        Map<String, String> m = new HashMap<String, String>();
+        Map<String, String> m = new HashMap<>();
         for (String groupName : sched.getTriggerGroupNames()) {
 
             Set<TriggerKey> keys = sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(groupName));
@@ -251,11 +254,11 @@ public class TestController {
             }
 
         }
-        return m;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(m);
     }
 
-    @RequestMapping("/startJobs.do")
-    public @ResponseBody Map<String, String> startJobs(final HttpServletResponse res) throws SchedulerException {
+    @GetMapping("/startJobs.do")
+    public ResponseEntity<Map<String, String>> startJobs(final HttpServletResponse res) throws SchedulerException {
         Scheduler sched = scheduler.getScheduler();
         for (String groupName : sched.getTriggerGroupNames()) {
             Set<TriggerKey> keys = sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(groupName));
@@ -266,17 +269,17 @@ public class TestController {
         return infoJobs(res);
     }
 
-    @RequestMapping("/fillDefPacs.do")
-    public @ResponseBody List<DicomNode> getDefPacsInfo(final HttpServletResponse res) {
-        return dicomNodes;
+    @GetMapping("/fillDefPacs.do")
+    public ResponseEntity<List<DicomNode>> getDefPacsInfo(final HttpServletResponse res) {
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(dicomNodes);
     }
 
-    @RequestMapping(value = "/config", method = RequestMethod.GET)
-    public ModelAndView getDpiConfigutation(ModelAndView mav) {
+    @GetMapping(value = "/config")
+    public ResponseEntity<ModelAndView> getDpiConfigutation(ModelAndView mav) {
         mav.setViewName("config");
 
         mav.addObject("config", context);
-        return mav;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(mav);
     }
 
 }

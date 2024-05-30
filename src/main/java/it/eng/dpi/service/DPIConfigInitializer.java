@@ -56,6 +56,16 @@ import it.eng.dpi.dicom.scp.TxStoreSCP;
 import it.eng.dpi.dicom.scu.EchoSCU;
 import it.eng.dpi.dicom.scu.QRSCU;
 import it.eng.dpi.dicom.scu.StoreSCU;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.GeneralSecurityException;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import javax.net.ssl.SSLContext;
+import org.apache.commons.lang3.ArrayUtils;
+import org.dcm4che2.net.Device;
 
 @Configuration
 @ImportResource({ "file:///${catalina.base}/conf/dpi-${env}/securityContext.xml" })
@@ -71,6 +81,9 @@ public class DPIConfigInitializer {
     private Integer port = null;
     private Integer reaperTimeoutMS = null;
     private Integer connTimeoutMS = null;
+    // MEV#30349
+    private Boolean enableDicomTLS = null;
+    // end MEV#30349
     @Resource
     @Qualifier("validAET")
     private List<String> validAET;
@@ -135,12 +148,23 @@ public class DPIConfigInitializer {
 
     @Bean
     @Scope(value = "singleton")
-    protected DicomServer getDicomServer() throws IOException {
+    protected DicomServer getDicomServer() throws IOException, GeneralSecurityException {
         // Device
         DicomServer dicomServer = new DicomServer(validAET, DPIConstants.defaultStorageSOPClasses, getReaperTimeoutMS(),
                 getConnTimeoutMS());
         dicomServer.setAETitle(getDpiAETitle());
         dicomServer.setPort(getPort());
+        // MEV#30394
+        if (enableDicomTLS) {
+            String[] tlsProtocols = getTlsProtocols().isEmpty() ? getActiveProtocols()
+                    : ArrayUtils.toStringArray(getTlsProtocols().toArray());
+            String[] tlsCipherSuites = getTlsCipherSuites().isEmpty() ? getActiveCipherSuites()
+                    : ArrayUtils.toStringArray(getTlsCipherSuites().toArray());
+            dicomServer.getNetworkConnection().setTlsProtocol(tlsProtocols);
+            dicomServer.getNetworkConnection().setTlsCipherSuite(tlsCipherSuites);
+            initTLS(dicomServer.getNetworkConnection().getDevice());
+        }
+        // end MEV#30394
         return dicomServer;
     }
 
@@ -496,7 +520,7 @@ public class DPIConfigInitializer {
 
     public Integer getPort() throws IOException {
         if (port == null) {
-            port = getConfigInt("dpi.port");
+            port = enableDicomTLS() ? getConfigInt("dpi.dicom_tls.port") : getConfigInt("dpi.port");
         }
         return port;
     }
@@ -574,4 +598,94 @@ public class DPIConfigInitializer {
         return getConfigBool("dpi.replace_empty_tag");
     }
 
+    // MEV#30349
+    public Boolean enableDicomTLS() throws IOException {
+        if (enableDicomTLS == null) {
+            enableDicomTLS = getConfigBool("dpi.dicom_tls.enable");
+        }
+        return enableDicomTLS;
+    }
+
+    public List<String> getTlsProtocols() throws IOException {
+        ArrayList<String> protocols = new ArrayList<>();
+        int i = 0;
+        String protocol;
+        while ((protocol = getConfigString("dpi.dicom_tls.protocol." + i)) != null && !protocol.equals("")) {
+            protocols.add(protocol);
+            i++;
+        }
+        return protocols;
+    }
+
+    public List<String> getTlsCipherSuites() throws IOException {
+        ArrayList<String> cipherSuites = new ArrayList<>();
+        int i = 0;
+        String cipher;
+        while ((cipher = getConfigString("dpi.dicom_tls.cipher_suite." + i)) != null && !cipher.equals("")) {
+            cipherSuites.add(cipher);
+            i++;
+        }
+        return cipherSuites;
+    }
+
+    private static String[] getActiveProtocols() {
+        String[] protocols = {};
+        try {
+            protocols = SSLContext.getDefault().createSSLEngine().getEnabledProtocols();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("Unable to get enabled protocols:", e);
+        }
+        return protocols;
+    }
+
+    private static String[] getActiveCipherSuites() {
+        String[] cipherSuites = {};
+        try {
+            cipherSuites = SSLContext.getDefault().createSSLEngine().getEnabledCipherSuites();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("Unable to get enabled cipher suites:", e);
+        }
+        return cipherSuites;
+    }
+
+    public void initTLS(Device device) throws GeneralSecurityException, IOException {
+        KeyStore keyStore = loadKeyStore(getConfigString("dpi.dicom_tls.keyStoreURL"),
+                getConfigString("dpi.dicom_tls.keyStorePassword").toCharArray());
+        KeyStore trustStore = loadKeyStore(getConfigString("dpi.dicom_tls.trustStoreURL"),
+                getConfigString("dpi.dicom_tls.trustStorePassword").toCharArray());
+        device.initTLS(keyStore,
+                getConfigString("dpi.dicom_tls.keyPassword") != null
+                        ? getConfigString("dpi.dicom_tls.keyPassword").toCharArray()
+                        : getConfigString("dpi.dicom_tls.keyStorePassword").toCharArray(),
+                trustStore);
+    }
+
+    private static KeyStore loadKeyStore(String url, char[] password) throws GeneralSecurityException, IOException {
+        KeyStore key = KeyStore.getInstance(toKeyStoreType(url));
+        InputStream in = openFileOrURL(url);
+        try {
+            key.load(in, password);
+        } finally {
+            in.close();
+        }
+        return key;
+    }
+
+    private static InputStream openFileOrURL(String url) throws IOException {
+        if (url.startsWith("/")) {
+            final FileSystemResource fsResource = new FileSystemResource(
+                    System.getProperty("catalina.base") + "/dicom_tls/dpi-" + System.getProperty("env") + url);
+            return fsResource.getInputStream();
+        }
+        try {
+            return new URL(url).openStream();
+        } catch (MalformedURLException e) {
+            return new FileInputStream(url);
+        }
+    }
+
+    private static String toKeyStoreType(String fname) {
+        return fname.endsWith(".p12") || fname.endsWith(".P12") ? "PKCS12" : "JKS";
+    }
+    // end MEV#30349
 }

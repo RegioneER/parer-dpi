@@ -76,6 +76,15 @@ public class StoreSCU {
         remoteAE.setAETitle(remoteAET);
         remoteAE.setInstalled(true);
         remoteAE.setAssociationAcceptor(true);
+
+        // MEV#30349
+        NetworkConnection c = ae.getNetworkConnection()[0];
+        if (c.isInstalled() && c.isTLS()) {
+            remoteConn.setTlsProtocol(c.getTlsProtocol());
+            remoteConn.setTlsCipherSuite(c.getTlsCipherSuite());
+        }
+        // end MEV#30349
+
         remoteAE.setNetworkConnection(new NetworkConnection[] { remoteConn });
         return remoteAE;
     }

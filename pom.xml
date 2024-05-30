@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dpi</artifactId>
-    <version>2.8.1-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Dpi Maven Webapp</name>
     <description>Progetto DPI</description>
@@ -9,7 +9,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>parer-pom</artifactId>
-        <version>4.2.0</version>
+        <version>5.2.1</version>
     </parent>
 
     <scm>
@@ -25,13 +25,11 @@
         <final.war.name>dpi</final.war.name>
         <!-- resource filter -->
         <web.session-config.cookie-config.http-only>true</web.session-config.cookie-config.http-only>
-		<web.session-config.cookie-config.secure>true</web.session-config.cookie-config.secure>    
+        <web.session-config.cookie-config.secure>true</web.session-config.cookie-config.secure>    
         <!-- spagofat bom -->
-        <spagofat.version>4.11.0</spagofat.version>
-		<!-- third party lib -->
-		<spring.version>5.3.28</spring.version>
-        <spring.security.version>5.7.9</spring.security.version>		
-		<tomcat-servlet-api.version>9.0.30</tomcat-servlet-api.version>
+        <spagofat.version>5.14.0</spagofat.version>
+        <!-- third party lib -->		
+        <tomcat-servlet-api.version>9.0.30</tomcat-servlet-api.version>
         <dcm4che2-core.version>2.0.29</dcm4che2-core.version>
         <dcm4che2-net.version>2.0.29</dcm4che2-net.version>
         <quartz.version>2.3.2</quartz.version>
@@ -59,18 +57,17 @@
         </repository>                     
      </repositories>
 
-
-	<dependencyManagement>
-		<dependencies>
-			<!-- Framework -->
-			<dependency>
-				<groupId>it.eng.parer</groupId>
-				<artifactId>spagofat</artifactId>
-				<version>${spagofat.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-			<!-- Spring (override managed spagofat)-->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Framework -->
+            <dependency>
+                <groupId>it.eng.parer</groupId>
+                <artifactId>spagofat</artifactId>
+                <version>${spagofat.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring (override managed spagofat)-->
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
@@ -127,67 +124,67 @@
                 <version>${spring.security.version}</version>
             </dependency>
             <!-- Jackson libs -->
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-core</artifactId>
-				<version>${jackson-core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>${jackson-core.version}</version>
-			</dependency> 
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>${jackson-core.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-jstlel</artifactId>
-				<version>${taglibs-standard-jstlel.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-spec</artifactId>
-				<version>${taglibs-standard-jstlel.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.taglibs</groupId>
-				<artifactId>taglibs-standard-impl</artifactId>
-				<version>${taglibs-standard-jstlel.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-core</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>${logback.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.dom4j</groupId>
-				<artifactId>dom4j</artifactId>
-				<version>${dom4j.version}</version>
-				<scope>compile</scope>
-			</dependency> 	 
-		</dependencies>
-	</dependencyManagement>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-core.version}</version>
+            </dependency> 
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-jstlel</artifactId>
+                <version>${taglibs-standard-jstlel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-spec</artifactId>
+                <version>${taglibs-standard-jstlel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-impl</artifactId>
+                <version>${taglibs-standard-jstlel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.dom4j</groupId>
+                <artifactId>dom4j</artifactId>
+                <version>${dom4j.version}</version>
+                <scope>compile</scope>
+            </dependency> 	 
+        </dependencies>
+    </dependencyManagement>
 
     <profiles>
         <profile>
             <id>dev</id>
             <properties>
                 <target.env>svil</target.env>
-				<web.session-config.cookie-config.http-only>false</web.session-config.cookie-config.http-only>
-				<web.session-config.cookie-config.secure>false</web.session-config.cookie-config.secure>                    
+                <web.session-config.cookie-config.http-only>false</web.session-config.cookie-config.http-only>
+                <web.session-config.cookie-config.secure>false</web.session-config.cookie-config.secure>                    
             </properties>
         </profile>
     </profiles>
@@ -317,18 +314,18 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-		</dependency> 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency> 
 
         <dependency>
             <groupId>org.apache.cxf.build-utils</groupId>
@@ -374,7 +371,7 @@
             <groupId>org.apache.taglibs</groupId>
             <artifactId>taglibs-standard-jstlel</artifactId>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.apache.taglibs</groupId>
             <artifactId>taglibs-standard-spec</artifactId>
         </dependency>
@@ -445,10 +442,10 @@
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency> 
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency> 
     </dependencies>
 
     <build>
@@ -474,7 +471,30 @@
         </resources>
 
         <plugins>
-			 <plugin>
+            <plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<configuration>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<useNativeGit>false</useNativeGit>
+					<failOnNoGitDirectory>false</failOnNoGitDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>get-the-git-infos</id>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>validate-the-git-infos</id>
+						<goals>
+							<goal>validateRevision</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
@@ -527,75 +547,76 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-					<!-- Escludo dal javadoc le classi generate dal sips tool perchè non 
+                    <!-- Escludo dal javadoc le classi generate dal sips tool perchè non 
                     sono in UTF-8 e la generazione durante il release:perform restituisce un 
                     errore -->
                     <excludePackageNames>it.eng.dpi.slite.*:it.eng.sacerasi.*</excludePackageNames>
                 </configuration>
             </plugin>
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-compiler-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <id>parer-tool-compilation</id>
-			            <phase>generate-sources</phase>
-			            <configuration>
-			                <includes>
-			                    <include>it/eng/dpi/web/util/*.java</include>
-			                </includes>
-			            </configuration>
-			            <goals>
-			                <goal>compile</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			</plugin>
-			<plugin>
-			    <groupId>org.apache.maven.plugins</groupId>
-			    <artifactId>maven-antrun-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <id>createSliteDir</id>
-			            <phase>generate-sources</phase>
-			            <configuration>
-			                <target>
-			                    <mkdir dir="${project.build.directory}/generated-sources/slite" />
-			                </target>
-			            </configuration>
-			            <goals>
-			                <goal>run</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			</plugin>
-			<plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-			    <artifactId>exec-maven-plugin</artifactId>
-			    <executions>
-			        <execution>
-			            <id>generate-slite-sources</id>
-			            <phase>generate-sources</phase>
-			            <goals>
-			                <goal>java</goal>
-			            </goals>
-			        </execution>
-			    </executions>
-			    <configuration>
-			        <sourceRoot>${project.build.directory}/generated-sources/slite</sourceRoot>
-			        <includePluginDependencies>true</includePluginDependencies>
-			        <includeProjectDependencies>true</includeProjectDependencies>
-			        <mainClass>it.eng.dpi.web.util.ParerTool</mainClass>
-			        <classpathScope>compile</classpathScope>
-			    </configuration>
-			    <dependencies>
-			        <dependency>
-			            <groupId>commons-collections</groupId>
-			            <artifactId>commons-collections</artifactId>
-			            <version>${commons-collections.version}</version>
-			        </dependency>
-			    </dependencies>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>parer-tool-compilation</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <includes>
+                                <include>it/eng/dpi/web/util/*.java</include>
+                            </includes>
+                        </configuration>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>createSliteDir</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <target>
+                                <mkdir dir="${project.build.directory}/generated-sources/slite" />
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <?m2e execute onConfiguration,onIncremental?>
+                        <id>generate-slite-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceRoot>${project.build.directory}/generated-sources/slite</sourceRoot>
+                    <includePluginDependencies>true</includePluginDependencies>
+                    <includeProjectDependencies>true</includeProjectDependencies>
+                    <mainClass>it.eng.dpi.web.util.ParerTool</mainClass>
+                    <classpathScope>compile</classpathScope>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>commons-collections</groupId>
+                        <artifactId>commons-collections</artifactId>
+                        <version>${commons-collections.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 
@@ -605,7 +626,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-					<!-- Esclusione dai javadoc delle classi generate da xmlbeans -->
+                    <!-- Esclusione dai javadoc delle classi generate da xmlbeans -->
                     <excludePackageNames>it.eng.dpi.slite.*:it.eng.sacerasi.*</excludePackageNames>
                 </configuration>
             </plugin>

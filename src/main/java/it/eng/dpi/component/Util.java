@@ -25,6 +25,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -37,12 +40,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.CloseShieldInputStream;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xadisk.bridge.proxies.interfaces.Session;
 import org.xadisk.filesystem.exceptions.DirectoryNotEmptyException;
 import org.xadisk.filesystem.exceptions.FileAlreadyExistsException;
@@ -53,8 +60,11 @@ import org.xadisk.filesystem.exceptions.LockingFailedException;
 import org.xadisk.filesystem.exceptions.NoTransactionAssociatedException;
 
 import it.eng.dpi.exception.XAGenericException;
+import it.eng.dpi.service.DPIConstants;
 
 public class Util {
+
+    private static final Logger log = LoggerFactory.getLogger(Util.class);
 
     public static final String FILE_PREFIX = "tmp_dpi_";
 
@@ -445,6 +455,20 @@ public class Util {
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    public static String encodePassword(String password) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance(DPIConstants.HASH_ALGO);
+            md.update(password.getBytes(StandardCharsets.UTF_8), 0, password.length());
+        } catch (NoSuchAlgorithmException ex) {
+            log.error("Algoritmo " + DPIConstants.HASH_ALGO + "non supportato");
+            return StringUtils.EMPTY;
+        }
+        byte[] pwdHash = md.digest();
+        return new String(Base64.encodeBase64(pwdHash));
+
     }
 
 }

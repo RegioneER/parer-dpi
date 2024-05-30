@@ -21,20 +21,7 @@
  */
 package it.eng.dpi.business.impl;
 
-import it.eng.dpi.component.DPIContext;
-import it.eng.dpi.web.util.Constants;
-import it.eng.integriam.client.util.UserUtil;
-import it.eng.integriam.client.ws.IAMSoapClients;
-import it.eng.integriam.client.ws.recauth.RecuperoAutorizzazioni;
-import it.eng.integriam.client.ws.recauth.RecuperoAutorizzazioniRisposta;
-import it.eng.integriam.client.ws.recauth.AuthWSException_Exception;
-
-import it.eng.spagoLite.SessionManager;
-import it.eng.spagoLite.security.User;
-import it.eng.spagoLite.security.auth.Authenticator;
-import it.eng.spagoLite.security.menu.impl.Link;
-import it.eng.spagoLite.security.menu.impl.Menu;
-
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -45,14 +32,25 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import it.eng.dpi.component.DPIContext;
+import it.eng.dpi.component.Util;
+import it.eng.dpi.exception.AuthenticationException;
+import it.eng.dpi.web.util.Constants;
+import it.eng.integriam.client.util.UserUtil;
+import it.eng.integriam.client.ws.IAMSoapClients;
+import it.eng.integriam.client.ws.recauth.AuthWSException_Exception;
+import it.eng.integriam.client.ws.recauth.RecuperoAutorizzazioni;
+import it.eng.integriam.client.ws.recauth.RecuperoAutorizzazioniRisposta;
+import it.eng.spagoLite.SessionManager;
+import it.eng.spagoLite.security.User;
+import it.eng.spagoLite.security.auth.Authenticator;
+
 /**
  * 
  * @author Quaranta_M
  */
 @Component
 public class DPIAuthenticator extends Authenticator {
-
-    private static final Logger log = LoggerFactory.getLogger(DPIAuthenticator.class);
 
     @Autowired
     private DPIContext ctx;
@@ -73,6 +71,30 @@ public class DPIAuthenticator extends Authenticator {
         organizzazione.put("VERSATORE", ctx.getNmVersatore());
         utente.setOrganizzazioneMap(organizzazione);
         SessionManager.setUser(httpSession, utente);
+
+        return utente;
+    }
+
+    public User doLogin(String user, String password) throws AuthenticationException {
+        String encHashedPwd = Util.encodePassword(password);
+        User utente = new User();
+        boolean authorized = false;
+        if (ctx.getAdminUser().equals(user) && ctx.getAdminPwd().equals(encHashedPwd)) {
+            authorized = true;
+            utente.setIdApplicazione(Long.valueOf(1));
+        }
+        if (!authorized) {
+            throw new AuthenticationException(
+                    "Autenticazione fallita. Utente non abilitato all'applicativo " + Constants.DPI);
+        }
+        utente.setIdUtente(1);
+        Calendar c = Calendar.getInstance();
+        c.set(2444, 10, 10);
+        utente.setScadenzaPwd(c.getTime());
+        utente.setUsername(ctx.getAdminUser());
+        utente.setCognome(ctx.getAdminSurname());
+        utente.setNome(ctx.getAdminName());
+        utente.setAttivo(ctx.isAdminAttivo());
 
         return utente;
     }

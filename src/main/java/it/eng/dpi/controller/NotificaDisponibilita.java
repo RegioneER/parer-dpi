@@ -25,11 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.xadisk.bridge.proxies.interfaces.Session;
 import org.xadisk.bridge.proxies.interfaces.XAFileSystem;
 import org.xadisk.filesystem.exceptions.NoTransactionAssociatedException;
@@ -38,12 +34,19 @@ import it.eng.dpi.bean.NotificaDisponibilitaRisposta;
 import it.eng.dpi.bean.NotificaDisponibilitaRisposta.EsitoServizio;
 import it.eng.dpi.component.DPIContext;
 import it.eng.dpi.component.XAUtil;
+import it.eng.dpi.exception.XAGenericException;
 import it.eng.dpi.service.DPIConstants;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class NotificaDisponibilita {
 
     private static final Logger log = LoggerFactory.getLogger(NotificaDisponibilita.class);
+
+    public static final String HEADER_NAME = "Custom-Header";
+    public static final String HEADER_VALUES = "Value";
 
     @Autowired
     private DPIContext ctx;
@@ -62,8 +65,8 @@ public class NotificaDisponibilita {
         richiesteDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
     }
 
-    @RequestMapping(value = "/NotificaDisponibilita", method = RequestMethod.GET)
-    public @ResponseBody NotificaDisponibilitaRisposta notificaDisponibilitaREST(final HttpServletResponse res,
+    @GetMapping("/NotificaDisponibilita")
+    public ResponseEntity<NotificaDisponibilitaRisposta> notificaDisponibilitaREST(final HttpServletResponse res,
             @RequestParam(value = "nmAmbiente", required = false) String nmAmbiente,
             @RequestParam(value = "nmVersatore", required = false) String nmVersatore,
             @RequestParam(value = "globalHash", required = false) String globalHash) {
@@ -75,7 +78,7 @@ public class NotificaDisponibilita {
             log.debug("L’ambiente " + nmAmbiente
                     + " non è valorizzato o è valorizzato con un valore non corrispondente al DPI");
             resp.setCdEsito(EsitoServizio.KO);
-            return resp;
+            return ResponseEntity.badRequest().header(HEADER_NAME, HEADER_VALUES).body(resp);
         }
         if (nmVersatore == null || !nmVersatore.equals(ctx.getNmVersatore())) {
             resp.setCdErr("DPI-NOTIFDISP-002");
@@ -84,14 +87,14 @@ public class NotificaDisponibilita {
             log.debug("Il versatore " + nmVersatore
                     + " non è valorizzato o è valorizzato con un valore non corrispondente al DPI");
             resp.setCdEsito(EsitoServizio.KO);
-            return resp;
+            return ResponseEntity.badRequest().header(HEADER_NAME, HEADER_VALUES).body(resp);
         }
         if (globalHash == null || globalHash.trim().length() == 0) {
             resp.setCdErr("DPI-NOTIFDISP-003");
             resp.setDlErr("La chiave identificante lo studio notificato " + globalHash + " non è definita");
             log.debug("La chiave identificante lo studio notificato " + globalHash + " non è definita");
             resp.setCdEsito(EsitoServizio.KO);
-            return resp;
+            return ResponseEntity.badRequest().header(HEADER_NAME, HEADER_VALUES).body(resp);
         }
         Session session = xaDiskNativeFS.createSessionForLocalTransaction();
         try {
@@ -105,7 +108,7 @@ public class NotificaDisponibilita {
                 XAUtil.deleteFile(session, richSubDir);
             }
             session.commit();
-        } catch (Exception e) {
+        } catch (XAGenericException | NoTransactionAssociatedException e) {
             log.error("Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback", e);
             try {
                 session.rollback();
@@ -117,10 +120,10 @@ public class NotificaDisponibilita {
             resp.setDlErr("Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback");
             log.debug("Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback");
             resp.setCdEsito(EsitoServizio.KO);
-            return resp;
+            return ResponseEntity.badRequest().header(HEADER_NAME, HEADER_VALUES).body(resp);
         }
         resp.setCdEsito(EsitoServizio.OK);
-        return resp;
+        return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(resp);
 
     }
 
