@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dpi</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Dpi Maven Webapp</name>
     <description>Progetto DPI</description>
@@ -14,7 +14,7 @@
 
     <scm>
         <developerConnection>scm:git:https://github.com/RegioneER/parer-dpi.git</developerConnection>
-        <tag>dpi-3.0.0</tag>
+        <tag>HEAD</tag>
     </scm>
     <properties>
         <maven.build.timestamp.format>dd-MM-yyyy HH:mm</maven.build.timestamp.format>
