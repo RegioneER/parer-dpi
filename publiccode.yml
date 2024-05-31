@@ -24,7 +24,7 @@ description:
       può essere gestito secondo le proprie politiche di sicurezza e autenticarsi sul suo IdP. E' pensato per il versamento in conservazione 
       delle immagini diagnostiche in formato Dicom e dialoga con i Pacs utilizzando il medesimo protocollo.
     shortDescription: |-
-      E' un'interfaccia che consente di versare in conservazione le immagini diagnostiche mediante l'utilizzo del protocollo DICOM, interfacciando i PACS con il modulo PING
+      Interfaccia che consente di versare in conservazione le immagini diagnostiche mediante protocollo DICOM, interfacciando i PACS con il modulo PING
 developmentStatus: stable
 intendedAudience:
   countries:
