@@ -19,6 +19,7 @@ package it.eng.dpi.web.util;
 
 import it.eng.util.SpringLiteTool;
 import java.io.File;
+import java.nio.charset.Charset;
 
 public class ParerTool extends SpringLiteTool {
 
@@ -33,10 +34,16 @@ public class ParerTool extends SpringLiteTool {
         super(actionPath, actionRerPath, genPackage, actionPackage, formPackage);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+            throws IllegalArgumentException, SecurityException, NoSuchFieldException, IllegalAccessException {
         System.out.println(new File(".").getAbsolutePath());
 
         System.setProperty("file.encoding", "UTF-8");
+
+        java.lang.reflect.Field charset = Charset.class.getDeclaredField("defaultCharset");
+        charset.setAccessible(true);
+        charset.set(null, null);
+
         ParerTool myParerTool = new ParerTool(ACTION_PATH, null, GEN_PACKAGE, ACTION_PACKAGE, FORM_PACKAGE);
         myParerTool.setSrcPath("./target/generated-sources/slite");
         myParerTool.setFormPath("./src/main/resources/form");
