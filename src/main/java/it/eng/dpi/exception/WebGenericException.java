@@ -18,13 +18,13 @@
 package it.eng.dpi.exception;
 
 /**
- * 
+ *
  * @author Bonora_L
  */
 public class WebGenericException extends Exception {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -6703876569134950217L;
 

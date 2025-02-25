@@ -31,7 +31,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
 
 /**
  * RowBean per la tabella Pig_V_Ric_Diario
- * 
+ *
  */
 public class PigVRicDiarioRowBean extends BaseRow implements JEEBaseRowInterface {
 
@@ -41,7 +41,7 @@ public class PigVRicDiarioRowBean extends BaseRow implements JEEBaseRowInterface
      */
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -7283200672374881293L;
     public static PigVRicDiarioTableDescriptor TABLE_DESCRIPTOR = new PigVRicDiarioTableDescriptor();

@@ -26,7 +26,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
 
 /**
  * RowBean per la tabella Confronti_Pacs
- * 
+ *
  */
 public class ConfrontiPacsRowBean extends BaseRow implements JEEBaseRowInterface {
 
@@ -36,7 +36,7 @@ public class ConfrontiPacsRowBean extends BaseRow implements JEEBaseRowInterface
      */
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -7283200672374881293L;
     public static ConfrontiPacsTableDescriptor TABLE_DESCRIPTOR = new ConfrontiPacsTableDescriptor();

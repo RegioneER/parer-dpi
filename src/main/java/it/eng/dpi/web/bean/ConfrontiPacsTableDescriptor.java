@@ -26,9 +26,9 @@ import java.util.Map;
 
 /**
  * @author Sloth
- * 
+ *
  *         Bean per la tabella Pig_V_Ric_Diario
- * 
+ *
  */
 public class ConfrontiPacsTableDescriptor extends TableDescriptor {
 

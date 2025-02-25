@@ -203,11 +203,11 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                      * AGGIUNTA LA SEGUENTE LOGICA per fixare un eventuale problema di timeout nella risposta di
                      * preinget. Se infatti il dpi va in timeout il preingest potrebbe cmq aver committato ma il dpi
                      * avrebbe rollbackato ed un 2° invio da parte del DPI eliminerebbe il file (la risposta sarebbe KO)
-                     * 
+                     *
                      * Se codErr == PING-SENDOBJ-OBJ-003 (Oggetto già in warning) eseguire la logica WARN (ma solo se i
                      * file non esistono già nella destinazione) Se codErr == PING-SENDOBJ-OBJ-010 (oggetto già in
                      * attesa file) eseguire la logica OK (ma solo se i file non esistono già nella destinazione)
-                     * 
+                     *
                      * Se codErr == 666 rollback
                      */
                     if (risposta.getCdErr() != null) {
@@ -291,7 +291,7 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
 
     /**
      * Elabora la risposta ottenuta dall'invocazione di Preingest
-     * 
+     *
      * @param risposta
      *            Risposta ritornata da Sacer Preingest
      * @param objFolder
@@ -319,10 +319,10 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                      * AGGIUNTA LA SEGUENTE LOGICA per fixare un eventuale problema di timeout nella risposta di
                      * preinget. Se infatti il dpi va in timeout il preingest potrebbe cmq aver committato ma il dpi
                      * avrebbe rollbackato ed un 2° invio da parte del DPI eliminerebbe il file (la risposta sarebbe KO)
-                     * 
+                     *
                      * Se codErr == PING-SENDOBJ-OBJ-010 (oggetto già in attesa file) eseguire la logica OK (ma solo se
                      * i file non esistono già nella destinazione)
-                     * 
+                     *
                      * Se codErr == 666 rollback
                      */
                     if (risposta.getCdErr() != null) {

@@ -92,7 +92,7 @@ public class QueryMoveService {
 
     /**
      * Utilizzato dal testController
-     * 
+     *
      * @param query
      *            bean rappresentante la query da eseguire {@link QueryBean}
      * @param hostname
@@ -101,9 +101,9 @@ public class QueryMoveService {
      *            porta
      * @param aet
      *            indirizzo aet
-     * 
+     *
      * @return lista oggetti di tipo {@link Patient}
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      * @throws ConfigurationException
@@ -123,7 +123,7 @@ public class QueryMoveService {
 
     /**
      * Utilizzato dal testController
-     * 
+     *
      * @param query
      *            bean rappresentante la query da eseguire {@link QueryBean}
      * @param hostname
@@ -132,9 +132,9 @@ public class QueryMoveService {
      *            porta
      * @param aet
      *            indirizzo aet
-     * 
+     *
      * @return lista oggetti di tipo {@link Study}
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      * @throws ConfigurationException

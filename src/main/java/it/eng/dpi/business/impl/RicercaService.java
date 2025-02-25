@@ -130,9 +130,9 @@ public class RicercaService extends AbstractWSClientAOP {
 
     /**
      * Esegue la chiamata a ricerca diario utilizzando i filtri assegnati
-     * 
+     *
      * IMPORTANTE: gli ultimi due parametri devono rimanere i due interi FROM e TO per far funzionare la paginazione
-     * 
+     *
      * @param filtri
      *            i filtri assegnati
      * @param dateStudy
@@ -143,9 +143,9 @@ public class RicercaService extends AbstractWSClientAOP {
      *            l'indice di posizione per la paginazione
      * @param to
      *            il numero di record da visualizzare
-     * 
+     *
      * @return il tablebean popolato
-     * 
+     *
      * @throws JAXBException
      *             eccezione generica
      * @throws WebGenericException
@@ -413,14 +413,14 @@ public class RicercaService extends AbstractWSClientAOP {
 
     /**
      * Esegue la chiamata per ottenere il dettaglio di uno studio
-     * 
+     *
      * @param currentRow
      *            riga della lista da caricare in dettaglio
      * @param fromRicDiario
      *            boolean che indica se si carica il dettaglio da ricerca diario e non è il refresh del dettaglio
-     * 
+     *
      * @return il rowBean del dettaglio
-     * 
+     *
      * @throws WebGenericException
      *             eccezione generica
      * @throws JAXBException
@@ -606,9 +606,9 @@ public class RicercaService extends AbstractWSClientAOP {
 
     /**
      * Esegue la chiamata a ricerca restituzioni studi utilizzando i filtri assegnati
-     * 
+     *
      * IMPORTANTE: gli ultimi due parametri devono rimanere i due interi FROM e TO per far funzionare la paginazione
-     * 
+     *
      * @param filtri
      *            i filtri assegnati
      * @param dateAperturaSessioni
@@ -619,9 +619,9 @@ public class RicercaService extends AbstractWSClientAOP {
      *            l'indice di posizione per la paginazione
      * @param to
      *            il numero di record da visualizzare
-     * 
+     *
      * @return il tablebean popolato
-     * 
+     *
      * @throws JAXBException
      *             eccezione generica
      * @throws WebGenericException

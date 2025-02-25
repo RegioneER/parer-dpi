@@ -44,11 +44,10 @@ import it.eng.spagoCore.error.EMFError;
 import it.eng.spagoLite.form.fields.Field;
 import it.eng.spagoLite.form.fields.Fields;
 import it.eng.spagoLite.security.auth.PwdUtil;
+import it.eng.util.EncryptionUtil;
 
 public class HomeAction extends HomeAbstractAction {
     private static final Logger logger = LoggerFactory.getLogger(HomeAction.class);
-
-    private static final String SEC = "dsfjajnoi4jh983nkj43nfkjrenf90rg834jnlkj";
 
     @Autowired
     private DPIContext ctx;
@@ -112,7 +111,7 @@ public class HomeAction extends HomeAbstractAction {
         sb.append(getRequest().getContextPath());
         String retURL = sb.toString();
         String salt = Base64.encodeBase64URLSafeString(PwdUtil.generateSalt());
-        String hmac = getHMAC(retURL + ":" + salt);
+        String hmac = EncryptionUtil.getHMAC(retURL + ":" + salt);
         this.getResponse().sendRedirect(ctx.getModificaPasswordUrl() + "?r=" + retURL + "&h=" + hmac + "&s=" + salt);
     }
 
@@ -160,20 +159,6 @@ public class HomeAction extends HomeAbstractAction {
         }
         getRequest().setAttribute("news", list);
 
-    }
-
-    private String getHMAC(String msg) throws EMFError {
-        try {
-            SecretKeySpec keySpec = new SecretKeySpec(SEC.getBytes(), "HmacSHA1");
-            Mac mac = Mac.getInstance("HmacSHA1");
-            mac.init(keySpec);
-            byte[] result = mac.doFinal(msg.getBytes());
-            return Base64.encodeBase64URLSafeString(result);
-        } catch (NoSuchAlgorithmException ex) {
-            throw new EMFError(ex.getMessage(), ex);
-        } catch (InvalidKeyException ex) {
-            throw new EMFError(ex.getMessage(), ex);
-        }
     }
 
     @Override

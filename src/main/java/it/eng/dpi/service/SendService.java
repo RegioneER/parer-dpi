@@ -41,7 +41,7 @@ public class SendService {
 
     /**
      * Metodo che effettua il trasferimento di uno studio
-     * 
+     *
      * @param hostname
      *            nome host
      * @param port
@@ -52,9 +52,9 @@ public class SendService {
      *            directory principale
      * @param session
      *            sessione applicativa
-     * 
+     *
      * @return Numero di immagini trasferite correttamente
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      * @throws InterruptedException

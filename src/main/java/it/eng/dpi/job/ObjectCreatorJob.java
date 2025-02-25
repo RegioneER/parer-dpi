@@ -101,12 +101,12 @@ public class ObjectCreatorJob implements JobInterface {
 
     /**
      * 1- Creo DCM File 2- Calcolo DCM Hash 3- Creo Global File 4- Calcolo Global Hash 5- Creo ZIP 6- Creo XML
-     * 
+     *
      * @param studyPath
      * @param destinationSubDir
      * @param pacsName
      * @param session
-     * 
+     *
      * @throws IOException
      * @throws NoSuchAlgorithmException
      * @throws DPIException

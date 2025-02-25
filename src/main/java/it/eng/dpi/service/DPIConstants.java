@@ -161,7 +161,7 @@ public final class DPIConstants {
 
     /**
      * Come da Specifica funzionale ecco le codifiche supportate Codifiche supportate:
-     * 
+     *
      * LittleEndianImplicitTransferSyntax 1.2.840.10008.1.2 LittleEndianExplicitTransferSyntax 1.2.840.10008.1.2.1
      * DeflatedExplicitVRLittleEndianTransferSyntax 1.2.840.10008.1.2.1.99 BigEndianExplicitTransferSyntax
      * 1.2.840.10008.1.2.2 JPEGProcess1TransferSyntax 1.2.840.10008.1.2.4.50 JPEGProcess2_4TransferSyntax

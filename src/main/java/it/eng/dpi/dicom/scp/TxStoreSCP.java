@@ -110,7 +110,7 @@ public final class TxStoreSCP {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.dcm4che2.net.service.CStoreSCP#cstore(org.dcm4che2.net.Association , int,
          * org.dcm4che2.data.DicomObject, org.dcm4che2.net.PDVInputStream, java.lang.String)
          */
