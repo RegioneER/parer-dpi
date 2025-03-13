@@ -167,7 +167,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     /**
      * Carica la pagina di ricerca diario inizializzando i campi
-     * 
+     *
      * @throws EMFError
      *             eccezione generica
      */
@@ -316,10 +316,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
              * Da analisi: - FlTutteSessioni = Si se attivato da "Ricerca diario"; = No se attivato da
              * "Ricerca restituzioni studi"; = No se attivato di seguito ad uno dei punti successivi di “Dettaglio
              * studio” Determino perciò il valore del campo flTutteSessioni con questa logica:
-             * 
+             *
              * NB. refresh : Indica se è un refresh del dettaglio (ad esempio in seguito alla pressione di un bottone
              * del dettaglio)
-             * 
+             *
              * Se la riga corrente è un'istanza della lista di ricercaDiario e refresh è true = false Se la riga
              * corrente è un'istanza della lista di ricercaDiario e refresh è false = true Se la riga corrente NON è
              * un'istanza della lista di ricercaDiario e refresh è true = false Se la riga corrente NON è un'istanza
@@ -692,7 +692,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Eseguo la chiamata per il versamento in pre-ingest dello studio in warning. Verifico la presenza della
      * motivazione e eseguo l'invio.
-     * 
+     *
      * @throws EMFError
      *             eccezione generica
      */
@@ -886,7 +886,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     /**
      * Eseguo la chiamata di restituzione dello studio dal Pre-Ingest
-     * 
+     *
      * @throws EMFError
      *             eccezione generica
      */
@@ -911,7 +911,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     /**
      * Eseguo il trasferimento dello studio al PACS
-     * 
+     *
      * @throws EMFError
      *             eccezione generica
      */
@@ -1140,7 +1140,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     /**
      * Ricerca il file delle prove di conservazione su filesystem e ne permette il download
-     * 
+     *
      * @throws Throwable
      *             eccezione generica
      */
@@ -1184,7 +1184,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Trigger sull'utilizzo del campo Dl_motivo_chiuso_warning_standard copia il valore contenuto nel campo del trigger
      * sul campo Dl_motivo_chiuso_warning
-     * 
+     *
      * @throws EMFError
      *             eccezione generica
      */
@@ -1198,7 +1198,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
     /**
      * Carica la pagina di ricerca restituzioni studi inizializzando i campi
-     * 
+     *
      * @throws EMFError
      *             eccezione generica
      */

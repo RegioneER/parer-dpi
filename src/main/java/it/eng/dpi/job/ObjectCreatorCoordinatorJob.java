@@ -78,12 +78,16 @@ public class ObjectCreatorCoordinatorJob implements JobInterface {
         File fileCmove = new File(storageSCPDir, pacs + File.separator + DPIConstants.CMOVE_DIR);
         File fileCstore = new File(storageSCPDir, pacs + File.separator + DPIConstants.CSTORE_DIR);
         int numStudi = 0;
+
         File[] studiesCmove = XAUtil.listFilesNewTX(xaDiskNativeFS, fileCmove);
         File[] studiesCstore = XAUtil.listFilesNewTX(xaDiskNativeFS, fileCstore);
+
         List<File> studiesCmoveList = new ArrayList<>();
         List<File> studiesCstoreList = new ArrayList<>();
-        // Parto da un consumer casuale
-        int idx = new Random().nextInt(consumerIds.length);
+
+        // Creiamo e riutilizziamo l'istanza di Random
+        Random random = new Random();
+        int idx = random.nextInt(consumerIds.length);
 
         for (File f : studiesCmove) {
             if (!fileQueue.contains(f)) {
@@ -98,7 +102,7 @@ public class ObjectCreatorCoordinatorJob implements JobInterface {
         studiesCmove = studiesCmoveList.toArray(new File[0]);
         studiesCstore = studiesCstoreList.toArray(new File[0]);
 
-        // Ordino le cartelle per dimensione in modo da bilanciare il carico
+        // Ordiniamo le cartelle per dimensione per bilanciare il carico
         Arrays.sort(studiesCmove, SizeFileComparator.SIZE_SUMDIR_REVERSE);
         Arrays.sort(studiesCstore, SizeFileComparator.SIZE_SUMDIR_COMPARATOR);
 
@@ -114,9 +118,9 @@ public class ObjectCreatorCoordinatorJob implements JobInterface {
             }
             idx = (--idx < 0) ? (consumerIds.length - 1) : idx;
         }
-        audit.info(
-                "PACS: " + pacs + " | STUDI AGGIUNTI : " + numStudi + " | STUDI TOTALI IN LISTA: " + fileQueue.size());
 
+        audit.info(
+                "PACS: " + pacs + " | STUDI AGGIUNTI: " + numStudi + " | STUDI TOTALI IN LISTA: " + fileQueue.size());
     }
 
     @Override

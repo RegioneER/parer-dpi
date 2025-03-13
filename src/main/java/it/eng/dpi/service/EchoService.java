@@ -55,7 +55,7 @@ public class EchoService {
 
     /**
      * Metodo utilizzato dal controller di test per informazioni sull'echo
-     * 
+     *
      * @param hostname
      *            nome host
      * @param port
@@ -64,7 +64,7 @@ public class EchoService {
      *            indirizzo aet
      * @param nrOfTests
      *            numero di test
-     * 
+     *
      * @return risultato
      */
     public String echo(String hostname, int port, String aet, Integer nrOfTests) {

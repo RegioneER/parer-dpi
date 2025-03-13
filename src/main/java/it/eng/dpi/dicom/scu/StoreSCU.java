@@ -111,9 +111,9 @@ public class StoreSCU {
      *            sessione applicativa
      * @param executor
      *            esecutore generico
-     * 
+     *
      * @return bean {@link CStoreBean}
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      * @throws InterruptedException

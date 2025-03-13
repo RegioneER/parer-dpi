@@ -16,7 +16,7 @@
 @import "dpi/css/jquery.dataTables.css";
 </style>
 <link rel="stylesheet" type="text/css" href="dpi/css/flexigrid.css">
-<script type="text/javascript" src="js/jQuery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jQuery/jquery-3.7.1.min.js"></script>
 <script type="text/javascript" src="js/jQuery/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="dpi/js/jquery.cookie.js"></script>
 <script type="text/javascript" src="dpi/js/jquery.dataTables.min.js"></script>

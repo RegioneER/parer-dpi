@@ -34,12 +34,12 @@ import it.eng.dpi.exception.XAGenericException;
 
 /**
  * Implementazione di una coda per processare file.
- * 
+ *
  * La coda è un Set di ProcessableFile, non è possibile inserire due file con lo stesso percorso assoluto. In
  * ProcessableFile sono stati ridefiniti, infatti, i metodi hashcode e equals per basare l'uguaglianza sul percorso.
- * 
- * 
- * 
+ *
+ *
+ *
  * @author Quaranta_M
  *
  */

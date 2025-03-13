@@ -28,7 +28,7 @@ import java.util.Iterator;
 
 /**
  * TableBean per la tabella Confronti_Pacs
- * 
+ *
  */
 public class ConfrontiPacsTableBean extends AbstractBaseTable<ConfrontiPacsRowBean> {
 

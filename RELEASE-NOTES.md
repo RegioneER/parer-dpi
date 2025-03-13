@@ -1,4 +1,4 @@
-## 4.0.0 (30-01-2025)
+## 4.1.0 (25-02-2025)
 
 ### Novità: 1
-- [#33052](https://parermine.regione.emilia-romagna.it/issues/33052) Aggiornamento a Java 11
+- [#34725](https://parermine.regione.emilia-romagna.it/issues/34725) Aggiornamento librerie obsolete 2024 - TOMCAT

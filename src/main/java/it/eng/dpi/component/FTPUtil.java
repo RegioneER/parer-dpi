@@ -37,7 +37,7 @@ public class FTPUtil {
     private static final Logger log = LoggerFactory.getLogger(FTPUtil.class);
 
     /**
-     * 
+     *
      * @param fileToSend
      *            File da inviare
      * @param filename
@@ -54,7 +54,7 @@ public class FTPUtil {
      *            Password utente
      * @param isSSL
      *            Connessione SSL/TSL
-     * 
+     *
      * @return Esito operazione
      */
     public static boolean sendFile(File fileToSend, String filename, String path, String IP, String port, String user,
@@ -132,7 +132,7 @@ public class FTPUtil {
     }
 
     /**
-     * 
+     *
      * @param filename
      *            Nome del file da recuperare
      * @param path
@@ -149,7 +149,7 @@ public class FTPUtil {
      *            Password utente
      * @param isSSL
      *            Connessione SSL/TSL
-     * 
+     *
      * @return Esito operazione
      */
     public static boolean retrieveFile(String[] filename, OutputStream[] localStream, String path, String IP,

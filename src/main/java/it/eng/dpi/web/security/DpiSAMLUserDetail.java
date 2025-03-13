@@ -22,7 +22,7 @@ import it.eng.spagoLite.security.saml.SliteSAMLUserDetail;
 /**
  *
  * @author MIacolucci
- * 
+ *
  *         Classe al momento lasciata vuota perché il framework (baseSecurityContext.xml) lo vuole. In questa classe si
  *         implementa la ricerca sul db locale. Vedere PING e altre applicazioni. I metodi non vengono ridefiniti in
  *         quanto DPI non accede al db (credo) e quindi tutti i metodi della superclasse tornano null.

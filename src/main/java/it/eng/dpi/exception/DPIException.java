@@ -20,7 +20,7 @@ package it.eng.dpi.exception;
 public class DPIException extends Exception {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 7126545024410274030L;
 

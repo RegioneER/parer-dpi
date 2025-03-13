@@ -46,7 +46,7 @@ import it.eng.spagoLite.security.User;
 import it.eng.spagoLite.security.auth.Authenticator;
 
 /**
- * 
+ *
  * @author Quaranta_M
  */
 @Component

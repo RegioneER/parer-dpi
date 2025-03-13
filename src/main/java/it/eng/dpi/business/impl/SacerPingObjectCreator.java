@@ -183,7 +183,7 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
 
     /**
      * Calcola l'hash di un file: è utilizzato per il calcolo del global hash e del dcm hash
-     * 
+     *
      */
     @Override
     public String calculateHash(String fileString) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -209,7 +209,7 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     /**
      * Calcola l'hash di un file: è utilizzato per il calcolo del hash del file zip provvede a chiudere lo stream
      * passato in input
-     * 
+     *
      */
     private String calculateHash(InputStream is) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance(DPIConstants.HASH_ALGO);
@@ -317,45 +317,39 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     private void createZip(Session session, File zipStudy, File studypath, DatiSpecificiType datiSpecificiDICOM)
             throws XAGenericException, IOException, DatatypeConfigurationException {
 
-        OutputStream os = XAUtil.createFileOS(session, zipStudy, true);
-        OutputStream tmpZipOutputStream = new ZipOutputStream(os);
-        DicomOutputStream outStream = new DicomOutputStream(tmpZipOutputStream);
-        outStream.setAutoFinish(false);
-        MutableBoolean firstElementInSeries = new MutableBoolean(true);
-        try {
+        try (OutputStream os = XAUtil.createFileOS(session, zipStudy, true);
+                ZipOutputStream tmpZipOutputStream = new ZipOutputStream(os);
+                DicomOutputStream outStream = new DicomOutputStream(tmpZipOutputStream)) {
+
+            outStream.setAutoFinish(false);
+            MutableBoolean firstElementInSeries = new MutableBoolean(true);
+
             File[] studyFolder = XAUtil.listFiles(session, studypath);
             for (File seriesFile : studyFolder) {
                 File[] serieFolder = XAUtil.listFiles(session, seriesFile);
                 log.debug("Creazione ZIP: processo la serie " + seriesFile);
                 firstElementInSeries.setValue(true);
+
                 for (File instance : serieFolder) {
                     ZipEntry tmpEntry = new ZipEntry(seriesFile.getName() + "/" + instance.getName());
+                    tmpZipOutputStream.putNextEntry(tmpEntry);
 
-                    ((ZipOutputStream) tmpZipOutputStream).putNextEntry(tmpEntry);
-                    InputStream is = null;
-                    DicomInputStream dis = null;
-                    try {
-                        is = XAUtil.createFileIS(session, instance, false);
-                        dis = new DicomInputStream(new BufferedInputStream(is, BUFFER_SIZE));
+                    try (InputStream is = XAUtil.createFileIS(session, instance, false);
+                            DicomInputStream dis = new DicomInputStream(new BufferedInputStream(is, BUFFER_SIZE))) {
+
                         dis.setHandler(new StopTagInputHandler(Tag.PixelData));
                         DicomObject dcmObj = dis.readDicomObject();
                         setDicomDatiSpec(dcmObj, datiSpecificiDICOM, firstElementInSeries);
-
-                    } finally {
-                        IOUtils.closeQuietly(dis);
                     }
-                    try {
-                        is = XAUtil.createFileIS(session, instance, false);
-                        dis = new DicomInputStream(new BufferedInputStream(is, BUFFER_SIZE));
+
+                    try (InputStream is = XAUtil.createFileIS(session, instance, false);
+                            DicomInputStream dis = new DicomInputStream(new BufferedInputStream(is, BUFFER_SIZE))) {
+
                         byte[] buffer = new byte[BUFFER_SIZE];
                         IOUtils.copyLarge(dis, outStream, buffer);
-                    } finally {
-                        IOUtils.closeQuietly(dis);
                     }
                 }
             }
-        } finally {
-            IOUtils.closeQuietly(tmpZipOutputStream);
         }
     }
 
@@ -381,14 +375,14 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
 
     /**
      * Effettuo il merge dei parametri che non sono stati ancora settati nei datiSpecificiDICOM
-     * 
+     *
      * @param dcmObj
      *            Oggetto dicom di origine
      * @param cs
      *            CharacterSet
      * @param datiSpecificiDICOM
      *            dati specifici da aggiornare
-     * 
+     *
      * @throws DatatypeConfigurationException
      */
     private void mergeParams(DicomObject dcmObj, SpecificCharacterSet cs, DatiSpecificiType datiSpecificiDICOM)

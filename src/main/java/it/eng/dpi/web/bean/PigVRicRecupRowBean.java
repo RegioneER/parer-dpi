@@ -30,7 +30,7 @@ import it.eng.spagoLite.db.oracle.bean.column.TableDescriptor;
 
 /**
  * RowBean per la tabella Pig_V_Ric_Recup
- * 
+ *
  */
 public class PigVRicRecupRowBean extends BaseRow implements JEEBaseRowInterface {
 

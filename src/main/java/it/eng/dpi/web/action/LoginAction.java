@@ -32,11 +32,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * 
+ *
  * @author Quaranta_M
- * 
+ *
  *         1 - process() 2 - passIn() 3 - doLogin()
- * 
+ *
  */
 public class LoginAction extends ActionBase {
 

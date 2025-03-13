@@ -192,7 +192,7 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
      * <Oggetto> e <Data> li prendo rispettivamente da ProfiloUnitaDocumentaria.Oggetto e ProfiloUnitaDocumentaria.Data.
      * Altrimenti se nel file di configurazione ho tipoObj.tiCalcProfiloUd.n=CALC_1 allora il tag Oggetto sarà uguale a
      * "<tipoObj> del <produttore>" e il tag Data sarà uguale a <raccoglitore>
-     * 
+     *
      */
     private void createXmlPingVers(Session session, File xmlDestFile, ChiaveType chiave, Files files, File propertyFile,
             String tiCalcProfiloUd, String tipoOggetto, String produttore, String raccoglietore) throws Exception {
@@ -366,10 +366,10 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
 
     /**
      * Cerca tra i file in input il file di property.
-     * 
+     *
      * @param filesArray
      *            File tra i quali cercare quello di property
-     * 
+     *
      * @return Il file di property
      */
     private File searchPropertyFile(File[] filesArray) {
@@ -410,14 +410,14 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
 
     /**
      * Crea un file zip
-     * 
+     *
      * @param session
      *            Sessione XADisk
      * @param zipFile
      *            File zip output
      * @param inputDirPath
      *            Directory contenente i file da inserire nell'archivio zip
-     * 
+     *
      * @throws XAGenericException
      * @throws IOException
      */

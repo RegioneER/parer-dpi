@@ -27,11 +27,11 @@ import it.eng.spagoCore.error.EMFError;
 import it.eng.spagoLite.actions.ActionBase;
 
 /**
- * 
+ *
  * @author Quaranta_M
- * 
+ *
  *         1 - process() 2 - passIn() 3 - doLogin()
- * 
+ *
  */
 public class SceltaOrganizzazioneAction extends ActionBase {
 

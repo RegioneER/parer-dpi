@@ -74,12 +74,12 @@ public class Util {
 
     /**
      * Metodo statico per ordinare un enum tramite il valore
-     * 
+     *
      * @param <T>
      *            generics enum
      * @param enumValues
      *            l'array di valori dell'enum
-     * 
+     *
      * @return la collezione ordinata
      */
     public static <T extends Enum<?>> Collection<T> sortEnum(T[] enumValues) {
@@ -92,14 +92,14 @@ public class Util {
 
     /**
      * Metodo statico che verifica la presenza di un file all'interno di un archivio zip
-     * 
+     *
      * @param zipPathName
      *            il path del file zip
      * @param pathFileInZip
      *            il path del file all'interno dello zip
-     * 
+     *
      * @return true se il file è presente
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      */
@@ -121,14 +121,14 @@ public class Util {
 
     /**
      * Metodo statico che verifica la presenza di una directory all'interno di un archivio zip
-     * 
+     *
      * @param zipPathName
      *            il path del file zip
      * @param pathDirInZip
      *            il path della directory all'interno dello zip
-     * 
+     *
      * @return true se la directory è presente
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      */
@@ -157,16 +157,16 @@ public class Util {
 
     /**
      * Metodo che ritorna il file richiesto come parametro contenuto all'interno di un archivio zip
-     * 
+     *
      * @param zipPathName
      *            il path del file zip
      * @param fileInZip
      *            il path del file all'interno dello zip
      * @param pathContenutoZip
      *            il path su cui scrivere il file
-     * 
+     *
      * @return il file salvato
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      */
@@ -184,14 +184,14 @@ public class Util {
 
     /**
      * Metodo che ritorna il file richiesto come parametro contenuto all'interno di un archivio zip come byte array
-     * 
+     *
      * @param zipPathName
      *            il path del file zip
      * @param fileInZip
      *            il path del file all'interno dello zip
-     * 
+     *
      * @return il byte[]
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      */
@@ -207,16 +207,16 @@ public class Util {
 
     /**
      * Metodo che ritorna un outputStream contenente il file richiesto come parametro all'interno di un archivio zip
-     * 
+     *
      * @param zipPathName
      *            il path del file zip
      * @param fileInZip
      *            il path del file all'interno dello zip
      * @param out
      *            l'outputStream su cui scrivere
-     * 
+     *
      * @return out oggetto {@link OutputStream}
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      */
@@ -248,7 +248,7 @@ public class Util {
     /**
      * Metodo statico che va a scrivere nella directory outFolder i file contenuti nella directory pathDirInZip in
      * transazione
-     * 
+     *
      * @param zipFile
      *            il file zip
      * @param pathDirInZip
@@ -259,9 +259,9 @@ public class Util {
      *            la sessione in transazione
      * @param mkdirs
      *            true per ricreare lo stesso path del file nella directory di destinazione
-     * 
+     *
      * @return array di oggetti tipo {@link File}
-     * 
+     *
      * @throws XAGenericException
      *             eccezione generica
      * @throws IOException
@@ -332,12 +332,12 @@ public class Util {
 
     /**
      * Metodo statico che rimuove ricorsivamente i dati contenuti in una directory in transazione
-     * 
+     *
      * @param dirPath
      *            la directory
      * @param xaSession
      *            la sessione in transazione
-     * 
+     *
      * @throws XAGenericException
      *             eccezione generica
      * @throws DirectoryNotEmptyException
@@ -371,14 +371,14 @@ public class Util {
 
     /**
      * Metodo statico che elimina un'intera gerarchia di directory da un file zip
-     * 
+     *
      * @param zipFile
      *            lo zip
      * @param dirPath
      *            la directory da rimuovere dallo zip
      * @param session
      *            la sessione in transazione
-     * 
+     *
      * @throws IOException
      *             eccezione generica
      * @throws XAGenericException
@@ -442,14 +442,14 @@ public class Util {
 
     /**
      * Get a diff between two dates
-     * 
+     *
      * @param date1
      *            the oldest date
      * @param date2
      *            the newest date
      * @param timeUnit
      *            the unit in which you want the diff
-     * 
+     *
      * @return the diff value, in the provided unit
      */
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
