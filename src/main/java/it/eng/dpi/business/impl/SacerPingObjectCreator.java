@@ -102,16 +102,12 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     @Override
     public Map<String, DicomElement> readDicomValues(List<String> dcmHashDicomTag, List<File> dicomInstances)
             throws IOException {
-        DicomInputStream din = null;
         Map<String, DicomElement> map = new LinkedHashMap<String, DicomElement>();
         for (File dicomInstance : dicomInstances) {
-            try {
-                din = new DicomInputStream(dicomInstance);
+            try (DicomInputStream din = new DicomInputStream(dicomInstance)) {
                 din.setHandler(new StopTagInputHandler(Tag.PixelData));
                 DicomObject dcmObj = din.readDicomObject();
                 this.getDicomValues(dcmHashDicomTag, dcmObj, map);
-            } finally {
-                IOUtils.closeQuietly(din);
             }
         }
         return map;
@@ -202,7 +198,9 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
             byte[] pwdHash = md.digest();
             return new String(toHexString(pwdHash));
         } else {
-            return this.calculateHash(FileUtils.openInputStream(file));
+            try (InputStream is = FileUtils.openInputStream(file)) {
+                return this.calculateHash(is);
+            }
         }
     }
 
@@ -213,17 +211,12 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
      */
     private String calculateHash(InputStream is) throws NoSuchAlgorithmException, IOException {
         MessageDigest md = MessageDigest.getInstance(DPIConstants.HASH_ALGO);
-        DigestInputStream dis = null;
-        int ch;
-        try {
-            dis = new DigestInputStream(is, md);
+        try (DigestInputStream dis = new DigestInputStream(is, md)) {
+            int ch;
             byte[] buffer = new byte[BUFFER_SIZE];
             while ((ch = dis.read(buffer)) != -1) {
                 log.trace("Letti " + ch + " bytes");
             }
-            ;
-        } finally {
-            IOUtils.closeQuietly(dis);
         }
         byte[] pwdHash = md.digest();
         return new String(toHexString(pwdHash));
