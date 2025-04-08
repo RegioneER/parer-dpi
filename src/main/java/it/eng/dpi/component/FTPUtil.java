@@ -63,7 +63,6 @@ public class FTPUtil {
         try {
             connectFTP(ftp, IP, port, user, pwd, isSSL);
             // String filename = globalHash + ".zip";
-            OutputStream fout = null;
             // ftp.makeDirectory(ctx.getFtpInputFolder() + "/" + globalHash);
             ftp.makeDirectory(path);
             log.debug(ftp.getReplyString());
@@ -85,18 +84,15 @@ public class FTPUtil {
             } else {
                 log.debug("File " + filename + " non presente lo copio");
             }
-            fout = ftp.storeFileStream(filename);
             log.debug(ftp.getReplyString());
             log.info("Invio il file " + filename + " ...");
-            InputStream is = null;
             long startTime = System.currentTimeMillis();
             int copiedBytes = -1;
-            try {
-                is = new FileInputStream(fileToSend);
+            try (InputStream is = new FileInputStream(fileToSend); OutputStream fout = ftp.storeFileStream(filename)) {
                 copiedBytes = IOUtils.copy(is, fout);
-            } finally {
-                IOUtils.closeQuietly(fout);
-                IOUtils.closeQuietly(is);
+            } catch (IOException e) {
+                log.error("Errore durante il trasferimento del file " + filename, e);
+                return false;
             }
             ftp.completePendingCommand();
             long endTime = System.currentTimeMillis();

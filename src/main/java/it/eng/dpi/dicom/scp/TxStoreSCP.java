@@ -158,27 +158,23 @@ public final class TxStoreSCP {
                 String fileName = tempNamePart + UUID.randomUUID() + ".dcm";
                 File tempFile = new File(pacsDir, fileName);
                 session.createFile(tempFile, false);
-                DicomInputStream dis = null;
-                DicomObject data = null;
-                XAFileOutputStream xafos = session.createXAFileOutputStream(tempFile, true);
-                XAFileOutputStreamWrapper wrapperOS = new XAFileOutputStreamWrapper(xafos);
+
                 // 600000 bytes appears to be a fairly optimal cache
                 // size to
                 // maximize throughput for single-frame CT data
-                final DicomOutputStream outStream = new DicomOutputStream(new BufferedOutputStream(wrapperOS, 600000));
-                try {
+                XAFileOutputStream xafos = session.createXAFileOutputStream(tempFile, true);
+                try (XAFileOutputStreamWrapper wrapperOS = new XAFileOutputStreamWrapper(xafos);
+                        final DicomOutputStream outStream = new DicomOutputStream(
+                                new BufferedOutputStream(wrapperOS, 600000))) {
                     outStream.writeFileMetaInformation(fileMetaDcmObj);
                     dataStream.copyTo(outStream);
-                } finally {
-                    outStream.close();
                 }
 
-                try {
-                    dis = new DicomInputStream(new BufferedInputStream(XAUtil.createFileIS(session, tempFile, false)));
+                DicomObject data;
+                try (DicomInputStream dis = new DicomInputStream(
+                        new BufferedInputStream(XAUtil.createFileIS(session, tempFile, false)))) {
                     dis.setHandler(new StopTagInputHandler(Tag.PixelData));
                     data = dis.readDicomObject();
-                } finally {
-                    IOUtils.closeQuietly(dis);
                 }
 
                 // Leggo suid

@@ -84,15 +84,17 @@ public class PrelievoFTPJob implements JobInterface {
                 String udFileName = "UD_" + globalHashFolder.getName() + ".zip";
                 String pcFileName = "PC_" + globalHashFolder.getName() + ".zip";
                 String[] filename = { udFileName, pcFileName };
-                OutputStream[] os = { XAUtil.createFileOS(session, new File(dir, udFileName), true),
-                        XAUtil.createFileOS(session, new File(dir, pcFileName), true) };
-                boolean ok = FTPUtil.retrieveFile(filename, os, ctx.getFtpOutputFolder(), ctx.getFtpIP(),
-                        ctx.getFtpPort(), ctx.getFtpUser(), ctx.getFtpPassword(), ctx.getSecureFtp());
-                if (!ok) {
-                    session.rollback();
-                } else {
-                    XAUtil.deleteFile(session, globalHashFolder);
-                    session.commit();
+                try (OutputStream udOS = XAUtil.createFileOS(session, new File(dir, udFileName), true);
+                        OutputStream pcOS = XAUtil.createFileOS(session, new File(dir, pcFileName), true)) {
+                    boolean ok = FTPUtil.retrieveFile(filename, new OutputStream[] { udOS, pcOS },
+                            ctx.getFtpOutputFolder(), ctx.getFtpIP(), ctx.getFtpPort(), ctx.getFtpUser(),
+                            ctx.getFtpPassword(), ctx.getSecureFtp());
+                    if (!ok) {
+                        session.rollback();
+                    } else {
+                        XAUtil.deleteFile(session, globalHashFolder);
+                        session.commit();
+                    }
                 }
             } catch (Exception e) {
                 try {

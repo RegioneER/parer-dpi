@@ -422,27 +422,19 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
      * @throws IOException
      */
     private void createZip(Session session, File zipFile, File inputDirPath) throws XAGenericException, IOException {
-        OutputStream os = XAUtil.createFileOS(session, zipFile, true);
-        OutputStream tmpZipOutputStream = new ZipOutputStream(os);
-        try {
+        try (OutputStream os = XAUtil.createFileOS(session, zipFile, true);
+                ZipOutputStream tmpZipOutputStream = new ZipOutputStream(os)) {
             File[] filesToZip = XAUtil.listFiles(session, inputDirPath);
             log.debug("Creazione ZIP: processo la directory " + inputDirPath);
             for (File file : filesToZip) {
-                ZipEntry tmpEntry = null;
                 if (!file.getName().endsWith(".properties")) {
-                    tmpEntry = new ZipEntry(file.getName());
-                    ((ZipOutputStream) tmpZipOutputStream).putNextEntry(tmpEntry);
-                    InputStream is = null;
-                    try {
-                        is = XAUtil.createFileIS(session, file, false);
+                    ZipEntry tmpEntry = new ZipEntry(file.getName());
+                    tmpZipOutputStream.putNextEntry(tmpEntry);
+                    try (InputStream is = XAUtil.createFileIS(session, file, false)) {
                         IOUtils.copy(is, tmpZipOutputStream);
-                    } finally {
-                        IOUtils.closeQuietly(is);
                     }
                 }
             }
-        } finally {
-            IOUtils.closeQuietly(tmpZipOutputStream);
         }
     }
 

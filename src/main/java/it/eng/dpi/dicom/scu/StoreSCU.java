@@ -146,21 +146,21 @@ public class StoreSCU {
 
             fileLoop: for (final FileInfoBean fileInfo : fileInfoList) {
 
-                final InputStream fis = new BufferedInputStream((session == null) ? new FileInputStream(fileInfo.getF())
-                        : XAUtil.createFileIS(session, fileInfo.getF(), false));
-                final DimseRSPHandler rspHandler = new DimseRSPHandler() {
-                    @Override
-                    public void onDimseRSP(Association as, DicomObject cmd, DicomObject data) {
-                        StoreSCU.this.onRSP(cmd, fileInfo, infoBean);
-                    }
-                };
+                try (final InputStream fis = new BufferedInputStream(
+                        (session == null) ? new FileInputStream(fileInfo.getF())
+                                : XAUtil.createFileIS(session, fileInfo.getF(), false))) {
+                    final DimseRSPHandler rspHandler = new DimseRSPHandler() {
+                        @Override
+                        public void onDimseRSP(Association as, DicomObject cmd, DicomObject data) {
+                            StoreSCU.this.onRSP(cmd, fileInfo, infoBean);
+                        }
+                    };
 
-                final DataWriter dataWriter = new DataWriter() {
-                    @Override
-                    public final void writeTo(final PDVOutputStream outStream, final String reqTransferSyntaxUID)
-                            throws IOException {
+                    final DataWriter dataWriter = new DataWriter() {
+                        @Override
+                        public final void writeTo(final PDVOutputStream outStream, final String reqTransferSyntaxUID)
+                                throws IOException {
 
-                        try {
                             if (!reqTransferSyntaxUID.equals(fileInfo.getTsuid())) {
                                 throw new IOException("Requested transfer syntax UID " + reqTransferSyntaxUID
                                         + " not matching stored transfer syntax UID " + fileInfo.getTsuid());
@@ -170,43 +170,41 @@ public class StoreSCU {
                                 bytesToSkip -= fis.skip(bytesToSkip);
                             }
                             outStream.copyFrom(fis);
-                        } finally {
-                            if (fis != null)
-                                fis.close();
                         }
-                    }
-                };
+                    };
 
-                TransferCapability tc = assoc.getTransferCapabilityAsSCU(fileInfo.getCuid());
-                String tsuid = selectTransferSyntax(tc.getTransferSyntax(), fileInfo.getTsuid());
-                // Put the cstore operation in a loop, so that we can retry
-                // if the first attempt fails;
-                // for example, it's always possible that the SCP might have
-                // closed the association.
-                for (int i = 0; i < 2; ++i) {
-                    try {
-                        assoc.cstore(fileInfo.getCuid(), fileInfo.getIuid(), 0, dataWriter, tsuid, rspHandler);
-                        log.info("Stored " + fileInfo.getF());
-                        break;
-                    } catch (final NoPresentationContextException e) {
-                        log.error("Presentation Context not supported for file " + fileInfo.getF() + e.getMessage());
-                        continue fileLoop;
-                    } catch (final IllegalStateException e) {
-                        if (i == 0) {
+                    TransferCapability tc = assoc.getTransferCapabilityAsSCU(fileInfo.getCuid());
+                    String tsuid = selectTransferSyntax(tc.getTransferSyntax(), fileInfo.getTsuid());
+                    // Put the cstore operation in a loop, so that we can retry
+                    // if the first attempt fails;
+                    // for example, it's always possible that the SCP might have
+                    // closed the association.
+                    for (int i = 0; i < 2; ++i) {
+                        try {
+                            assoc.cstore(fileInfo.getCuid(), fileInfo.getIuid(), 0, dataWriter, tsuid, rspHandler);
+                            log.info("Stored " + fileInfo.getF());
+                            break;
+                        } catch (final NoPresentationContextException e) {
+                            log.error(
+                                    "Presentation Context not supported for file " + fileInfo.getF() + e.getMessage());
+                            continue fileLoop;
+                        } catch (final IllegalStateException e) {
+                            if (i == 0) {
+                                log.warn("Error during C-STORE operation - association is in invalid state;"
+                                        + " will attempt to reestablish association: " + e.toString());
+                                // Assume that association is beyond recovery,
+                                // so we can't even release it
+                                assoc = this.open(remoteAE, tcNetAe, executor);
+                                // Second attempt
+                                continue;
+                            }
                             log.warn("Error during C-STORE operation - association is in invalid state;"
-                                    + " will attempt to reestablish association: " + e.toString());
-                            // Assume that association is beyond recovery,
-                            // so we can't even release it
-                            assoc = this.open(remoteAE, tcNetAe, executor);
-                            // Second attempt
-                            continue;
+                                    + " retry failed - aborting: " + e.getMessage());
+                            throw e;
+                        } catch (final InterruptedException e) {
+                            log.error("Interrupted - exiting");
+                            throw e;
                         }
-                        log.warn("Error during C-STORE operation - association is in invalid state;"
-                                + " retry failed - aborting: " + e.getMessage());
-                        throw e;
-                    } catch (final InterruptedException e) {
-                        log.error("Interrupted - exiting");
-                        throw e;
                     }
                 }
 

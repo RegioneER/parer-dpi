@@ -105,16 +105,11 @@ public class Util {
      */
     public static boolean verificaPresenzaFileInZip(String zipPathName, String pathFileInZip) throws IOException {
         boolean tmpResult = false;
-        ZipArchiveEntry tmpZipArchiveEntry;
-        ZipFile tmpFile = null;
-        try {
-            tmpFile = new ZipFile(zipPathName);
-            tmpZipArchiveEntry = tmpFile.getEntry(pathFileInZip);
+        try (ZipFile tmpFile = new ZipFile(zipPathName)) {
+            ZipArchiveEntry tmpZipArchiveEntry = tmpFile.getEntry(pathFileInZip);
             if (tmpZipArchiveEntry != null) {
                 tmpResult = true;
             }
-        } finally {
-            ZipFile.closeQuietly(tmpFile);
         }
         return tmpResult;
     }
@@ -134,12 +129,10 @@ public class Util {
      */
     public static boolean verificaPresenzaDirInZip(String zipPathName, String pathDirInZip) throws IOException {
         boolean tmpResult = false;
-        ZipFile tmpFile = null;
-        try {
-            if (!pathDirInZip.endsWith("/")) {
-                pathDirInZip += '/';
-            }
-            tmpFile = new ZipFile(zipPathName);
+        if (!pathDirInZip.endsWith("/")) {
+            pathDirInZip += '/';
+        }
+        try (ZipFile tmpFile = new ZipFile(zipPathName)) {
             Enumeration<ZipArchiveEntry> entries = tmpFile.getEntries();
             while (entries.hasMoreElements()) {
                 ZipArchiveEntry tmpZipArchiveEntry = entries.nextElement();
@@ -149,8 +142,6 @@ public class Util {
                     break;
                 }
             }
-        } finally {
-            ZipFile.closeQuietly(tmpFile);
         }
         return tmpResult;
     }
@@ -223,25 +214,19 @@ public class Util {
     public static OutputStream estraFileDaZip(String zipPathName, String fileInZip, OutputStream out)
             throws IOException {
         byte[] buffer = new byte[512 * 1024]; // 1/2 megabyte di buffer
-        ZipArchiveEntry tmpZipArchiveEntry;
-        ZipFile tmpZipFile = null;
-        InputStream tmpInputStream = null;
-        try {
-            tmpZipFile = new ZipFile(zipPathName);
-            tmpZipArchiveEntry = tmpZipFile.getEntry(fileInZip);
+        try (ZipFile tmpZipFile = new ZipFile(zipPathName)) {
+            ZipArchiveEntry tmpZipArchiveEntry = tmpZipFile.getEntry(fileInZip);
             if (tmpZipArchiveEntry != null) {
-                tmpInputStream = tmpZipFile.getInputStream(tmpZipArchiveEntry);
-                int numBytes;
-                while ((numBytes = tmpInputStream.read(buffer, 0, buffer.length)) != -1) {
-                    out.write(buffer, 0, numBytes);
+                try (InputStream tmpInputStream = tmpZipFile.getInputStream(tmpZipArchiveEntry)) {
+                    int numBytes;
+                    while ((numBytes = tmpInputStream.read(buffer, 0, buffer.length)) != -1) {
+                        out.write(buffer, 0, numBytes);
+                    }
                 }
             }
         } finally {
             IOUtils.closeQuietly(out);
-            IOUtils.closeQuietly(tmpInputStream);
-            ZipFile.closeQuietly(tmpZipFile);
         }
-
         return out;
     }
 
@@ -271,11 +256,6 @@ public class Util {
             boolean mkdirs) throws XAGenericException, IOException {
 
         byte[] buffer = new byte[512 * 1024]; // 1/2 megabyte di buffer
-        ZipArchiveEntry tmpZipArchiveEntry = null;
-        CloseShieldInputStream tmpInputStream = null;
-        BufferedOutputStream out = null;
-        File outFile = null;
-        ZipArchiveInputStream is = new ZipArchiveInputStream(XAUtil.createFileIS(session, zipFile, false));
         List<File> fileList = new ArrayList<File>();
         boolean extractFromRoot = false;
         if (pathDirInZip.equals("/")) {
@@ -283,7 +263,9 @@ public class Util {
         } else if (!pathDirInZip.endsWith("/")) {
             pathDirInZip += '/';
         }
-        try {
+
+        try (ZipArchiveInputStream is = new ZipArchiveInputStream(XAUtil.createFileIS(session, zipFile, false))) {
+            ZipArchiveEntry tmpZipArchiveEntry;
             while ((tmpZipArchiveEntry = is.getNextZipEntry()) != null) {
                 String fileName = tmpZipArchiveEntry.getName();
                 if (extractFromRoot || fileName.startsWith(pathDirInZip)) {
@@ -292,40 +274,34 @@ public class Util {
                             File dir = new File(outFolder, fileName);
                             XAUtil.createDirectory(session, dir);
                             fileList.add(dir);
-                        } else {
-                            continue;
                         }
                     } else {
-                        try {
-                            int index = fileName.lastIndexOf('/') + 1;
-                            String tmpFileName = fileName.substring(index);
-                            String tmpFilePath = fileName.substring(0, index);
-                            if (mkdirs) {
-                                if (!XAUtil.fileExistsAndIsDirectory(session, new File(outFolder, tmpFilePath))) {
-                                    File dir = new File(outFolder, tmpFilePath);
-                                    XAUtil.createDirectory(session, dir);
-                                    fileList.add(dir);
-                                }
-                                outFile = new File(outFolder, fileName);
-                            } else {
-                                outFile = new File(outFolder, tmpFileName);
+                        File outFile;
+                        int index = fileName.lastIndexOf('/') + 1;
+                        String tmpFileName = fileName.substring(index);
+                        String tmpFilePath = fileName.substring(0, index);
+                        if (mkdirs) {
+                            if (!XAUtil.fileExistsAndIsDirectory(session, new File(outFolder, tmpFilePath))) {
+                                File dir = new File(outFolder, tmpFilePath);
+                                XAUtil.createDirectory(session, dir);
+                                fileList.add(dir);
                             }
-                            out = new BufferedOutputStream(XAUtil.createFileOS(session, outFile, true));
-                            tmpInputStream = new CloseShieldInputStream(is);
+                            outFile = new File(outFolder, fileName);
+                        } else {
+                            outFile = new File(outFolder, tmpFileName);
+                        }
+                        try (BufferedOutputStream out = new BufferedOutputStream(
+                                XAUtil.createFileOS(session, outFile, true));
+                                CloseShieldInputStream tmpInputStream = new CloseShieldInputStream(is)) {
                             int numBytes;
                             while ((numBytes = tmpInputStream.read(buffer, 0, buffer.length)) != -1) {
                                 out.write(buffer, 0, numBytes);
                             }
-                        } finally {
-                            IOUtils.closeQuietly(out);
-                            tmpInputStream.close();
                             fileList.add(outFile);
                         }
                     }
                 }
             }
-        } finally {
-            is.close();
         }
         return fileList.toArray(new File[fileList.size()]);
     }
@@ -401,17 +377,13 @@ public class Util {
             InsufficientPermissionOnFileException, LockingFailedException, NoTransactionAssociatedException,
             InterruptedException {
         // get a temp file
-        File tempFile = new File(FileUtils.getTempDirectory(), FILE_PREFIX + UUID.randomUUID().toString() + ".zip");// File.createTempFile("dpi_tmp_",
-                                                                                                                    // ".zip");
-
-        ZipArchiveEntry tmpZipArchiveEntry = null;
+        File tempFile = new File(FileUtils.getTempDirectory(), FILE_PREFIX + UUID.randomUUID().toString() + ".zip");
 
         byte[] buf = new byte[1024];
 
-        ZipArchiveInputStream zin = new ZipArchiveInputStream(XAUtil.createFileIS(session, zipFile, false));
-        ZipOutputStream zout = new ZipOutputStream(XAUtil.createFileOS(session, tempFile, true));
-
-        try {
+        try (ZipArchiveInputStream zin = new ZipArchiveInputStream(XAUtil.createFileIS(session, zipFile, false));
+                ZipOutputStream zout = new ZipOutputStream(XAUtil.createFileOS(session, tempFile, true))) {
+            ZipArchiveEntry tmpZipArchiveEntry;
             while ((tmpZipArchiveEntry = zin.getNextZipEntry()) != null) {
                 String name = tmpZipArchiveEntry.getName();
                 boolean toBeDeleted = false;
@@ -430,11 +402,6 @@ public class Util {
                     }
                 }
             }
-        } finally {
-            // Close the streams
-            zin.close();
-            // Complete the ZIP file
-            zout.close();
         }
         XAUtil.deleteFile(session, zipFile);
         XAUtil.moveFile(session, tempFile, zipFile);
