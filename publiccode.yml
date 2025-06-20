@@ -60,7 +60,7 @@ maintenance:
       name: Cristiano Casagni
   contractors:
     - name: ' Engineering Ingegneria Informatica S.p.A.'
-      until: '2024-06-30'
+      until: '23/12/2026'
   type: contract
 name: Parer - DPI
 platforms:
