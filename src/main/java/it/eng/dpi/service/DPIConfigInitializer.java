@@ -186,6 +186,9 @@ public class DPIConfigInitializer {
         txStoreSCP.setAcceptMore(getAcceptMoreTag());
         // DAV
         txStoreSCP.setContaMultiframe(getContaMultiframeTag());
+        // MEV#34069
+        txStoreSCP.setAcceptMoreSerie(getAcceptMoreSerieTag());
+        // end MEV#34069
         return txStoreSCP;
     }
     //
@@ -585,6 +588,14 @@ public class DPIConfigInitializer {
     public boolean getAcceptMoreTag() throws IOException {
         return getConfigBool("dpi.accept_more");
     }
+
+    // MEV#34069
+    @Bean(name = { "acceptMoreSerie" })
+    @Scope(value = "singleton")
+    public boolean getAcceptMoreSerieTag() throws IOException {
+        return getConfigBool("dpi.accept_more_serie");
+    }
+    // end MEV#34069
 
     @Bean(name = { "contaMultiframe" })
     @Scope(value = "singleton")

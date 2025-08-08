@@ -79,6 +79,9 @@ public final class TxStoreSCP {
     private boolean acceptMore;
     // DAV
     private boolean contaMultiframe;
+    // MEV#34069
+    private boolean acceptMoreSerie;
+    // end MEV#34069
 
     public TxStoreSCP(NetworkApplicationEntity ae, String[] sopClasses, QueryMoveService qrService) {
         this.qrService = qrService;
@@ -310,6 +313,10 @@ public final class TxStoreSCP {
                         // DAV
                         if (contaMultiframe) {
                             commit = studyBean.isStudyCompleteWithMultiframe(acceptMore);
+                        } else if (acceptMoreSerie) {
+                            // MEV#34069
+                            commit = studyBean.isStudyCompleteAcceptMoreSerie();
+                            // end MEV#34069
                         } else {
                             commit = studyBean.isStudyComplete(acceptMore);
                         }
@@ -465,4 +472,9 @@ public final class TxStoreSCP {
         this.contaMultiframe = contaMultiframe;
     }
 
+    // MEV#34069
+    public void setAcceptMoreSerie(boolean acceptMoreSerie) {
+        this.acceptMoreSerie = acceptMoreSerie;
+    }
+    // end MEV#34069
 }
