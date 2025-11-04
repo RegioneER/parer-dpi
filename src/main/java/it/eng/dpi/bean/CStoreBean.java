@@ -138,4 +138,12 @@ public class CStoreBean {
         // transferedSeriesInStudy)));
     }
 
+    // MEV#34069
+    public boolean isStudyCompleteAcceptMoreSerie() {
+        // aggiunto <= perché nel caso del VNA le serie in rejected (IOCM KOS Reject) non vengono contate come serie da
+        // trasferire
+        return (numImagesInStudy == transferedImagesInStudy) && (numSeriesInStudy <= transferedSeriesInStudy);
+    }
+    // end MEV#34069
+
 }
