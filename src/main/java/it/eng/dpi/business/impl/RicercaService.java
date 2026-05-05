@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business.impl;
@@ -80,7 +76,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
-//DEPRECATED import org.apache.commons.lang3.text.WordUtils;
+// DEPRECATED import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +106,8 @@ public class RicercaService extends AbstractWSClientAOP {
         return filtro;
     }
 
-    private FiltroType creaFiltroDueValori(String datoSpec, String operatore, String valore1, String valore2) {
+    private FiltroType creaFiltroDueValori(String datoSpec, String operatore, String valore1,
+            String valore2) {
         FiltroType filtro = new FiltroType();
         FiltroDueValori filtroDueValori = new FiltroDueValori();
         filtroDueValori.setDatoSpecifico(datoSpec);
@@ -131,35 +128,31 @@ public class RicercaService extends AbstractWSClientAOP {
     /**
      * Esegue la chiamata a ricerca diario utilizzando i filtri assegnati
      *
-     * IMPORTANTE: gli ultimi due parametri devono rimanere i due interi FROM e TO per far funzionare la paginazione
+     * IMPORTANTE: gli ultimi due parametri devono rimanere i due interi FROM e TO per far
+     * funzionare la paginazione
      *
-     * @param filtri
-     *            i filtri assegnati
-     * @param dateStudy
-     *            l'array di date già validate
-     * @param datePresaInCarico
-     *            l'array di date presa in carico
-     * @param from
-     *            l'indice di posizione per la paginazione
-     * @param to
-     *            il numero di record da visualizzare
+     * @param filtri            i filtri assegnati
+     * @param dateStudy         l'array di date già validate
+     * @param datePresaInCarico l'array di date presa in carico
+     * @param from              l'indice di posizione per la paginazione
+     * @param to                il numero di record da visualizzare
      *
      * @return il tablebean popolato
      *
-     * @throws JAXBException
-     *             eccezione generica
-     * @throws WebGenericException
-     *             eccezione generica
+     * @throws JAXBException       eccezione generica
+     * @throws WebGenericException eccezione generica
      */
     public PigVRicDiarioTableBean callRicercaDiarioService(
-            it.eng.dpi.slite.gen.form.MonitoraggioForm.RicercaDiario filtri, Date[] dateStudy, Date[] datePresaInCarico,
-            int from, int to) throws JAXBException, WebGenericException {
+            it.eng.dpi.slite.gen.form.MonitoraggioForm.RicercaDiario filtri, Date[] dateStudy,
+            Date[] datePresaInCarico, int from, int to) throws JAXBException, WebGenericException {
         if (ricDiarioClient == null) {
-            ricDiarioClient = init(ctx.getWsdlRicercaDiarioUrl(), RicercaDiario.class, "wsRicercaDiarioAdvisor");
+            ricDiarioClient = init(ctx.getWsdlRicercaDiarioUrl(), RicercaDiario.class,
+                    "wsRicercaDiarioAdvisor");
         }
         if (ricDiarioClient == null) {
             log.debug("Ricerca Diario - client non disponibile");
-            throw new WebGenericException(messagesCtx.getServiceUnavailable(RicercaDiario.class.getSimpleName()));
+            throw new WebGenericException(
+                    messagesCtx.getServiceUnavailable(RicercaDiario.class.getSimpleName()));
         }
         log.debug("Ricerca Diario - client inizializzato");
         // Chiamo il servizio di ricerca diario in base ai parametri forniti
@@ -189,14 +182,16 @@ public class RicercaService extends AbstractWSClientAOP {
             FiltroType filtro = null;
             if (dateStudy[0] != null && dateStudy[1] != null) {
                 operatore = Constants.ValoriOperatore.COMPRESO_FRA.name();
-                filtro = creaFiltroDueValori(Constants.StudyDate, operatore, timeStampDf.format(dateStudy[0]),
-                        timeStampDf.format(dateStudy[1]));
+                filtro = creaFiltroDueValori(Constants.StudyDate, operatore,
+                        timeStampDf.format(dateStudy[0]), timeStampDf.format(dateStudy[1]));
             } else if (dateStudy[0] != null) {
                 operatore = Constants.ValoriOperatore.MAGGIORE_UGUALE.name();
-                filtro = creaFiltroUnValore(Constants.StudyDate, operatore, timeStampDf.format(dateStudy[0]));
+                filtro = creaFiltroUnValore(Constants.StudyDate, operatore,
+                        timeStampDf.format(dateStudy[0]));
             } else if (dateStudy[1] != null) {
                 operatore = Constants.ValoriOperatore.MINORE_UGUALE.name();
-                filtro = creaFiltroUnValore(Constants.StudyDate, operatore, timeStampDf.format(dateStudy[1]));
+                filtro = creaFiltroUnValore(Constants.StudyDate, operatore,
+                        timeStampDf.format(dateStudy[1]));
             }
             xmlfiltri.getFiltro().add(filtro);
         }
@@ -209,7 +204,8 @@ public class RicercaService extends AbstractWSClientAOP {
             if (datePresaInCarico[0] != null && datePresaInCarico[1] != null) {
                 operatore = Constants.ValoriOperatore.COMPRESO_FRA.name();
                 filtro = creaFiltroDueValori(Constants.DataPresaInCarico, operatore,
-                        timeStampDf.format(datePresaInCarico[0]), timeStampDf.format(datePresaInCarico[1]));
+                        timeStampDf.format(datePresaInCarico[0]),
+                        timeStampDf.format(datePresaInCarico[1]));
             } else if (datePresaInCarico[0] != null) {
                 operatore = Constants.ValoriOperatore.MAGGIORE_UGUALE.name();
                 filtro = creaFiltroUnValore(Constants.DataPresaInCarico, operatore,
@@ -224,8 +220,10 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // AccessionNumber
         if (StringUtils.isNotBlank(filtri.getAccession_number().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.AccessionNumber,
-                    Constants.ValoriOperatore.UGUALE.name(), filtri.getAccession_number().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.AccessionNumber,
+                            Constants.ValoriOperatore.UGUALE.name(),
+                            filtri.getAccession_number().getValue()));
         }
 
         // PatientName
@@ -241,8 +239,10 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // PatientSex
         if (StringUtils.isNotBlank(filtri.getSesso_paziente().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientSex, Constants.ValoriOperatore.UGUALE.name(),
-                    filtri.getSesso_paziente().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.PatientSex,
+                            Constants.ValoriOperatore.UGUALE.name(),
+                            filtri.getSesso_paziente().getValue()));
         }
 
         // PatientBirthDate
@@ -250,9 +250,9 @@ public class RicercaService extends AbstractWSClientAOP {
             DateFormat dateDf = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat webDf = new SimpleDateFormat("dd/MM/yyyy");
             try {
-                xmlfiltri.getFiltro()
-                        .add(creaFiltroUnValore(Constants.PatientBirthDate, Constants.ValoriOperatore.UGUALE.name(),
-                                dateDf.format(webDf.parse(filtri.getDt_nascita_paziente().getValue()))));
+                xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientBirthDate,
+                        Constants.ValoriOperatore.UGUALE.name(),
+                        dateDf.format(webDf.parse(filtri.getDt_nascita_paziente().getValue()))));
             } catch (ParseException e) {
                 throw new WebGenericException("Errore di lettura della data di nascita");
             }
@@ -260,14 +260,16 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // PatientId
         if (StringUtils.isNotBlank(filtri.getId_paziente().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientId, Constants.ValoriOperatore.UGUALE.name(),
-                    filtri.getId_paziente().getValue()));
+            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientId,
+                    Constants.ValoriOperatore.UGUALE.name(), filtri.getId_paziente().getValue()));
         }
 
         // PatientIdIssuer
         if (StringUtils.isNotBlank(filtri.getIssuer_id_paziente().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientIdIssuer,
-                    Constants.ValoriOperatore.UGUALE.name(), filtri.getIssuer_id_paziente().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.PatientIdIssuer,
+                            Constants.ValoriOperatore.UGUALE.name(),
+                            filtri.getIssuer_id_paziente().getValue()));
         }
 
         // // ReferringPhysicianName
@@ -280,8 +282,10 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // ModalityStudyList
         if (StringUtils.isNotBlank(filtri.getModality_study().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.ModalityInStudyList,
-                    Constants.ValoriOperatore.CONTIENE.name(), filtri.getModality_study().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.ModalityInStudyList,
+                            Constants.ValoriOperatore.CONTIENE.name(),
+                            filtri.getModality_study().getValue()));
         }
 
         // StudyInstanceUID
@@ -292,13 +296,15 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // DcmHash
         if (StringUtils.isNotBlank(filtri.getDcm_hash().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.DCM_hash, Constants.ValoriOperatore.UGUALE.name(),
-                    filtri.getDcm_hash().getValue()));
+            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.DCM_hash,
+                    Constants.ValoriOperatore.UGUALE.name(), filtri.getDcm_hash().getValue()));
         }
         // Creo la lista di ordine dei dati specifici
         ListaDatiSpecificiOrderType xmlorder = new ListaDatiSpecificiOrderType();
-        xmlorder.getDatoSpecificoOrder().add(creaDatoSpecificoOrder(Constants.PatientName, Constants.ASCENDING));
-        xmlorder.getDatoSpecificoOrder().add(creaDatoSpecificoOrder(Constants.StudyDate, Constants.ASCENDING));
+        xmlorder.getDatoSpecificoOrder()
+                .add(creaDatoSpecificoOrder(Constants.PatientName, Constants.ASCENDING));
+        xmlorder.getDatoSpecificoOrder()
+                .add(creaDatoSpecificoOrder(Constants.StudyDate, Constants.ASCENDING));
 
         // Eseguo il marshalling dei tre xml predisposti sopra
         StringWriter swXmlOut = new StringWriter();
@@ -331,11 +337,12 @@ public class RicercaService extends AbstractWSClientAOP {
         // niRecordResultSet, xmlDatiSpecOutput, xmlDatiSpecFiltri,
         // xmlDatiSpecOrder
         log.debug("Eseguo la chiamata ricerca diario");
-        RicercaDiarioRisposta risp = ricDiarioClient.ricercaDiario(ctx.getNmAmbiente(), ctx.getNmVersatore(),
-                DPIConstants.WS_NM_TIPO_OBJECT, null, null,
-                StringUtils.isBlank(filtri.getTi_stato().getValue()) ? null : filtri.getTi_stato().getValue(),
-                filtri.getRicerca_ogni_sessione().getValue().equals("1"), from + 1, to, swXmlOut.toString(),
-                swXmlFiltri.toString(), swXmlOrder.toString());
+        RicercaDiarioRisposta risp = ricDiarioClient.ricercaDiario(ctx.getNmAmbiente(),
+                ctx.getNmVersatore(), DPIConstants.WS_NM_TIPO_OBJECT, null, null,
+                StringUtils.isBlank(filtri.getTi_stato().getValue()) ? null
+                        : filtri.getTi_stato().getValue(),
+                filtri.getRicerca_ogni_sessione().getValue().equals("1"), from + 1, to,
+                swXmlOut.toString(), swXmlFiltri.toString(), swXmlOrder.toString());
 
         // Istanzio un tableBean vuoto
         PigVRicDiarioTableBean tb = new PigVRicDiarioTableBean();
@@ -348,7 +355,8 @@ public class RicercaService extends AbstractWSClientAOP {
             // al tablebean istanziato
             log.debug("Popolo la lista di risultati");
             ListaOggRicDiarioType listaOggetti = risp.getListaOggetti();
-            Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType().createUnmarshaller();
+            Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType()
+                    .createUnmarshaller();
             for (OggettoRicDiarioType ogg : listaOggetti.getOggetto()) {
                 RicDiarioObjToRowBean obj = new RicDiarioObjToRowBean(ogg);
                 JAXBElement<ListaValoriDatiSpecificiType> datoSpecJAXB = (JAXBElement<ListaValoriDatiSpecificiType>) um
@@ -369,7 +377,8 @@ public class RicercaService extends AbstractWSClientAOP {
                     }
                     for (ValoreDatoSpecificoType dato : datoSpec.getValoreDatoSpecifico()) {
 
-                        String nomeCampo = Constants.DatiSpecDicom.getEnum(dato.getDatoSpecifico()).getMethod();
+                        String nomeCampo = Constants.DatiSpecDicom.getEnum(dato.getDatoSpecifico())
+                                .getMethod();
 
                         Method method;
                         String methodName = "set" + WordUtils.capitalize(nomeCampo, null);
@@ -384,10 +393,12 @@ public class RicercaService extends AbstractWSClientAOP {
                             if (params[0].equals(String.class)) {
                                 value = dato.getValore();
                             } else if (params[0].equals(Date.class)) {
-                                DateFormat dateDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+                                DateFormat dateDf = new SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ssXXX");
                                 value = dateDf.parse(dato.getValore());
                             } else if (params[0].equals(Timestamp.class)) {
-                                DateFormat timeStampDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+                                DateFormat timeStampDf = new SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ssXXX");
                                 value = timeStampDf.parse(dato.getValore());
                             } else if (params[0].equals(BigDecimal.class)) {
                                 value = new BigDecimal(dato.getValore());
@@ -396,8 +407,9 @@ public class RicercaService extends AbstractWSClientAOP {
                         method.invoke(obj, value);
 
                     }
-                } catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException | ParseException e) {
+                } catch (NoSuchMethodException | SecurityException | ClassNotFoundException
+                        | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | ParseException e) {
                     log.error("Errore di popolamento del bean RicDiarioObjToRowBean", e);
                 }
                 PigVRicDiarioRowBean row = new PigVRicDiarioRowBean();
@@ -405,8 +417,10 @@ public class RicercaService extends AbstractWSClientAOP {
                 tb.add(row);
             }
         } else if (risp != null && risp.getCdEsito().value().equals(EsitoServizio.KO.name())) {
-            log.debug("Errore nella chiamata di ricerca diario : " + risp.getCdErr() + " : " + risp.getDsErr());
-            throw new WebGenericException(messagesCtx.getServiceError(risp.getCdErr(), risp.getDsErr()));
+            log.debug("Errore nella chiamata di ricerca diario : " + risp.getCdErr() + " : "
+                    + risp.getDsErr());
+            throw new WebGenericException(
+                    messagesCtx.getServiceError(risp.getCdErr(), risp.getDsErr()));
         }
         return tb;
     }
@@ -414,26 +428,25 @@ public class RicercaService extends AbstractWSClientAOP {
     /**
      * Esegue la chiamata per ottenere il dettaglio di uno studio
      *
-     * @param currentRow
-     *            riga della lista da caricare in dettaglio
-     * @param fromRicDiario
-     *            boolean che indica se si carica il dettaglio da ricerca diario e non è il refresh del dettaglio
+     * @param currentRow    riga della lista da caricare in dettaglio
+     * @param fromRicDiario boolean che indica se si carica il dettaglio da ricerca diario e non è
+     *                      il refresh del dettaglio
      *
      * @return il rowBean del dettaglio
      *
-     * @throws WebGenericException
-     *             eccezione generica
-     * @throws JAXBException
-     *             eccezione generica
+     * @throws WebGenericException eccezione generica
+     * @throws JAXBException       eccezione generica
      */
-    public PigVRicDiarioRowBean callDettaglioRicercaDiarioService(BaseRowInterface currentRow, boolean fromRicDiario)
-            throws WebGenericException, JAXBException {
+    public PigVRicDiarioRowBean callDettaglioRicercaDiarioService(BaseRowInterface currentRow,
+            boolean fromRicDiario) throws WebGenericException, JAXBException {
         if (ricDiarioClient == null) {
-            ricDiarioClient = init(ctx.getWsdlRicercaDiarioUrl(), RicercaDiario.class, "wsRicercaDiarioAdvisor");
+            ricDiarioClient = init(ctx.getWsdlRicercaDiarioUrl(), RicercaDiario.class,
+                    "wsRicercaDiarioAdvisor");
         }
         if (ricDiarioClient == null) {
             log.debug("Ricerca Diario - client non disponibile");
-            throw new WebGenericException(messagesCtx.getServiceUnavailable(RicercaDiario.class.getSimpleName()));
+            throw new WebGenericException(
+                    messagesCtx.getServiceUnavailable(RicercaDiario.class.getSimpleName()));
         }
         log.debug("Ricerca Diario - client inizializzato");
         // Chiamo il servizio di ricerca diario in base ai parametri forniti
@@ -464,10 +477,12 @@ public class RicercaService extends AbstractWSClientAOP {
         // idSessione, tiStatoObject, flTutteSessioni, niRecordInizio,
         // niRecordResultSet, xmlDatiSpecOutput, xmlDatiSpecFiltri,
         // xmlDatiSpecOrder
-        log.debug("Eseguo la chiamata ricercaDiario per visualizzare il dettaglio dello studio " + cdKeyObject);
-        RicercaDiarioRisposta risp = ricDiarioClient.ricercaDiario(ctx.getNmAmbiente(), ctx.getNmVersatore(),
-                DPIConstants.WS_NM_TIPO_OBJECT, cdKeyObject, fromRicDiario ? idSessione.longValue() : null, null,
-                fromRicDiario, 1, 1, swXmlOut.toString(), null, null);
+        log.debug("Eseguo la chiamata ricercaDiario per visualizzare il dettaglio dello studio "
+                + cdKeyObject);
+        RicercaDiarioRisposta risp = ricDiarioClient.ricercaDiario(ctx.getNmAmbiente(),
+                ctx.getNmVersatore(), DPIConstants.WS_NM_TIPO_OBJECT, cdKeyObject,
+                fromRicDiario ? idSessione.longValue() : null, null, fromRicDiario, 1, 1,
+                swXmlOut.toString(), null, null);
         // Se la chiamata ha avuto esito OK e la lista di oggetti non è vuota
         if (risp != null && risp.getCdEsito().value().equals(EsitoServizio.OK.name())
                 && risp.getListaOggetti() != null) {
@@ -477,7 +492,8 @@ public class RicercaService extends AbstractWSClientAOP {
             // rowbean da aggiungere
             // al tablebean istanziato
             ListaOggRicDiarioType listaOggetti = risp.getListaOggetti();
-            Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType().createUnmarshaller();
+            Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType()
+                    .createUnmarshaller();
             for (OggettoRicDiarioType ogg : listaOggetti.getOggetto()) {
                 RicDiarioObjToRowBean obj = new RicDiarioObjToRowBean(ogg);
                 JAXBElement<ListaValoriDatiSpecificiType> datoSpecJAXB = (JAXBElement<ListaValoriDatiSpecificiType>) um
@@ -498,7 +514,8 @@ public class RicercaService extends AbstractWSClientAOP {
                     }
                     for (ValoreDatoSpecificoType dato : datoSpec.getValoreDatoSpecifico()) {
 
-                        String nomeCampo = Constants.DatiSpecDicom.getEnum(dato.getDatoSpecifico()).getMethod();
+                        String nomeCampo = Constants.DatiSpecDicom.getEnum(dato.getDatoSpecifico())
+                                .getMethod();
 
                         Method method;
                         String methodName = "set" + WordUtils.capitalize(nomeCampo, null);
@@ -513,10 +530,12 @@ public class RicercaService extends AbstractWSClientAOP {
                             if (params[0].equals(String.class)) {
                                 value = dato.getValore();
                             } else if (params[0].equals(Date.class)) {
-                                DateFormat dateDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+                                DateFormat dateDf = new SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ssXXX");
                                 value = dateDf.parse(dato.getValore());
                             } else if (params[0].equals(Timestamp.class)) {
-                                DateFormat timeStampDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+                                DateFormat timeStampDf = new SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ssXXX");
                                 value = timeStampDf.parse(dato.getValore());
                             } else if (params[0].equals(BigDecimal.class)) {
                                 value = new BigDecimal(dato.getValore());
@@ -524,25 +543,26 @@ public class RicercaService extends AbstractWSClientAOP {
                         }
                         method.invoke(obj, value);
                     }
-                } catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException | ParseException e) {
+                } catch (NoSuchMethodException | SecurityException | ClassNotFoundException
+                        | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | ParseException e) {
                     log.error("Errore di popolamento del bean RicDiarioObjToRowBean", e);
                 }
                 detRow.entityToRowBean(obj);
                 // Imposto a posteriori alcuni dati in quanto dipende dalla
                 // presenza dello studio all'interno della directory notificati
-                if (detRow.getTiStatoSessioneRecup() != null
-                        && detRow.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_OK.name())) {
+                if (detRow.getTiStatoSessioneRecup() != null && detRow.getTiStatoSessioneRecup()
+                        .equals(Constants.StatoStudio.CHIUSO_OK.name())) {
                     String dicomPath = ctx.getWorkingPath() + ctx.getStudioDicomPath();
                     File notifDir = new File(dicomPath.concat(DPIConstants.NOTIFICATI_FOLDER),
                             detRow.getDsGlobalHash());
                     if (notifDir.exists()) {
                         detRow.setFlTransferDicom(Constants.DB_FALSE);
                         String[] fileNames = notifDir.list();
-                        String udFileName = Constants.UD_FILE_PREFIX_DPI.concat(detRow.getDsGlobalHash())
-                                .concat(Constants.ZIP_EXTENSION);
-                        String pcFileName = Constants.PC_FILE_PREFIX_DPI.concat(detRow.getDsGlobalHash())
-                                .concat(Constants.ZIP_EXTENSION);
+                        String udFileName = Constants.UD_FILE_PREFIX_DPI
+                                .concat(detRow.getDsGlobalHash()).concat(Constants.ZIP_EXTENSION);
+                        String pcFileName = Constants.PC_FILE_PREFIX_DPI
+                                .concat(detRow.getDsGlobalHash()).concat(Constants.ZIP_EXTENSION);
                         String zipPathUdFile = notifDir + File.separator + udFileName;
                         String zipPathPcFile = notifDir + File.separator + pcFileName;
                         try {
@@ -552,7 +572,8 @@ public class RicercaService extends AbstractWSClientAOP {
                             if (Arrays.asList(fileNames).contains(udFileName)) {
                                 // verifico se esiste la cartella con nome
                                 // registro-anno-numero
-                                if (Util.verificaPresenzaDirInZip(zipPathUdFile, detRow.getChiaveUnitaDoc())) {
+                                if (Util.verificaPresenzaDirInZip(zipPathUdFile,
+                                        detRow.getChiaveUnitaDoc())) {
                                     detRow.setFlTransferDicom(Constants.DB_TRUE);
                                 } else {
                                     detRow.setFlTransferDicom(Constants.DB_FALSE);
@@ -560,7 +581,8 @@ public class RicercaService extends AbstractWSClientAOP {
                                 // Estraggo il file di indice
                                 try {
                                     String xml = new String(
-                                            Util.estraiFileDaZip(zipPathUdFile, Constants.UD_INDEX_FILE),
+                                            Util.estraiFileDaZip(zipPathUdFile,
+                                                    Constants.UD_INDEX_FILE),
                                             Constants.UTF_ENCODING);
                                     detRow.setBlXmlIndiceUd(xml);
                                 } catch (FileNotFoundException e) {
@@ -576,7 +598,8 @@ public class RicercaService extends AbstractWSClientAOP {
                                 // Estraggo il file di indice
                                 try {
                                     String xml = new String(
-                                            Util.estraiFileDaZip(zipPathPcFile, Constants.PC_INDEX_FILE),
+                                            Util.estraiFileDaZip(zipPathPcFile,
+                                                    Constants.PC_INDEX_FILE),
                                             Constants.UTF_ENCODING);
                                     detRow.setBlXmlIndicePc(xml);
                                 } catch (FileNotFoundException e) {
@@ -586,8 +609,8 @@ public class RicercaService extends AbstractWSClientAOP {
                                 throw new WebGenericException(messagesCtx.getNoPcFile());
                             }
                         } catch (IOException e) {
-                            throw new WebGenericException(
-                                    messagesCtx.getGeneralError("Errore in fase di lettura del file zip"), e);
+                            throw new WebGenericException(messagesCtx
+                                    .getGeneralError("Errore in fase di lettura del file zip"), e);
                         }
                     } else {
                         detRow.setDtAperturaSessioneRecup(null);
@@ -598,8 +621,10 @@ public class RicercaService extends AbstractWSClientAOP {
                 }
             }
         } else if (risp != null && risp.getCdEsito().value().equals(EsitoServizio.KO.name())) {
-            log.debug("Errore nella chiamata di ricerca diario : " + risp.getCdErr() + " : " + risp.getDsErr());
-            throw new WebGenericException(messagesCtx.getServiceError(risp.getCdErr(), risp.getDsErr()));
+            log.debug("Errore nella chiamata di ricerca diario : " + risp.getCdErr() + " : "
+                    + risp.getDsErr());
+            throw new WebGenericException(
+                    messagesCtx.getServiceError(risp.getCdErr(), risp.getDsErr()));
         }
         return detRow;
     }
@@ -607,36 +632,32 @@ public class RicercaService extends AbstractWSClientAOP {
     /**
      * Esegue la chiamata a ricerca restituzioni studi utilizzando i filtri assegnati
      *
-     * IMPORTANTE: gli ultimi due parametri devono rimanere i due interi FROM e TO per far funzionare la paginazione
+     * IMPORTANTE: gli ultimi due parametri devono rimanere i due interi FROM e TO per far
+     * funzionare la paginazione
      *
-     * @param filtri
-     *            i filtri assegnati
-     * @param dateAperturaSessioni
-     *            l'array di date apertura già validate
-     * @param dateStudy
-     *            l'array di date studi già validate
-     * @param from
-     *            l'indice di posizione per la paginazione
-     * @param to
-     *            il numero di record da visualizzare
+     * @param filtri               i filtri assegnati
+     * @param dateAperturaSessioni l'array di date apertura già validate
+     * @param dateStudy            l'array di date studi già validate
+     * @param from                 l'indice di posizione per la paginazione
+     * @param to                   il numero di record da visualizzare
      *
      * @return il tablebean popolato
      *
-     * @throws JAXBException
-     *             eccezione generica
-     * @throws WebGenericException
-     *             eccezione generica
+     * @throws JAXBException       eccezione generica
+     * @throws WebGenericException eccezione generica
      */
     public PigVRicRecupTableBean callRicercaRestituzioniStudiService(
-            it.eng.dpi.slite.gen.form.MonitoraggioForm.RicercaRestituzioniStudi filtri, Date[] dateAperturaSessioni,
-            Date[] dateStudy, int from, int to) throws JAXBException, WebGenericException {
+            it.eng.dpi.slite.gen.form.MonitoraggioForm.RicercaRestituzioniStudi filtri,
+            Date[] dateAperturaSessioni, Date[] dateStudy, int from, int to)
+            throws JAXBException, WebGenericException {
         if (ricRestClient == null) {
-            ricRestClient = init(ctx.getWsdlRicercaRestituzioniOggettiUrl(), RicercaRestituzioniOggetti.class,
-                    "wsRicercaDiarioAdvisor");
+            ricRestClient = init(ctx.getWsdlRicercaRestituzioniOggettiUrl(),
+                    RicercaRestituzioniOggetti.class, "wsRicercaDiarioAdvisor");
         }
         if (ricRestClient == null) {
             log.debug("Ricerca Restituzioni - client non disponibile");
-            throw new WebGenericException(messagesCtx.getServiceUnavailable(RicercaDiario.class.getSimpleName()));
+            throw new WebGenericException(
+                    messagesCtx.getServiceUnavailable(RicercaDiario.class.getSimpleName()));
         }
         log.debug("Ricerca Restituzioni - client inizializzato");
 
@@ -667,22 +688,26 @@ public class RicercaService extends AbstractWSClientAOP {
             FiltroType filtro = null;
             if (dateStudy[0] != null && dateStudy[1] != null) {
                 operatore = Constants.ValoriOperatore.COMPRESO_FRA.name();
-                filtro = creaFiltroDueValori(Constants.StudyDate, operatore, timeStampDf.format(dateStudy[0]),
-                        timeStampDf.format(dateStudy[1]));
+                filtro = creaFiltroDueValori(Constants.StudyDate, operatore,
+                        timeStampDf.format(dateStudy[0]), timeStampDf.format(dateStudy[1]));
             } else if (dateStudy[0] != null) {
                 operatore = Constants.ValoriOperatore.MAGGIORE_UGUALE.name();
-                filtro = creaFiltroUnValore(Constants.StudyDate, operatore, timeStampDf.format(dateStudy[0]));
+                filtro = creaFiltroUnValore(Constants.StudyDate, operatore,
+                        timeStampDf.format(dateStudy[0]));
             } else if (dateStudy[1] != null) {
                 operatore = Constants.ValoriOperatore.MINORE_UGUALE.name();
-                filtro = creaFiltroUnValore(Constants.StudyDate, operatore, timeStampDf.format(dateStudy[1]));
+                filtro = creaFiltroUnValore(Constants.StudyDate, operatore,
+                        timeStampDf.format(dateStudy[1]));
             }
             xmlfiltri.getFiltro().add(filtro);
         }
 
         // AccessionNumber
         if (StringUtils.isNotBlank(filtri.getAccession_number().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.AccessionNumber,
-                    Constants.ValoriOperatore.UGUALE.name(), filtri.getAccession_number().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.AccessionNumber,
+                            Constants.ValoriOperatore.UGUALE.name(),
+                            filtri.getAccession_number().getValue()));
         }
 
         // PatientName
@@ -697,8 +722,10 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // PatientSex
         if (StringUtils.isNotBlank(filtri.getSesso_paziente().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientSex, Constants.ValoriOperatore.UGUALE.name(),
-                    filtri.getSesso_paziente().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.PatientSex,
+                            Constants.ValoriOperatore.UGUALE.name(),
+                            filtri.getSesso_paziente().getValue()));
         }
 
         // PatientBirthDate
@@ -706,9 +733,9 @@ public class RicercaService extends AbstractWSClientAOP {
             DateFormat dateDf = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat webDf = new SimpleDateFormat("dd/MM/yyyy");
             try {
-                xmlfiltri.getFiltro()
-                        .add(creaFiltroUnValore(Constants.PatientBirthDate, Constants.ValoriOperatore.UGUALE.name(),
-                                dateDf.format(webDf.parse(filtri.getDt_nascita_paziente().getValue()))));
+                xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientBirthDate,
+                        Constants.ValoriOperatore.UGUALE.name(),
+                        dateDf.format(webDf.parse(filtri.getDt_nascita_paziente().getValue()))));
             } catch (ParseException e) {
                 throw new WebGenericException("Errore di lettura della data di nascita");
             }
@@ -716,14 +743,16 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // PatientId
         if (StringUtils.isNotBlank(filtri.getId_paziente().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientId, Constants.ValoriOperatore.UGUALE.name(),
-                    filtri.getId_paziente().getValue()));
+            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientId,
+                    Constants.ValoriOperatore.UGUALE.name(), filtri.getId_paziente().getValue()));
         }
 
         // PatientIdIssuer
         if (StringUtils.isNotBlank(filtri.getIssuer_id_paziente().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.PatientIdIssuer,
-                    Constants.ValoriOperatore.UGUALE.name(), filtri.getIssuer_id_paziente().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.PatientIdIssuer,
+                            Constants.ValoriOperatore.UGUALE.name(),
+                            filtri.getIssuer_id_paziente().getValue()));
         }
 
         // ReferringPhysicianName
@@ -734,8 +763,10 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // ModalityStudyList
         if (StringUtils.isNotBlank(filtri.getModality_study().getValue())) {
-            xmlfiltri.getFiltro().add(creaFiltroUnValore(Constants.ModalityInStudyList,
-                    Constants.ValoriOperatore.CONTIENE.name(), filtri.getModality_study().getValue()));
+            xmlfiltri.getFiltro()
+                    .add(creaFiltroUnValore(Constants.ModalityInStudyList,
+                            Constants.ValoriOperatore.CONTIENE.name(),
+                            filtri.getModality_study().getValue()));
         }
 
         // StudyInstanceUID
@@ -746,8 +777,10 @@ public class RicercaService extends AbstractWSClientAOP {
 
         // Creo la lista di ordine dei dati specifici
         ListaDatiSpecificiOrderType xmlorder = new ListaDatiSpecificiOrderType();
-        xmlorder.getDatoSpecificoOrder().add(creaDatoSpecificoOrder(Constants.PatientName, Constants.ASCENDING));
-        xmlorder.getDatoSpecificoOrder().add(creaDatoSpecificoOrder(Constants.StudyDate, Constants.ASCENDING));
+        xmlorder.getDatoSpecificoOrder()
+                .add(creaDatoSpecificoOrder(Constants.PatientName, Constants.ASCENDING));
+        xmlorder.getDatoSpecificoOrder()
+                .add(creaDatoSpecificoOrder(Constants.StudyDate, Constants.ASCENDING));
 
         // Eseguo il marshalling dei tre xml predisposti sopra
         StringWriter swXmlOut = new StringWriter();
@@ -801,10 +834,12 @@ public class RicercaService extends AbstractWSClientAOP {
         // tiStatoSessione, dtAperturaSessioneDa, dtAperturaSessioneA,
         // niRecordInizio, niRecordResultSet, xmlDatiSpecOutput,
         // xmlDatiSpecFiltri, xmlDatiSpecOrder
-        RicercaRestituzioniOggettiRisposta risp = ricRestClient.ricercaRestituzioniOggetti(ctx.getNmAmbiente(),
-                ctx.getNmVersatore(), DPIConstants.WS_NM_TIPO_OBJECT, null,
-                StringUtils.isBlank(filtri.getTi_stato().getValue()) ? null : filtri.getTi_stato().getValue(), xmlCalDa,
-                xmlCalA, from + 1, to, swXmlOut.toString(), swXmlFiltri.toString(), swXmlOrder.toString());
+        RicercaRestituzioniOggettiRisposta risp = ricRestClient.ricercaRestituzioniOggetti(
+                ctx.getNmAmbiente(), ctx.getNmVersatore(), DPIConstants.WS_NM_TIPO_OBJECT, null,
+                StringUtils.isBlank(filtri.getTi_stato().getValue()) ? null
+                        : filtri.getTi_stato().getValue(),
+                xmlCalDa, xmlCalA, from + 1, to, swXmlOut.toString(), swXmlFiltri.toString(),
+                swXmlOrder.toString());
 
         // Istanzio un tableBean vuoto
         PigVRicRecupTableBean tb = new PigVRicRecupTableBean();
@@ -815,7 +850,8 @@ public class RicercaService extends AbstractWSClientAOP {
             // Creo il bean di supporto RicRecupObjToRowBean e popolo il
             // rowbean da aggiungere al tablebean istanziato
             ListaOggRicRestOggType listaOggetti = risp.getListaOggetti();
-            Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType().createUnmarshaller();
+            Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType()
+                    .createUnmarshaller();
             for (OggettoRicRestOggType ogg : listaOggetti.getOggetto()) {
                 RicRecupObjToRowBean obj = new RicRecupObjToRowBean(ogg);
                 JAXBElement<ListaValoriDatiSpecificiType> datoSpecJAXB = (JAXBElement<ListaValoriDatiSpecificiType>) um
@@ -836,7 +872,8 @@ public class RicercaService extends AbstractWSClientAOP {
                     }
                     for (ValoreDatoSpecificoType dato : datoSpec.getValoreDatoSpecifico()) {
 
-                        String nomeCampo = Constants.DatiSpecDicom.getEnum(dato.getDatoSpecifico()).getMethod();
+                        String nomeCampo = Constants.DatiSpecDicom.getEnum(dato.getDatoSpecifico())
+                                .getMethod();
 
                         Method method;
                         String methodName = "set" + WordUtils.capitalize(nomeCampo, null);
@@ -851,10 +888,12 @@ public class RicercaService extends AbstractWSClientAOP {
                             if (params[0].equals(String.class)) {
                                 value = dato.getValore();
                             } else if (params[0].equals(Date.class)) {
-                                DateFormat dateDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+                                DateFormat dateDf = new SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ssXXX");
                                 value = dateDf.parse(dato.getValore());
                             } else if (params[0].equals(Timestamp.class)) {
-                                DateFormat timeStampDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+                                DateFormat timeStampDf = new SimpleDateFormat(
+                                        "yyyy-MM-dd'T'HH:mm:ssXXX");
                                 value = timeStampDf.parse(dato.getValore());
                             } else if (params[0].equals(BigDecimal.class)) {
                                 value = new BigDecimal(dato.getValore());
@@ -863,8 +902,9 @@ public class RicercaService extends AbstractWSClientAOP {
                         method.invoke(obj, value);
 
                     }
-                } catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException
-                        | IllegalArgumentException | InvocationTargetException | ParseException e) {
+                } catch (NoSuchMethodException | SecurityException | ClassNotFoundException
+                        | IllegalAccessException | IllegalArgumentException
+                        | InvocationTargetException | ParseException e) {
                     log.error("Errore di popolamento del bean RicRecupObjToRowBean", e);
                 }
                 PigVRicRecupRowBean row = new PigVRicRecupRowBean();
@@ -872,7 +912,8 @@ public class RicercaService extends AbstractWSClientAOP {
                 tb.add(row);
             }
         } else if (risp != null && risp.getCdEsito().value().equals(EsitoServizio.KO.name())) {
-            throw new WebGenericException(messagesCtx.getServiceError(risp.getCdErr(), risp.getDsErr()));
+            throw new WebGenericException(
+                    messagesCtx.getServiceError(risp.getCdErr(), risp.getDsErr()));
         }
         return tb;
     }

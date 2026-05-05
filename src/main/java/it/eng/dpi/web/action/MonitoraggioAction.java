@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.web.action;
@@ -168,8 +164,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Carica la pagina di ricerca diario inizializzando i campi
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     // @Secure(action = "Menu.Monitoraggio.RicercaDiario")
     public void loadRicercaDiario() throws EMFError {
@@ -179,24 +174,29 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         getForm().getRicercaDiario().clear();
         // Inizializzo il campo ricercaOgniSessione con la decodeMap
         // indicando il valore di default
-        getForm().getRicercaDiario().getRicerca_ogni_sessione().setDecodeMap(getIndicatoreDecodeMap());
+        getForm().getRicercaDiario().getRicerca_ogni_sessione()
+                .setDecodeMap(getIndicatoreDecodeMap());
         getForm().getRicercaDiario().getRicerca_ogni_sessione().setValue("0");
         // Inizializzo il campo ti_stato con la decodeMap degli stati
         getForm().getRicercaDiario().getTi_stato().setDecodeMap(getStatiStudioDecodeMap());
         // Inizializzo il campo nodiDicom con la decodeMap dei nodi dicom
         // indicando il valore di default nel caso esista solo un nodo dicom
-        getForm().getRicercaDiario().getNodo_dicom().setDecodeMap(getDicomNodesForResearchDecodeMap());
+        getForm().getRicercaDiario().getNodo_dicom()
+                .setDecodeMap(getDicomNodesForResearchDecodeMap());
         if (pacsListForSearch.size() == 1) {
             getForm().getRicercaDiario().getNodo_dicom().setValue(pacsListForSearch.get(0));
         }
         // Inizializzo il campo filtro paziente indicando il valore di
         // default
-        getForm().getRicercaDiario().getFiltro_paziente().setDecodeMap(getFiltroPazienteDecodeMap());
-        getForm().getRicercaDiario().getFiltro_paziente().setValue(Constants.ValoriOperatore.INIZIA_PER.name());
+        getForm().getRicercaDiario().getFiltro_paziente()
+                .setDecodeMap(getFiltroPazienteDecodeMap());
+        getForm().getRicercaDiario().getFiltro_paziente()
+                .setValue(Constants.ValoriOperatore.INIZIA_PER.name());
         // Inizializzo il campo sesso paziente
         getForm().getRicercaDiario().getSesso_paziente().setDecodeMap(getSexDecodeMap());
         // Inizializzo il campo modality in study
-        getForm().getRicercaDiario().getModality_study().setDecodeMap(getModalityInStudyDecodeMap());
+        getForm().getRicercaDiario().getModality_study()
+                .setDecodeMap(getModalityInStudyDecodeMap());
         // // Inizializzo il campo di numero record visualizzati
         // getForm().getRicercaDiario().getPage_size().setDecodeMap(getPageSizeDecodeMap());
         // getForm().getRicercaDiario().getPage_size()
@@ -229,7 +229,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
             String stato = filtri.getTi_stato().parse();
 
-            if (StringUtils.isNotBlank(stato) && stato.equals(Constants.StatoStudio.WARNING.name())) {
+            if (StringUtils.isNotBlank(stato)
+                    && stato.equals(Constants.StatoStudio.WARNING.name())) {
                 getForm().getStudiList().getSelect_warnings().setHidden(false);
                 getForm().getRicercaDiario().getChiusuraMultipleWarnings().setHidden(false);
                 getForm().getRicercaDiario().getVersamentoMultipleWarnings().setHidden(false);
@@ -248,15 +249,19 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         TypeValidator validator = new TypeValidator(getMessageBox());
         // Valido i filtri data acquisizione da - a restituendo le date
         // comprensive di orario
-        Date[] dateStudi = validator.validaDate(filtri.getDt_study_da().parse(), filtri.getOre_dt_study_da().parse(),
-                filtri.getMinuti_dt_study_da().parse(), filtri.getDt_study_a().parse(),
-                filtri.getOre_dt_study_a().parse(), filtri.getMinuti_dt_study_a().parse(),
-                filtri.getDt_study_da().getHtmlDescription(), filtri.getDt_study_a().getHtmlDescription());
+        Date[] dateStudi = validator.validaDate(filtri.getDt_study_da().parse(),
+                filtri.getOre_dt_study_da().parse(), filtri.getMinuti_dt_study_da().parse(),
+                filtri.getDt_study_a().parse(), filtri.getOre_dt_study_a().parse(),
+                filtri.getMinuti_dt_study_a().parse(), filtri.getDt_study_da().getHtmlDescription(),
+                filtri.getDt_study_a().getHtmlDescription());
 
         Date[] datePresaInCarico = validator.validaDate(filtri.getDt_presa_in_carico_da().parse(),
-                filtri.getOre_dt_presa_in_carico_da().parse(), filtri.getMinuti_dt_presa_in_carico_da().parse(),
-                filtri.getDt_presa_in_carico_a().parse(), filtri.getOre_dt_presa_in_carico_a().parse(),
-                filtri.getMinuti_dt_presa_in_carico_a().parse(), filtri.getDt_presa_in_carico_da().getHtmlDescription(),
+                filtri.getOre_dt_presa_in_carico_da().parse(),
+                filtri.getMinuti_dt_presa_in_carico_da().parse(),
+                filtri.getDt_presa_in_carico_a().parse(),
+                filtri.getOre_dt_presa_in_carico_a().parse(),
+                filtri.getMinuti_dt_presa_in_carico_a().parse(),
+                filtri.getDt_presa_in_carico_da().getHtmlDescription(),
                 filtri.getDt_presa_in_carico_a().getHtmlDescription());
 
         PigVRicDiarioTableBean tableBean = new PigVRicDiarioTableBean();
@@ -264,12 +269,12 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             // Non ho ricevuto errori nella validazione delle date,
             // perciò genero l'xml di richiesta
             try {
-                tableBean = ricercaService.callRicercaDiarioService(filtri, dateStudi, datePresaInCarico, 0,
-                        Integer.parseInt(ctx.getWebNumRecords()));
+                tableBean = ricercaService.callRicercaDiarioService(filtri, dateStudi,
+                        datePresaInCarico, 0, Integer.parseInt(ctx.getWebNumRecords()));
             } catch (JAXBException e) {
                 log.error("Errore di marshalling della richiesta", e);
-                getMessageBox()
-                        .addError(messagesCtx.getGeneralError("Errore di marshalling della richiesta", e.getMessage()));
+                getMessageBox().addError(messagesCtx
+                        .getGeneralError("Errore di marshalling della richiesta", e.getMessage()));
             } catch (WebGenericException e) {
                 log.error("Errore dei filtri di ricerca diario : " + e.getMessage());
                 getMessageBox().addError(e.getMessage());
@@ -277,7 +282,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         }
         getForm().getStudiList().setTable(tableBean);
         // BigDecimal pageSize = filtri.getPage_size().parse();
-        getForm().getStudiList().getTable().setPageSize(Constants.NumPages.NUM_RECORDS_10.getValue());
+        getForm().getStudiList().getTable()
+                .setPageSize(Constants.NumPages.NUM_RECORDS_10.getValue());
         getForm().getStudiList().getTable().first();
     }
 
@@ -309,21 +315,24 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             if (navigationEvent != null) {
                 refresh = false;
             } else {
-                refresh = getLastPublisher().equals(Application.Publisher.DETTAGLIO_STUDIO) ? true : false;
+                refresh = getLastPublisher().equals(Application.Publisher.DETTAGLIO_STUDIO) ? true
+                        : false;
             }
 
             /*
-             * Da analisi: - FlTutteSessioni = Si se attivato da "Ricerca diario"; = No se attivato da
-             * "Ricerca restituzioni studi"; = No se attivato di seguito ad uno dei punti successivi di “Dettaglio
-             * studio” Determino perciò il valore del campo flTutteSessioni con questa logica:
+             * Da analisi: - FlTutteSessioni = Si se attivato da "Ricerca diario"; = No se attivato
+             * da "Ricerca restituzioni studi"; = No se attivato di seguito ad uno dei punti
+             * successivi di “Dettaglio studio” Determino perciò il valore del campo flTutteSessioni
+             * con questa logica:
              *
-             * NB. refresh : Indica se è un refresh del dettaglio (ad esempio in seguito alla pressione di un bottone
-             * del dettaglio)
+             * NB. refresh : Indica se è un refresh del dettaglio (ad esempio in seguito alla
+             * pressione di un bottone del dettaglio)
              *
-             * Se la riga corrente è un'istanza della lista di ricercaDiario e refresh è true = false Se la riga
-             * corrente è un'istanza della lista di ricercaDiario e refresh è false = true Se la riga corrente NON è
-             * un'istanza della lista di ricercaDiario e refresh è true = false Se la riga corrente NON è un'istanza
-             * della lista di ricercaDiario e refresh è false = false
+             * Se la riga corrente è un'istanza della lista di ricercaDiario e refresh è true =
+             * false Se la riga corrente è un'istanza della lista di ricercaDiario e refresh è false
+             * = true Se la riga corrente NON è un'istanza della lista di ricercaDiario e refresh è
+             * true = false Se la riga corrente NON è un'istanza della lista di ricercaDiario e
+             * refresh è false = false
              */
             boolean fromRicDiario = (currentRow instanceof PigVRicDiarioRowBean) && !refresh;
 
@@ -332,8 +341,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 row = ricercaService.callDettaglioRicercaDiarioService(currentRow, fromRicDiario);
             } catch (JAXBException e) {
                 log.error("Errore di marshalling della richiesta", e);
-                getMessageBox()
-                        .addError(messagesCtx.getGeneralError("Errore di marshalling della richiesta", e.getMessage()));
+                getMessageBox().addError(messagesCtx
+                        .getGeneralError("Errore di marshalling della richiesta", e.getMessage()));
             } catch (WebGenericException e) {
                 log.error("Errore dei filtri di ricerca diario", e);
                 getMessageBox().addError(e.getMessage());
@@ -341,7 +350,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getRicercaDiarioDettaglio().copyFromBean(row);
             // In base ai dati del dettaglio mostro le sezioni popolate e i
             // bottoni utilizzabili
-            if (StringUtils.isNotBlank(row.getBlXmlIndiceUd()) || StringUtils.isNotBlank(row.getBlXmlIndicePc())) {
+            if (StringUtils.isNotBlank(row.getBlXmlIndiceUd())
+                    || StringUtils.isNotBlank(row.getBlXmlIndicePc())) {
                 getForm().getXMLPCSection().setHidden(false);
                 getForm().getXMLUDSection().setHidden(false);
             } else {
@@ -357,13 +367,15 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             getForm().getDetailButtonList().getRestituzioneStudio().setHidden(true);
             getForm().getDetailButtonList().getTrasferimentoStudio().setHidden(true);
             getForm().getDetailButtonList().getVersamentoWarning().setHidden(true);
-            getForm().getRicercaDiarioDettaglio().getTi_patient_sex().setDecodeMap(getSexDecodeMap());
+            getForm().getRicercaDiarioDettaglio().getTi_patient_sex()
+                    .setDecodeMap(getSexDecodeMap());
             getForm().getRicercaDiarioDettaglio().setViewMode();
 
             boolean mostraBottoni;
 
             if (currentRow instanceof PigVRicDiarioRowBean) {
-                if (getForm().getRicercaDiario().getRicerca_ogni_sessione().getValue().equals(Constants.DB_TRUE)) {
+                if (getForm().getRicercaDiario().getRicerca_ogni_sessione().getValue()
+                        .equals(Constants.DB_TRUE)) {
                     mostraBottoni = false;
                 } else {
                     mostraBottoni = true;
@@ -375,17 +387,24 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             if (mostraBottoni) {
                 // CASISTICHE
                 // STATO SESSIONE RECUPERO
-                if (row.getTiStatoSessioneRecup() != null
-                        && row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_OK.name())) {
-                    getForm().getDetailButtonList().getDownloadProveConservazione().setHidden(false);
+                if (row.getTiStatoSessioneRecup() != null && row.getTiStatoSessioneRecup()
+                        .equals(Constants.StatoStudio.CHIUSO_OK.name())) {
+                    getForm().getDetailButtonList().getDownloadProveConservazione()
+                            .setHidden(false);
                     getForm().getDetailButtonList().getEliminaRecuperoStudio().setHidden(false);
                 } else if ((row.getTiStatoSessioneRecup() == null
-                        || row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_ERR.name())
-                        || row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_ERR_NOTIFICATO.name())
-                        || row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_ERR_RECUPERATO.name())
-                        || row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_ERR_PRELEVATO.name())
-                        || row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.CHIUSO_ERR_ELIMINATO.name())
-                        || row.getTiStatoSessioneRecup().equals(Constants.StatoStudio.ELIMINATO.name()))
+                        || row.getTiStatoSessioneRecup()
+                                .equals(Constants.StatoStudio.CHIUSO_ERR.name())
+                        || row.getTiStatoSessioneRecup()
+                                .equals(Constants.StatoStudio.CHIUSO_ERR_NOTIFICATO.name())
+                        || row.getTiStatoSessioneRecup()
+                                .equals(Constants.StatoStudio.CHIUSO_ERR_RECUPERATO.name())
+                        || row.getTiStatoSessioneRecup()
+                                .equals(Constants.StatoStudio.CHIUSO_ERR_PRELEVATO.name())
+                        || row.getTiStatoSessioneRecup()
+                                .equals(Constants.StatoStudio.CHIUSO_ERR_ELIMINATO.name())
+                        || row.getTiStatoSessioneRecup()
+                                .equals(Constants.StatoStudio.ELIMINATO.name()))
                         && row.getTiStatoObject() != null
                         && row.getTiStatoObject().equals(Constants.StatoStudio.CHIUSO_OK.name())) {
                     getForm().getDetailButtonList().getRestituzioneStudio().setHidden(false);
@@ -397,7 +416,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                     getForm().getDetailButtonList().getVersamentoWarning().setHidden(false);
                 }
                 // FL TRASFER DICOM
-                if (row.getFlTransferDicom() != null && row.getFlTransferDicom().equals(Constants.DB_TRUE)) {
+                if (row.getFlTransferDicom() != null
+                        && row.getFlTransferDicom().equals(Constants.DB_TRUE)) {
                     getForm().getDetailButtonList().getTrasferimentoStudio().setHidden(false);
                 }
             }
@@ -437,15 +457,18 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
         } else if (publisherName.equals(Application.Publisher.RICERCA_RESTITUZIONI_STUDI)) {
             try {
-                int paginaCorrente = getForm().getRestituzioniStudiList().getTable().getCurrentPageIndex();
-                int primoRecordPagina = getForm().getRestituzioniStudiList().getTable().getFirstRowPageIndex();
+                int paginaCorrente = getForm().getRestituzioniStudiList().getTable()
+                        .getCurrentPageIndex();
+                int primoRecordPagina = getForm().getRestituzioniStudiList().getTable()
+                        .getFirstRowPageIndex();
 
                 caricaListaRicercaRestituzioniStudi(getForm().getRicercaRestituzioniStudi());
 
                 // Rieseguo la query se necessario
                 this.lazyLoadGoPage(getForm().getRestituzioniStudiList(), paginaCorrente);
                 // Ritorno alla pagina
-                getForm().getRestituzioniStudiList().getTable().setCurrentRowIndex(primoRecordPagina);
+                getForm().getRestituzioniStudiList().getTable()
+                        .setCurrentRowIndex(primoRecordPagina);
             } catch (EMFError e) {
                 getMessageBox().addError("Impossibile caricare la lista");
             }
@@ -487,7 +510,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         DecodeMap mappaStato = new DecodeMap();
         String key = "stato";
 
-        for (Constants.StatoStudio stato : Util.sortEnum(Constants.StatoStudio.getRicercaDiarioEnums())) {
+        for (Constants.StatoStudio stato : Util
+                .sortEnum(Constants.StatoStudio.getRicercaDiarioEnums())) {
             bt.add(createKeyValueBaseRow(key, stato.name()));
         }
         mappaStato.populatedMap(bt, key, key);
@@ -502,7 +526,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         DecodeMap mappaStato = new DecodeMap();
         String key = "stato";
 
-        for (Constants.StatoStudio stato : Util.sortEnum(Constants.StatoStudio.getRicercaRestituzioniEnums())) {
+        for (Constants.StatoStudio stato : Util
+                .sortEnum(Constants.StatoStudio.getRicercaRestituzioniEnums())) {
             bt.add(createKeyValueBaseRow(key, stato.name()));
         }
         mappaStato.populatedMap(bt, key, key);
@@ -555,8 +580,9 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         // Imposto i valori della combo filtro paziente ordinati
         DecodeMap mappaFiltri = new DecodeMap();
         String key = "filtroPaziente";
-        Collection<Constants.ValoriOperatore> ops = Util.sortEnum(Constants.ValoriOperatore
-                .getEnums(Constants.ValoriOperatore.CONTIENE, Constants.ValoriOperatore.INIZIA_PER));
+        Collection<Constants.ValoriOperatore> ops = Util
+                .sortEnum(Constants.ValoriOperatore.getEnums(Constants.ValoriOperatore.CONTIENE,
+                        Constants.ValoriOperatore.INIZIA_PER));
         for (Constants.ValoriOperatore op : ops) {
             bt.add(createKeyValueBaseRow(key, op.name()));
         }
@@ -611,7 +637,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     @Override
     public void chiusuraMultipleWarnings() throws EMFError {
         // Ottengo la lista di globalHash selezionati
-        String[] selezionati = getRequest().getParameterValues(getForm().getStudiList().getSelect_warnings().getName());
+        String[] selezionati = getRequest()
+                .getParameterValues(getForm().getStudiList().getSelect_warnings().getName());
         int totSelezionati = selezionati != null ? selezionati.length : 0;
 
         if (totSelezionati > 0) {
@@ -621,8 +648,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
                 for (String comp : selezionati) {
                     if (StringUtils.isNotBlank(comp) && isNumeric(comp)) {
-                        PigVRicDiarioRowBean rowBean = (PigVRicDiarioRowBean) getForm().getStudiList().getTable()
-                                .getRow(Integer.parseInt(comp));
+                        PigVRicDiarioRowBean rowBean = (PigVRicDiarioRowBean) getForm()
+                                .getStudiList().getTable().getRow(Integer.parseInt(comp));
                         tb.add(rowBean);
                     }
                 }
@@ -656,14 +683,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         forwardToPublisher(Application.Publisher.CHIUSURA_WARNING);
     }
 
-    private void callWSChiusuraWarning(String globalHash, String motivazione) throws WebGenericException {
+    private void callWSChiusuraWarning(String globalHash, String motivazione)
+            throws WebGenericException {
         chiusWarnService.callWS(globalHash, motivazione);
     }
 
     @Override
     public void versamentoMultipleWarnings() throws EMFError {
         // Ottengo la lista di globalHash selezionati
-        String[] selezionati = getRequest().getParameterValues(getForm().getStudiList().getSelect_warnings().getName());
+        String[] selezionati = getRequest()
+                .getParameterValues(getForm().getStudiList().getSelect_warnings().getName());
         int totSelezionati = selezionati != null ? selezionati.length : 0;
 
         if (totSelezionati > 0) {
@@ -672,8 +701,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             if (selezionati != null) {
                 for (String comp : selezionati) {
                     if (StringUtils.isNotBlank(comp) && isNumeric(comp)) {
-                        PigVRicDiarioRowBean rowBean = (PigVRicDiarioRowBean) getForm().getStudiList().getTable()
-                                .getRow(Integer.parseInt(comp));
+                        PigVRicDiarioRowBean rowBean = (PigVRicDiarioRowBean) getForm()
+                                .getStudiList().getTable().getRow(Integer.parseInt(comp));
                         tb.add(rowBean);
                     }
                 }
@@ -690,11 +719,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     }
 
     /**
-     * Eseguo la chiamata per il versamento in pre-ingest dello studio in warning. Verifico la presenza della
-     * motivazione e eseguo l'invio.
+     * Eseguo la chiamata per il versamento in pre-ingest dello studio in warning. Verifico la
+     * presenza della motivazione e eseguo l'invio.
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     @Override
     public void versamentoWarning() throws EMFError {
@@ -717,7 +745,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         forwardToPublisher(Application.Publisher.FORZA_ACCETTAZIONE_WARNING);
     }
 
-    private void callWSVersamentoWarning(String globalHash, String motivazione) throws WebGenericException {
+    private void callWSVersamentoWarning(String globalHash, String motivazione)
+            throws WebGenericException {
         try {
             pingSender.setMotivazione(motivazione);
             pingSender.sendWarnStudy(globalHash);
@@ -730,18 +759,21 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     public void confermaChiusuraWarning() throws EMFError {
         if (!getForm().getStudySummarySection().isHidden()) {
             getForm().getGestioneWarning().getDl_motivo_chiuso_warning().post(getRequest());
-            String motivazione = getForm().getGestioneWarning().getDl_motivo_chiuso_warning().getValue();
-            String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash().getValue();
+            String motivazione = getForm().getGestioneWarning().getDl_motivo_chiuso_warning()
+                    .getValue();
+            String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash()
+                    .getValue();
             // Verifico la presenza della motivazione
             // Altrimenti ritorno errore
             if (StringUtils.isNotBlank(motivazione)) {
-                log.debug("Eseguo la chiamata di chiusura warning per il global hash " + globalHash + " e motivazione "
-                        + motivazione);
+                log.debug("Eseguo la chiamata di chiusura warning per il global hash " + globalHash
+                        + " e motivazione " + motivazione);
                 try {
                     callWSChiusuraWarning(globalHash, motivazione);
                 } catch (WebGenericException e) {
                     String descError = e.getCode() != null
-                            ? messagesCtx.getChiusWarnError(e.getCode(), e.getDescription(), 0, 1) : e.getMessage();
+                            ? messagesCtx.getChiusWarnError(e.getCode(), e.getDescription(), 0, 1)
+                            : e.getMessage();
                     log.debug(descError);
                     getMessageBox().addError(descError);
                 }
@@ -761,9 +793,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
         } else {
             // RICERCA DIARIO
-            PigVRicDiarioTableBean table = (PigVRicDiarioTableBean) getForm().getListaGestioneWarning().getTable();
+            PigVRicDiarioTableBean table = (PigVRicDiarioTableBean) getForm()
+                    .getListaGestioneWarning().getTable();
             getForm().getGestioneWarning().getDl_motivo_chiuso_warning().post(getRequest());
-            String motivazione = getForm().getGestioneWarning().getDl_motivo_chiuso_warning().getValue();
+            String motivazione = getForm().getGestioneWarning().getDl_motivo_chiuso_warning()
+                    .getValue();
             // Verifico la presenza della motivazione
             // Altrimenti ritorno errore
             if (StringUtils.isNotBlank(motivazione)) {
@@ -775,8 +809,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                         callWSChiusuraWarning(globalHash, motivazione);
                         currentRow++;
                     } catch (WebGenericException e) {
-                        String descError = e.getCode() != null ? messagesCtx.getChiusWarnError(e.getCode(),
-                                e.getDescription(), currentRow, table.size()) : e.getMessage();
+                        String descError = e.getCode() != null
+                                ? messagesCtx.getChiusWarnError(e.getCode(), e.getDescription(),
+                                        currentRow, table.size())
+                                : e.getMessage();
                         log.debug(descError);
                         getMessageBox().addError(descError);
                     }
@@ -790,7 +826,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
             if (!getMessageBox().hasError()) {
                 log.debug("Chiusure in warning eseguite con successo");
-                getMessageBox().addInfo(messagesCtx.getChiusWarnMultipleOk(table.size(), table.size()));
+                getMessageBox()
+                        .addInfo(messagesCtx.getChiusWarnMultipleOk(table.size(), table.size()));
                 // setTableName(getForm().getStudiList().getName());
                 // loadDettaglio();
                 goBack();
@@ -809,18 +846,21 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     public void confermaVersamentoWarning() throws EMFError {
         if (!getForm().getStudySummarySection().isHidden()) {
             getForm().getGestioneWarning().getDl_motivo_forza_accettazione().post(getRequest());
-            String motivazione = getForm().getGestioneWarning().getDl_motivo_forza_accettazione().getValue();
-            String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash().getValue();
+            String motivazione = getForm().getGestioneWarning().getDl_motivo_forza_accettazione()
+                    .getValue();
+            String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash()
+                    .getValue();
             // Verifico la presenza della motivazione
             // Altrimenti ritorno errore
             if (StringUtils.isNotBlank(motivazione)) {
-                log.debug("Eseguo la chiamata di versamento per il global hash " + globalHash + " e motivazione "
-                        + motivazione);
+                log.debug("Eseguo la chiamata di versamento per il global hash " + globalHash
+                        + " e motivazione " + motivazione);
                 try {
                     callWSVersamentoWarning(globalHash, motivazione);
                 } catch (WebGenericException e) {
                     String descError = e.getCode() != null
-                            ? messagesCtx.getVersWarnError(e.getCode(), e.getDescription(), 0, 1) : e.getMessage();
+                            ? messagesCtx.getVersWarnError(e.getCode(), e.getDescription(), 0, 1)
+                            : e.getMessage();
                     log.debug(descError);
                     getMessageBox().addError(descError);
                 }
@@ -840,9 +880,11 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
         } else {
             // RICERCA DIARIO
-            PigVRicDiarioTableBean table = (PigVRicDiarioTableBean) getForm().getListaGestioneWarning().getTable();
+            PigVRicDiarioTableBean table = (PigVRicDiarioTableBean) getForm()
+                    .getListaGestioneWarning().getTable();
             getForm().getGestioneWarning().getDl_motivo_forza_accettazione().post(getRequest());
-            String motivazione = getForm().getGestioneWarning().getDl_motivo_forza_accettazione().getValue();
+            String motivazione = getForm().getGestioneWarning().getDl_motivo_forza_accettazione()
+                    .getValue();
             // Verifico la presenza della motivazione
             // Altrimenti ritorno errore
             if (StringUtils.isNotBlank(motivazione)) {
@@ -854,8 +896,10 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                         callWSVersamentoWarning(globalHash, motivazione);
                         currentRow++;
                     } catch (WebGenericException e) {
-                        String descError = e.getCode() != null ? messagesCtx.getVersWarnError(e.getCode(),
-                                e.getDescription(), currentRow, table.size()) : e.getMessage();
+                        String descError = e.getCode() != null
+                                ? messagesCtx.getVersWarnError(e.getCode(), e.getDescription(),
+                                        currentRow, table.size())
+                                : e.getMessage();
                         log.debug(descError);
                         getMessageBox().addError(descError);
                     }
@@ -869,7 +913,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             }
             if (!getMessageBox().hasError()) {
                 log.debug("Versamenti in warning eseguiti con successo");
-                getMessageBox().addInfo(messagesCtx.getVersWarnMultipleOk(table.size(), table.size()));
+                getMessageBox()
+                        .addInfo(messagesCtx.getVersWarnMultipleOk(table.size(), table.size()));
                 // setTableName(getForm().getStudiList().getName());
                 // loadDettaglio();
                 goBack();
@@ -887,8 +932,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Eseguo la chiamata di restituzione dello studio dal Pre-Ingest
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     @Override
     public void restituzioneStudio() throws EMFError {
@@ -912,15 +956,15 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Eseguo il trasferimento dello studio al PACS
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     @Override
     public void trasferimentoStudio() throws EMFError {
         getForm().getStudySummarySection().setHidden(false);
         getForm().getTrasferimentoPacs().clear();
 
-        getForm().getTrasferimentoPacs().getTransfer_node().setDecodeMap(getTransferDicomNodesDecodeMap());
+        getForm().getTrasferimentoPacs().getTransfer_node()
+                .setDecodeMap(getTransferDicomNodesDecodeMap());
         String nodoDicom = getForm().getRicercaDiarioDettaglio().getCd_aet_nodo_dicom().getValue();
         getForm().getTrasferimentoPacs().getTransfer_node().setValue(nodoDicom);
 
@@ -934,16 +978,20 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             String nodoDicom = getForm().getTrasferimentoPacs().getTransfer_node().parse();
             log.debug("Conferma trasferimento pacs al nodo " + nodoDicom);
             // Estraggo tutti i dati per eseguire il trasferimento
-            String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash().getValue();
+            String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash()
+                    .getValue();
             // String nodoDicom =
             // getForm().getRicercaDiarioDettaglio().getCd_aet_nodo_dicom().getValue();
-            String chiaveUnitaDoc = getForm().getRicercaDiarioDettaglio().getChiave_unita_doc().getValue();
-            String udFileName = Constants.UD_FILE_PREFIX_DPI.concat(globalHash).concat(Constants.ZIP_EXTENSION);
-            String studyUid = getForm().getRicercaDiarioDettaglio().getDs_study_instance_uid().getValue();
-            File notifDir = new File(
-                    ctx.getWorkingPath().concat(ctx.getStudioDicomPath()).concat(DPIConstants.NOTIFICATI_FOLDER),
-                    globalHash);
-            File fileWork = new File(storageSCUDir, nodoDicom + File.separator + DPIConstants.WORK_FOLDER);
+            String chiaveUnitaDoc = getForm().getRicercaDiarioDettaglio().getChiave_unita_doc()
+                    .getValue();
+            String udFileName = Constants.UD_FILE_PREFIX_DPI.concat(globalHash)
+                    .concat(Constants.ZIP_EXTENSION);
+            String studyUid = getForm().getRicercaDiarioDettaglio().getDs_study_instance_uid()
+                    .getValue();
+            File notifDir = new File(ctx.getWorkingPath().concat(ctx.getStudioDicomPath())
+                    .concat(DPIConstants.NOTIFICATI_FOLDER), globalHash);
+            File fileWork = new File(storageSCUDir,
+                    nodoDicom + File.separator + DPIConstants.WORK_FOLDER);
             File chiaveUnitaDocDir = new File(fileWork, chiaveUnitaDoc);
             File[] filesInUdZip = null;
             File[] dicomFiles = null;
@@ -967,7 +1015,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 if (XAUtil.fileExistsAndIsDirectory(xaSession, notifDir)) {
                     if (XAUtil.fileExists(xaSession, new File(zipPathUdFile))) {
                         if (Util.verificaPresenzaDirInZip(zipPathUdFile, chiaveUnitaDoc)) {
-                            if (!XAUtil.fileExistsAndIsDirectoryLockExclusive(xaSession, chiaveUnitaDocDir)) {
+                            if (!XAUtil.fileExistsAndIsDirectoryLockExclusive(xaSession,
+                                    chiaveUnitaDocDir)) {
                                 log.debug("Creo la directory " + chiaveUnitaDoc + "in work");
                                 // Creo all'interno della directory work una
                                 // directory chiamata come la chiave
@@ -980,13 +1029,14 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                                 XAUtil.createDirectory(xaSession, studyUidDir);
 
                                 /*
-                                 * Estraggo dallo zip la directory chiaveUnitaDoc e copio il suo contenuto nella
-                                 * directory work nel filesystem
+                                 * Estraggo dallo zip la directory chiaveUnitaDoc e copio il suo
+                                 * contenuto nella directory work nel filesystem
                                  */
                                 log.debug("Estraggo dallo zip la directory " + chiaveUnitaDoc
                                         + " nella directory creata");
-                                filesInUdZip = Util.estraiFileDaZipTx(new File(zipPathUdFile), chiaveUnitaDoc,
-                                        chiaveUnitaDocDir.getPath(), xaSession, false);
+                                filesInUdZip = Util.estraiFileDaZipTx(new File(zipPathUdFile),
+                                        chiaveUnitaDoc, chiaveUnitaDocDir.getPath(), xaSession,
+                                        false);
                                 // L'estrazione dovrebbe aver salvato nella
                                 // directory chiave un file. Lo verifico
                                 if (filesInUdZip.length == 1) {
@@ -994,8 +1044,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                                         // Se esiste, estraggo il file salvato
                                         // per ricavarne il contenuto
                                         dicomZip = file;
-                                        dicomFiles = Util.estraiFileDaZipTx(file, "/", studyUidDir.getPath(), xaSession,
-                                                true);
+                                        dicomFiles = Util.estraiFileDaZipTx(file, "/",
+                                                studyUidDir.getPath(), xaSession, true);
                                     }
                                 } else {
                                     log.error(messagesCtx.getZipFileLengthError());
@@ -1050,11 +1100,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                         if (studyUidDir.exists() && studyUidDir.isDirectory()) {
                             // Eseguo la chiamata di trasferimento dei dati
                             log.debug("Eseguo la chiamata di trasferimento dei dati");
-                            result = pacsSender.doCStore(node.getHostname(), node.getPort(), nodoDicom, studyUidDir);
+                            result = pacsSender.doCStore(node.getHostname(), node.getPort(),
+                                    nodoDicom, studyUidDir);
                             log.debug(messagesCtx.getDicomNodeOk(result.getNumImagesInStudy(),
                                     result.getTransferedImagesInStudy()));
-                            getMessageBox().addInfo(messagesCtx.getDicomNodeOk(result.getNumImagesInStudy(),
-                                    result.getTransferedImagesInStudy()));
+                            getMessageBox().addInfo(
+                                    messagesCtx.getDicomNodeOk(result.getNumImagesInStudy(),
+                                            result.getTransferedImagesInStudy()));
                             // Verifico che siano stati trasferiti tutti i
                             // dati
                             if (!result.isStudyComplete()) {
@@ -1097,9 +1149,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     @Override
     public void eliminaRecuperoStudio() throws EMFError {
         String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash().getValue();
-        File notifDir = new File(
-                ctx.getWorkingPath().concat(ctx.getStudioDicomPath()).concat(DPIConstants.NOTIFICATI_FOLDER),
-                globalHash);
+        File notifDir = new File(ctx.getWorkingPath().concat(ctx.getStudioDicomPath())
+                .concat(DPIConstants.NOTIFICATI_FOLDER), globalHash);
         // Verifico che sia presente la cartella del globalHash all'interno
         // della directory "notificati"
         // Se non esiste, errore
@@ -1116,7 +1167,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 log.error("Si è verificato un errore durante la transazione.", e);
                 xaSession.rollback();
             } catch (NoTransactionAssociatedException e1) {
-                log.error("Si è verificato un errore durante il rollback della transazione. Transazione non esistente.",
+                log.error(
+                        "Si è verificato un errore durante il rollback della transazione. Transazione non esistente.",
                         e1);
             }
             getMessageBox().addError(messagesCtx.getFatalError());
@@ -1141,21 +1193,20 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Ricerca il file delle prove di conservazione su filesystem e ne permette il download
      *
-     * @throws Throwable
-     *             eccezione generica
+     * @throws Throwable eccezione generica
      */
     @Override
     public void downloadProveConservazione() throws Throwable {
         String globalHash = getForm().getRicercaDiarioDettaglio().getDs_global_hash().getValue();
-        File notifDir = new File(
-                ctx.getWorkingPath().concat(ctx.getStudioDicomPath()).concat(DPIConstants.NOTIFICATI_FOLDER),
-                globalHash);
+        File notifDir = new File(ctx.getWorkingPath().concat(ctx.getStudioDicomPath())
+                .concat(DPIConstants.NOTIFICATI_FOLDER), globalHash);
         // Verifico che sia presente la cartella del globalHash all'interno
         // della directory "notificati"
         // Se non esiste, errore
         if (notifDir.exists()) {
             String[] fileNames = notifDir.list();
-            String pcFileName = Constants.PC_FILE_PREFIX_DPI.concat(globalHash).concat(Constants.ZIP_EXTENSION);
+            String pcFileName = Constants.PC_FILE_PREFIX_DPI.concat(globalHash)
+                    .concat(Constants.ZIP_EXTENSION);
             String zipPathPcFile = notifDir + File.separator + pcFileName;
             // Verifico la presenza dello zip delle prove di conservazione nella
             // directory
@@ -1163,7 +1214,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             if (Arrays.asList(fileNames).contains(pcFileName)) {
                 // Eseguo la copia dell'outputStream per il download
                 getResponse().setContentType("application/zip");
-                getResponse().setHeader("Content-Disposition", "attachment; filename=\"" + pcFileName + "\"");
+                getResponse().setHeader("Content-Disposition",
+                        "attachment; filename=\"" + pcFileName + "\"");
                 OutputStream out = new DataOutputStream(getServletOutputStream());
                 FileUtils.copyFile(new File(zipPathPcFile), out);
                 out.flush();
@@ -1182,16 +1234,17 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     }
 
     /**
-     * Trigger sull'utilizzo del campo Dl_motivo_chiuso_warning_standard copia il valore contenuto nel campo del trigger
-     * sul campo Dl_motivo_chiuso_warning
+     * Trigger sull'utilizzo del campo Dl_motivo_chiuso_warning_standard copia il valore contenuto
+     * nel campo del trigger sul campo Dl_motivo_chiuso_warning
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     @Override
-    public JSONObject triggerGestioneWarningDl_motivo_chiuso_warning_standardOnTrigger() throws EMFError {
+    public JSONObject triggerGestioneWarningDl_motivo_chiuso_warning_standardOnTrigger()
+            throws EMFError {
         getForm().getGestioneWarning().getDl_motivo_chiuso_warning_standard().post(getRequest());
-        String value = getForm().getGestioneWarning().getDl_motivo_chiuso_warning_standard().getValue();
+        String value = getForm().getGestioneWarning().getDl_motivo_chiuso_warning_standard()
+                .getValue();
         getForm().getGestioneWarning().getDl_motivo_chiuso_warning().setValue(value);
         return getForm().getGestioneWarning().asJSON();
     }
@@ -1199,8 +1252,7 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
     /**
      * Carica la pagina di ricerca restituzioni studi inizializzando i campi
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     // @Secure(action = "Menu.Monitoraggio.RicercaRestituzioneStudi")
     public void loadRicercaRestituzioniStudi() throws EMFError {
@@ -1209,16 +1261,20 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
         getForm().getRicercaRestituzioniStudi().clear();
         // Inizializzo il campo ti_stato con la decodeMap degli stati
-        getForm().getRicercaRestituzioniStudi().getTi_stato().setDecodeMap(getStatiRecuperoStudioDecodeMap());
+        getForm().getRicercaRestituzioniStudi().getTi_stato()
+                .setDecodeMap(getStatiRecuperoStudioDecodeMap());
         // Inizializzo il campo nodiDicom con la decodeMap dei nodi dicom
         // indicando il valore di default nel caso esista solo un nodo dicom
-        getForm().getRicercaRestituzioniStudi().getNodo_dicom().setDecodeMap(getDicomNodesForResearchDecodeMap());
+        getForm().getRicercaRestituzioniStudi().getNodo_dicom()
+                .setDecodeMap(getDicomNodesForResearchDecodeMap());
         if (pacsListForSearch.size() == 1) {
-            getForm().getRicercaRestituzioniStudi().getNodo_dicom().setValue(pacsListForSearch.get(0));
+            getForm().getRicercaRestituzioniStudi().getNodo_dicom()
+                    .setValue(pacsListForSearch.get(0));
         }
         // Inizializzo il campo filtro paziente indicando il valore di
         // default
-        getForm().getRicercaRestituzioniStudi().getFiltro_paziente().setDecodeMap(getFiltroPazienteDecodeMap());
+        getForm().getRicercaRestituzioniStudi().getFiltro_paziente()
+                .setDecodeMap(getFiltroPazienteDecodeMap());
         getForm().getRicercaRestituzioniStudi().getFiltro_paziente()
                 .setValue(Constants.ValoriOperatore.INIZIA_PER.name());
         // Inizializzo il campo sesso paziente
@@ -1241,7 +1297,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         // Eseguo la ricerca restituzioni studi: valido i valori e creo l'xml di
         // richiesta
         if (getLastPublisher().equals(Application.Publisher.RICERCA_RESTITUZIONI_STUDI)) {
-            MonitoraggioForm.RicercaRestituzioniStudi filtri = getForm().getRicercaRestituzioniStudi();
+            MonitoraggioForm.RicercaRestituzioniStudi filtri = getForm()
+                    .getRicercaRestituzioniStudi();
             // Esegue la post dei filtri compilati
             filtri.post(getRequest());
             // Valida i filtri per verificare quelli obbligatori
@@ -1252,18 +1309,23 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
         }
     }
 
-    private void caricaListaRicercaRestituzioniStudi(RicercaRestituzioniStudi filtri) throws EMFError {
+    private void caricaListaRicercaRestituzioniStudi(RicercaRestituzioniStudi filtri)
+            throws EMFError {
         // Valida i campi di ricerca
         TypeValidator validator = new TypeValidator(getMessageBox());
         // Valido i filtri data acquisizione da - a restituendo le date
         // comprensive di orario
-        Date[] dateStudi = validator.validaDate(filtri.getDt_study_da().parse(), filtri.getOre_dt_study_da().parse(),
-                filtri.getMinuti_dt_study_da().parse(), filtri.getDt_study_a().parse(),
-                filtri.getOre_dt_study_a().parse(), filtri.getMinuti_dt_study_a().parse(),
-                filtri.getDt_study_da().getHtmlDescription(), filtri.getDt_study_a().getHtmlDescription());
-        Date[] dateAperturaSessioni = validator.validaDate(filtri.getDt_apertura_sessione_da().parse(),
-                filtri.getOre_dt_apertura_sessione_da().parse(), filtri.getMinuti_dt_apertura_sessione_da().parse(),
-                filtri.getDt_apertura_sessione_a().parse(), filtri.getOre_dt_apertura_sessione_a().parse(),
+        Date[] dateStudi = validator.validaDate(filtri.getDt_study_da().parse(),
+                filtri.getOre_dt_study_da().parse(), filtri.getMinuti_dt_study_da().parse(),
+                filtri.getDt_study_a().parse(), filtri.getOre_dt_study_a().parse(),
+                filtri.getMinuti_dt_study_a().parse(), filtri.getDt_study_da().getHtmlDescription(),
+                filtri.getDt_study_a().getHtmlDescription());
+        Date[] dateAperturaSessioni = validator.validaDate(
+                filtri.getDt_apertura_sessione_da().parse(),
+                filtri.getOre_dt_apertura_sessione_da().parse(),
+                filtri.getMinuti_dt_apertura_sessione_da().parse(),
+                filtri.getDt_apertura_sessione_a().parse(),
+                filtri.getOre_dt_apertura_sessione_a().parse(),
                 filtri.getMinuti_dt_apertura_sessione_a().parse(),
                 filtri.getDt_apertura_sessione_da().getHtmlDescription(),
                 filtri.getDt_apertura_sessione_a().getHtmlDescription());
@@ -1272,12 +1334,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             // Non ho ricevuto errori nella validazione delle date,
             // perciò genero l'xml di richiesta
             try {
-                tableBean = ricercaService.callRicercaRestituzioniStudiService(filtri, dateAperturaSessioni, dateStudi,
-                        0, Integer.parseInt(ctx.getWebNumRecords()));
+                tableBean = ricercaService.callRicercaRestituzioniStudiService(filtri,
+                        dateAperturaSessioni, dateStudi, 0,
+                        Integer.parseInt(ctx.getWebNumRecords()));
             } catch (JAXBException e) {
                 log.error("Errore di marshalling della richiesta", e);
-                getMessageBox()
-                        .addError(messagesCtx.getGeneralError("Errore di marshalling della richiesta", e.getMessage()));
+                getMessageBox().addError(messagesCtx
+                        .getGeneralError("Errore di marshalling della richiesta", e.getMessage()));
             } catch (WebGenericException e) {
                 log.error("Errore dei filtri di ricerca diario : " + e.getMessage());
                 getMessageBox().addError(e.getMessage());
@@ -1301,11 +1364,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             now.add(Calendar.DAY_OF_MONTH, -ctx.getDayBeforeNow());
 
             long days = Util.getDateDiff(from, to, TimeUnit.DAYS);
-            long daysFromNow = Util.getDateDiff(to, Calendar.getInstance().getTime(), TimeUnit.DAYS);
+            long daysFromNow = Util.getDateDiff(to, Calendar.getInstance().getTime(),
+                    TimeUnit.DAYS);
 
-            if (toCal.after(now) || days > ctx.getDayLimit() || from.after(to) || from.before(startDate)) {
-                getMessageBox().addError(
-                        messagesCtx.getQueryPacsDateError(new SimpleDateFormat("dd/MM/yyyy").format(startDate)));
+            if (toCal.after(now) || days > ctx.getDayLimit() || from.after(to)
+                    || from.before(startDate)) {
+                getMessageBox().addError(messagesCtx.getQueryPacsDateError(
+                        new SimpleDateFormat("dd/MM/yyyy").format(startDate)));
             } else {
 
                 int filtroGiorniDelay = (int) daysFromNow;
@@ -1313,11 +1378,13 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
 
                 getForm().getConfrontoPacsPreIngest().getFiltro_giorni_delay()
                         .setValue(String.valueOf(filtroGiorniDelay));
-                getForm().getConfrontoPacsPreIngest().getFiltro_ore_before().setValue(String.valueOf(filtroOreBefore));
+                getForm().getConfrontoPacsPreIngest().getFiltro_ore_before()
+                        .setValue(String.valueOf(filtroOreBefore));
 
                 List<CompareBean> compareList = null;
                 try {
-                    compareList = queryPacsPingJob.comparePacsPing(filtroGiorniDelay, filtroOreBefore);
+                    compareList = queryPacsPingJob.comparePacsPing(filtroGiorniDelay,
+                            filtroOreBefore);
                 } catch (Exception e) {
                     getMessageBox().addError(messagesCtx.getGeneralError(e.getMessage()));
                 }
@@ -1338,7 +1405,8 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
                 }
 
                 getForm().getConfrontiList().setTable(tb);
-                getForm().getConfrontiList().getTable().setPageSize(Constants.NumPages.NUM_RECORDS_100.getValue());
+                getForm().getConfrontiList().getTable()
+                        .setPageSize(Constants.NumPages.NUM_RECORDS_100.getValue());
                 getForm().getConfrontiList().getTable().first();
             }
         }
@@ -1419,13 +1487,16 @@ public class MonitoraggioAction extends MonitoraggioAbstractAction {
             // filtroGiorniDelay,
             // filtroOreBefore });
             // jobDetail.afterPropertiesSet();
-            int filtroGiorniDelay = getForm().getConfrontoPacsPreIngest().getFiltro_giorni_delay().parse().intValue();
-            int filtroOreBefore = getForm().getConfrontoPacsPreIngest().getFiltro_ore_before().parse().intValue();
+            int filtroGiorniDelay = getForm().getConfrontoPacsPreIngest().getFiltro_giorni_delay()
+                    .parse().intValue();
+            int filtroOreBefore = getForm().getConfrontoPacsPreIngest().getFiltro_ore_before()
+                    .parse().intValue();
 
             JobDetail job = (JobDetail) context.getBean("queryPacsPingQJobInstantly");
             MethodInvokingJobDetailFactoryBean jobDetailFactory = (MethodInvokingJobDetailFactoryBean) job
                     .getJobDataMap().get("methodInvoker");
-            jobDetailFactory.setArguments(new Object[] { filtroGiorniDelay, filtroOreBefore });
+            jobDetailFactory.setArguments(new Object[] {
+                    filtroGiorniDelay, filtroOreBefore });
             jobDetailFactory.afterPropertiesSet();
             // job.getJobDataMap().put("methodInvoker",
             // jobDetailFactory);

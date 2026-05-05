@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.service;
@@ -40,9 +36,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.FileSystemResource;
 import org.xadisk.bridge.proxies.interfaces.XAFileSystem;
@@ -68,8 +62,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.dcm4che2.net.Device;
 
 @Configuration
-@ImportResource({ "file:///${catalina.base}/conf/dpi-${env}/securityContext.xml" })
-@ComponentScan(basePackages = "org.springframework.security.saml")
+// VECCHIA CONFIGURAZIONE
+// @ImportResource({ "file:///${catalina.base}/conf/dpi-${env}/securityContext.xml" })
 public class DPIConfigInitializer {
     /*
      * Common stuff
@@ -150,8 +144,8 @@ public class DPIConfigInitializer {
     @Scope(value = "singleton")
     protected DicomServer getDicomServer() throws IOException, GeneralSecurityException {
         // Device
-        DicomServer dicomServer = new DicomServer(validAET, DPIConstants.defaultStorageSOPClasses, getReaperTimeoutMS(),
-                getConnTimeoutMS());
+        DicomServer dicomServer = new DicomServer(validAET, DPIConstants.defaultStorageSOPClasses,
+                getReaperTimeoutMS(), getConnTimeoutMS());
         dicomServer.setAETitle(getDpiAETitle());
         dicomServer.setPort(getPort());
         // MEV#30394
@@ -177,8 +171,8 @@ public class DPIConfigInitializer {
     @Bean
     @Scope(value = "singleton")
     protected TxStoreSCP getTxStoreSCP() throws IOException {
-        TxStoreSCP txStoreSCP = new TxStoreSCP(dicomServer.getAeStoreSCP(), DPIConstants.defaultStorageSOPClasses,
-                queryMoveService);
+        TxStoreSCP txStoreSCP = new TxStoreSCP(dicomServer.getAeStoreSCP(),
+                DPIConstants.defaultStorageSOPClasses, queryMoveService);
         txStoreSCP.setStorageRootDir(storageSCPDir());
         txStoreSCP.setXaDiskNativeFS(xaDiskNativeFS);
         txStoreSCP.setDicomNodes(getDicomNodes());
@@ -240,14 +234,15 @@ public class DPIConfigInitializer {
     @Scope(value = "singleton")
     public XAFileSystem xaDiskNativeFS() throws IOException {
         StandaloneFileSystemConfiguration configuration = new StandaloneFileSystemConfiguration(
-                getConfigString("dpi.work_path") + getConfigString("dpi.xadisk_path"), getDpiAETitle());
+                getConfigString("dpi.work_path") + getConfigString("dpi.xadisk_path"),
+                getDpiAETitle());
         // transaction timeout 1h
         configuration.setTransactionTimeout(3600);
         configuration.setLockTimeOut(90000);
         // Commentato il settaggio della dimensione del buffer in modo che utilizzi il default 4K
         configuration.setBufferSize(getConfigInt("dpi.xadisk_buffersize"));
-        log.info("Parametri XADisk: "
-                + ReflectionToStringBuilder.toString(configuration, ToStringStyle.MULTI_LINE_STYLE));
+        log.info("Parametri XADisk: " + ReflectionToStringBuilder.toString(configuration,
+                ToStringStyle.MULTI_LINE_STYLE));
         XAFileSystem xafs = NativeXAFileSystem.bootXAFileSystemStandAlone(configuration);
         try {
             xafs.waitForBootup(60000);
@@ -271,7 +266,8 @@ public class DPIConfigInitializer {
     private Properties envSpecificProperties() throws IOException {
         if (properties == null) {
             final FileSystemResource fsResource = new FileSystemResource(
-                    System.getProperty("catalina.base") + "/conf/dpi-" + System.getProperty("env") + "/dpi.properties");
+                    System.getProperty("catalina.base") + "/conf/dpi-" + System.getProperty("env")
+                            + "/dpi.properties");
             final Properties defaultProperties = new Properties();
             defaultProperties.load(fsResource.getInputStream());
             properties = defaultProperties;
@@ -302,13 +298,15 @@ public class DPIConfigInitializer {
 
     public void createDPIFileSystem() throws IOException {
 
-        final String studioDicomBasePath = getConfigString("dpi.work_path") + getConfigString("dpi.studiodicom_path");
+        final String studioDicomBasePath = getConfigString("dpi.work_path")
+                + getConfigString("dpi.studiodicom_path");
         final String basePathSCP = studioDicomBasePath + getConfigString("dpi.storescp.path");
         final String basePathSCU = studioDicomBasePath + getConfigString("dpi.storescu.path");
         int i = 0;
         if (StringUtils.isNotBlank(basePathSCP) && StringUtils.isNotBlank(basePathSCU)) {
             String relpath;
-            while ((relpath = getConfigString("nododicom.aet." + i)) != null && !relpath.equals("")) {
+            while ((relpath = getConfigString("nododicom.aet." + i)) != null
+                    && !relpath.equals("")) {
                 File pacsRootDir = new File(storageSCPDir(), relpath);
                 pacsRootDir.mkdirs();
                 // genero le dir cmove e cstore
@@ -346,22 +344,24 @@ public class DPIConfigInitializer {
         int j = 0;
         String genericRelpath;
 
-        while ((genericRelpath = getConfigString("tipoObj." + j)) != null && !"".equals(genericRelpath)) {
-            File genericItemRootDir = new File(getConfigString("dpi.work_path") + File.separatorChar + genericRelpath);
+        while ((genericRelpath = getConfigString("tipoObj." + j)) != null
+                && !"".equals(genericRelpath)) {
+            File genericItemRootDir = new File(
+                    getConfigString("dpi.work_path") + File.separatorChar + genericRelpath);
             // genericItemRootDir.mkdirs();
             File genericItemNewDir = new File(genericItemRootDir + DPIConstants.NEW_FOLDER);
             genericItemNewDir.mkdirs();
             File genericItemOutDir = new File(genericItemRootDir + DPIConstants.OUT_FOLDER);
             genericItemOutDir.mkdirs();
             // creo la cartella dei copiati (per gli oggetti generici)
-            File afterCopyDir = new File(
-                    getConfigString("tipoObj.copiato_path." + j) + File.separatorChar + genericRelpath);
+            File afterCopyDir = new File(getConfigString("tipoObj.copiato_path." + j)
+                    + File.separatorChar + genericRelpath);
             if (!afterCopyDir.exists()) {
                 afterCopyDir.mkdirs();
             }
             // creo la cartella di input (per gli oggetti generici)
-            File inputCopyDir = new File(
-                    getConfigString("tipoObj.input_path." + j) + File.separatorChar + genericRelpath);
+            File inputCopyDir = new File(getConfigString("tipoObj.input_path." + j)
+                    + File.separatorChar + genericRelpath);
             if (!inputCopyDir.exists()) {
                 inputCopyDir.mkdirs();
             }
@@ -369,7 +369,8 @@ public class DPIConfigInitializer {
         }
     }
 
-    @Bean(name = { "delayTime" })
+    @Bean(name = {
+            "delayTime" })
     @Scope(value = "singleton")
     public Optional<Integer> getDelayTime() throws IOException {
         // MEV#27600
@@ -380,21 +381,24 @@ public class DPIConfigInitializer {
     @Bean
     @Scope(value = "singleton")
     public File storageSCPDir() throws IOException {
-        final String studioDicomBasePath = getConfigString("dpi.work_path") + getConfigString("dpi.studiodicom_path");
+        final String studioDicomBasePath = getConfigString("dpi.work_path")
+                + getConfigString("dpi.studiodicom_path");
         return new File(studioDicomBasePath + getConfigString("dpi.storescp.path"));
     }
 
     @Bean
     @Scope(value = "singleton")
     public File storageSCUDir() throws IOException {
-        final String studioDicomBasePath = getConfigString("dpi.work_path") + getConfigString("dpi.studiodicom_path");
+        final String studioDicomBasePath = getConfigString("dpi.work_path")
+                + getConfigString("dpi.studiodicom_path");
         return new File(studioDicomBasePath + getConfigString("dpi.storescu.path"));
     }
 
-    @Bean(name = { "validAET" })
+    @Bean(name = {
+            "validAET" })
     @Scope(value = "singleton")
     public List<String> getValidAET() throws IOException {
-        ArrayList<String> aets = new ArrayList<String>();
+        ArrayList<String> aets = new ArrayList<>();
         int i = 0;
         String aet;
         while ((aet = getConfigString("validaet." + i)) != null && !aet.equals("")) {
@@ -404,10 +408,11 @@ public class DPIConfigInitializer {
         return aets;
     }
 
-    @Bean(name = { "pacsList" })
+    @Bean(name = {
+            "pacsList" })
     @Scope(value = "singleton")
     public List<String> getPacsList() throws IOException {
-        ArrayList<String> aets = new ArrayList<String>();
+        ArrayList<String> aets = new ArrayList<>();
         int i = 0;
         String aet;
         while ((aet = getConfigString("nododicom.aet." + i)) != null && !aet.equals("")) {
@@ -417,10 +422,11 @@ public class DPIConfigInitializer {
         return aets;
     }
 
-    @Bean(name = { "pacsListForSearch" })
+    @Bean(name = {
+            "pacsListForSearch" })
     @Scope(value = "singleton")
     public List<String> getPacsListForSearch() throws IOException {
-        ArrayList<String> aets = new ArrayList<String>();
+        ArrayList<String> aets = new ArrayList<>();
         int i = 0;
         String aet;
         while ((aet = getConfigString("nododicom.aet." + i)) != null && !aet.equals("")) {
@@ -436,10 +442,11 @@ public class DPIConfigInitializer {
         return aets;
     }
 
-    @Bean(name = { "dicomNodes" })
+    @Bean(name = {
+            "dicomNodes" })
     @Scope(value = "singleton")
     public List<DicomNode> getDicomNodes() throws IOException {
-        ArrayList<DicomNode> nodes = new ArrayList<DicomNode>();
+        ArrayList<DicomNode> nodes = new ArrayList<>();
         int i = 0;
         String aet;
         while ((aet = getConfigString("nododicom.aet." + i)) != null && !aet.equals("")) {
@@ -452,10 +459,11 @@ public class DPIConfigInitializer {
         return nodes;
     }
 
-    @Bean(name = { "transferPacsList" })
+    @Bean(name = {
+            "transferPacsList" })
     @Scope(value = "singleton")
     public List<String> getTransferPacsList() throws IOException {
-        ArrayList<String> aets = new ArrayList<String>();
+        ArrayList<String> aets = new ArrayList<>();
         int i = 0;
         String aet;
         while ((aet = getConfigString("nododicomtrasf.aet." + i)) != null && !aet.equals("")) {
@@ -465,10 +473,11 @@ public class DPIConfigInitializer {
         return aets;
     }
 
-    @Bean(name = { "transferDicomNodes" })
+    @Bean(name = {
+            "transferDicomNodes" })
     @Scope(value = "singleton")
     public List<DicomNode> getTransferDicomNodes() throws IOException {
-        ArrayList<DicomNode> nodes = new ArrayList<DicomNode>();
+        ArrayList<DicomNode> nodes = new ArrayList<>();
         int i = 0;
         String aet;
         while ((aet = getConfigString("nododicomtrasf.aet." + i)) != null && !aet.equals("")) {
@@ -481,10 +490,11 @@ public class DPIConfigInitializer {
         return nodes;
     }
 
-    @Bean(name = { "dcmHashDicomTag" })
+    @Bean(name = {
+            "dcmHashDicomTag" })
     @Scope(value = "singleton")
     public List<String> getDcmHashDicomTag() throws IOException {
-        ArrayList<String> tags = new ArrayList<String>();
+        ArrayList<String> tags = new ArrayList<>();
         int i = 0;
         String tag;
         while ((tag = getConfigString("dpi.dcmhash.attributo." + i)) != null) {
@@ -508,10 +518,11 @@ public class DPIConfigInitializer {
         return aeTitle;
     }
 
-    @Bean(name = { "dlMotivoWarningStandards" })
+    @Bean(name = {
+            "dlMotivoWarningStandards" })
     @Scope(value = "singleton")
     public List<String> getDlMotivoWarningStandards() throws IOException {
-        ArrayList<String> motivi = new ArrayList<String>();
+        ArrayList<String> motivi = new ArrayList<>();
         int i = 0;
         String motivo;
         while ((motivo = getConfigString("dpi.monitoraggio.chiusurawarning." + i)) != null) {
@@ -542,7 +553,8 @@ public class DPIConfigInitializer {
         return connTimeoutMS;
     }
 
-    @Bean(name = { "objectTypes" })
+    @Bean(name = {
+            "objectTypes" })
     @Scope(value = "singleton")
     public List<ObjectType> getObjectTypes() throws IOException, Exception {
         ArrayList<ObjectType> objectTypes = new ArrayList<ObjectType>();
@@ -575,35 +587,39 @@ public class DPIConfigInitializer {
                             "Il valore del parametro 'tipoObj.tiCalcProfiloUd' letto dal file di property non è tra quelli attesi");
                 }
             }
-            ObjectType objectType = new ObjectType(objType, inputPath, copiatoPath, flCreaZip, tiCalcRegistroUd,
-                    tiCalcAnnoUd, tiCalcKeyUd, tipoFile, tiCalcProfiloUd);
+            ObjectType objectType = new ObjectType(objType, inputPath, copiatoPath, flCreaZip,
+                    tiCalcRegistroUd, tiCalcAnnoUd, tiCalcKeyUd, tipoFile, tiCalcProfiloUd);
             objectTypes.add(objectType);
             i++;
         }
         return objectTypes;
     }
 
-    @Bean(name = { "acceptMore" })
+    @Bean(name = {
+            "acceptMore" })
     @Scope(value = "singleton")
     public boolean getAcceptMoreTag() throws IOException {
         return getConfigBool("dpi.accept_more");
     }
 
     // MEV#34069
-    @Bean(name = { "acceptMoreSerie" })
+    @Bean(name = {
+            "acceptMoreSerie" })
     @Scope(value = "singleton")
     public boolean getAcceptMoreSerieTag() throws IOException {
         return getConfigBool("dpi.accept_more_serie");
     }
     // end MEV#34069
 
-    @Bean(name = { "contaMultiframe" })
+    @Bean(name = {
+            "contaMultiframe" })
     @Scope(value = "singleton")
     public boolean getContaMultiframeTag() throws IOException {
         return getConfigBool("dpi.conta_multiframe");
     }
 
-    @Bean(name = { "replaceEmptyTag" })
+    @Bean(name = {
+            "replaceEmptyTag" })
     @Scope(value = "singleton")
     public boolean getReplaceEmptyTag() throws IOException {
         return getConfigBool("dpi.replace_empty_tag");
@@ -621,7 +637,8 @@ public class DPIConfigInitializer {
         ArrayList<String> protocols = new ArrayList<>();
         int i = 0;
         String protocol;
-        while ((protocol = getConfigString("dpi.dicom_tls.protocol." + i)) != null && !protocol.equals("")) {
+        while ((protocol = getConfigString("dpi.dicom_tls.protocol." + i)) != null
+                && !protocol.equals("")) {
             protocols.add(protocol);
             i++;
         }
@@ -632,7 +649,8 @@ public class DPIConfigInitializer {
         ArrayList<String> cipherSuites = new ArrayList<>();
         int i = 0;
         String cipher;
-        while ((cipher = getConfigString("dpi.dicom_tls.cipher_suite." + i)) != null && !cipher.equals("")) {
+        while ((cipher = getConfigString("dpi.dicom_tls.cipher_suite." + i)) != null
+                && !cipher.equals("")) {
             cipherSuites.add(cipher);
             i++;
         }
@@ -671,7 +689,8 @@ public class DPIConfigInitializer {
                 trustStore);
     }
 
-    private static KeyStore loadKeyStore(String url, char[] password) throws GeneralSecurityException, IOException {
+    private static KeyStore loadKeyStore(String url, char[] password)
+            throws GeneralSecurityException, IOException {
         KeyStore key = KeyStore.getInstance(toKeyStoreType(url));
         InputStream in = openFileOrURL(url);
         try {
@@ -685,7 +704,8 @@ public class DPIConfigInitializer {
     private static InputStream openFileOrURL(String url) throws IOException {
         if (url.startsWith("/")) {
             final FileSystemResource fsResource = new FileSystemResource(
-                    System.getProperty("catalina.base") + "/dicom_tls/dpi-" + System.getProperty("env") + url);
+                    System.getProperty("catalina.base") + "/dicom_tls/dpi-"
+                            + System.getProperty("env") + url);
             return fsResource.getInputStream();
         }
         try {

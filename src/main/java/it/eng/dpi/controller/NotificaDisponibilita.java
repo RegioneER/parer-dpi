@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.controller;
@@ -61,16 +57,20 @@ public class NotificaDisponibilita {
     public void init() {
         // disponibiliDir = new File(ctx.getWorkingPath() + DPIConstants.DISPONIBILI_FOLDER);
         // richiesteDir = new File(ctx.getWorkingPath() + DPIConstants.RICHIESTE_FOLDER);
-        disponibiliDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.DISPONIBILI_FOLDER);
-        richiesteDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
+        disponibiliDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.DISPONIBILI_FOLDER);
+        richiesteDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
     }
 
     @GetMapping("/NotificaDisponibilita")
-    public ResponseEntity<NotificaDisponibilitaRisposta> notificaDisponibilitaREST(final HttpServletResponse res,
+    public ResponseEntity<NotificaDisponibilitaRisposta> notificaDisponibilitaREST(
+            final HttpServletResponse res,
             @RequestParam(value = "nmAmbiente", required = false) String nmAmbiente,
             @RequestParam(value = "nmVersatore", required = false) String nmVersatore,
             @RequestParam(value = "globalHash", required = false) String globalHash) {
-        NotificaDisponibilitaRisposta resp = new NotificaDisponibilitaRisposta(nmAmbiente, nmVersatore, globalHash);
+        NotificaDisponibilitaRisposta resp = new NotificaDisponibilitaRisposta(nmAmbiente,
+                nmVersatore, globalHash);
         if (nmAmbiente == null || !nmAmbiente.equals(ctx.getNmAmbiente())) {
             resp.setCdErr("DPI-NOTIFDISP-001");
             resp.setDlErr("L’ambiente " + nmAmbiente
@@ -91,8 +91,10 @@ public class NotificaDisponibilita {
         }
         if (globalHash == null || globalHash.trim().length() == 0) {
             resp.setCdErr("DPI-NOTIFDISP-003");
-            resp.setDlErr("La chiave identificante lo studio notificato " + globalHash + " non è definita");
-            log.debug("La chiave identificante lo studio notificato " + globalHash + " non è definita");
+            resp.setDlErr("La chiave identificante lo studio notificato " + globalHash
+                    + " non è definita");
+            log.debug("La chiave identificante lo studio notificato " + globalHash
+                    + " non è definita");
             resp.setCdEsito(EsitoServizio.KO);
             return ResponseEntity.badRequest().header(HEADER_NAME, HEADER_VALUES).body(resp);
         }
@@ -109,16 +111,21 @@ public class NotificaDisponibilita {
             }
             session.commit();
         } catch (XAGenericException | NoTransactionAssociatedException e) {
-            log.error("Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback", e);
+            log.error(
+                    "Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback",
+                    e);
             try {
                 session.rollback();
             } catch (NoTransactionAssociatedException e1) {
-                log.error("Si è verificato un errore durante il rollback della transazione. Transazione non esistente.",
+                log.error(
+                        "Si è verificato un errore durante il rollback della transazione. Transazione non esistente.",
                         e1);
             }
             resp.setCdErr("666");
-            resp.setDlErr("Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback");
-            log.debug("Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback");
+            resp.setDlErr(
+                    "Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback");
+            log.debug(
+                    "Si è verificato un errore durante le operazioni su filesystem ... procedo al rollback");
             resp.setCdEsito(EsitoServizio.KO);
             return ResponseEntity.badRequest().header(HEADER_NAME, HEADER_VALUES).body(resp);
         }

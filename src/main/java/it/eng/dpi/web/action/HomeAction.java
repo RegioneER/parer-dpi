@@ -1,37 +1,17 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.web.action;
-
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import it.eng.dpi.component.DPIContext;
 import it.eng.dpi.slite.gen.Application;
@@ -45,6 +25,16 @@ import it.eng.spagoLite.form.fields.Field;
 import it.eng.spagoLite.form.fields.Fields;
 import it.eng.spagoLite.security.auth.PwdUtil;
 import it.eng.util.EncryptionUtil;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HomeAction extends HomeAbstractAction {
     private static final Logger logger = LoggerFactory.getLogger(HomeAction.class);
@@ -112,7 +102,8 @@ public class HomeAction extends HomeAbstractAction {
         String retURL = sb.toString();
         String salt = Base64.encodeBase64URLSafeString(PwdUtil.generateSalt());
         String hmac = EncryptionUtil.getHMAC(retURL + ":" + salt);
-        this.getResponse().sendRedirect(ctx.getModificaPasswordUrl() + "?r=" + retURL + "&h=" + hmac + "&s=" + salt);
+        this.getResponse().sendRedirect(
+                ctx.getModificaPasswordUrl() + "?r=" + retURL + "&h=" + hmac + "&s=" + salt);
     }
 
     @Override
@@ -136,9 +127,10 @@ public class HomeAction extends HomeAbstractAction {
 
     private void findNews() {
         ArrayList<Map<String, String>> list = new ArrayList<Map<String, String>>();
-        RestituzioneNewsApplicazione client = IAMSoapClients.restituzioneNewsApplicazioneClient(ctx.getUserIam(),
-                ctx.getPassIam(), ctx.getWsdlRestituzioneNewsApplicazioneUrl());
-        RestituzioneNewsApplicazioneRisposta resp = client.restituzioneNewsApplicazione(ctx.getNmApplic());
+        RestituzioneNewsApplicazione client = IAMSoapClients.restituzioneNewsApplicazioneClient(
+                ctx.getUserIam(), ctx.getPassIam(), ctx.getWsdlRestituzioneNewsApplicazioneUrl());
+        RestituzioneNewsApplicazioneRisposta resp = client
+                .restituzioneNewsApplicazione(ctx.getNmApplic());
         String newline = System.getProperty("line.separator");
         if (resp.getListaNews() != null) {
             for (News row : resp.getListaNews().getNews()) {
@@ -148,11 +140,13 @@ public class HomeAction extends HomeAbstractAction {
                     line = row.getDlTesto().replaceAll(newline, "<br />");
                 }
                 SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
-                String dateFormatted = fmt.format(row.getDtIniPubblic().toGregorianCalendar().getTime());
-                news.put("dsOggetto", "<font size=\"1\">" + dateFormatted + "</font></br><b><font size=\"2\"> "
-                        + row.getDsOggetto() + "</font></b>");
+                String dateFormatted = fmt
+                        .format(row.getDtIniPubblic().toGregorianCalendar().getTime());
+                news.put("dsOggetto", "<font size=\"1\">" + dateFormatted
+                        + "</font></br><b><font size=\"2\"> " + row.getDsOggetto() + "</font></b>");
                 news.put("dlTesto", line);
-                news.put("dtIniPubblic", row.getDtIniPubblic().toGregorianCalendar().getTime().toString());
+                news.put("dtIniPubblic",
+                        row.getDtIniPubblic().toGregorianCalendar().getTime().toString());
 
                 list.add(news);
             }

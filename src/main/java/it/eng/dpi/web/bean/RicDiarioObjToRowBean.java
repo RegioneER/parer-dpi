@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.web.bean;
@@ -75,8 +71,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param ogg
-     *            {@link OggettoRicDiarioType}
+     * @param ogg {@link OggettoRicDiarioType}
      */
     public RicDiarioObjToRowBean(OggettoRicDiarioType ogg) {
         this.oggRicDiario = ogg;
@@ -90,8 +85,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdKeyObject
-     *            the cdKeyObject to set
+     * @param cdKeyObject the cdKeyObject to set
      */
     public void setCdKeyObject(String cdKeyObject) {
         this.cdKeyObject = cdKeyObject;
@@ -105,8 +99,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param idSessione
-     *            the idSessione to set
+     * @param idSessione the idSessione to set
      */
     public void setIdSessione(Integer idSessione) {
         this.idSessione = idSessione;
@@ -120,8 +113,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param tiStatoObject
-     *            the tiStatoObject to set
+     * @param tiStatoObject the tiStatoObject to set
      */
     public void setTiStatoObject(String tiStatoObject) {
         this.tiStatoObject = tiStatoObject;
@@ -135,8 +127,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param ogg
-     *            the ogg to set
+     * @param ogg the ogg to set
      */
     public void setOgg(OggettoRicDiarioType ogg) {
         this.oggRicDiario = ogg;
@@ -150,8 +141,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param blDcmHashTxt
-     *            the blDcmHashTxt to set
+     * @param blDcmHashTxt the blDcmHashTxt to set
      */
     public void setBlDcmHashTxt(String blDcmHashTxt) {
         this.blDcmHashTxt = blDcmHashTxt;
@@ -165,8 +155,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param blGlobalHashTxt
-     *            the blGlobalHashTxt to set
+     * @param blGlobalHashTxt the blGlobalHashTxt to set
      */
     public void setBlGlobalHashTxt(String blGlobalHashTxt) {
         this.blGlobalHashTxt = blGlobalHashTxt;
@@ -180,8 +169,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdAetNodoDicom
-     *            the cdAetNodoDicom to set
+     * @param cdAetNodoDicom the cdAetNodoDicom to set
      */
     public void setCdAetNodoDicom(String cdAetNodoDicom) {
         this.cdAetNodoDicom = cdAetNodoDicom;
@@ -195,8 +183,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdEncodingDcmHash
-     *            the cdEncodingDcmHash to set
+     * @param cdEncodingDcmHash the cdEncodingDcmHash to set
      */
     public void setCdEncodingDcmHash(String cdEncodingDcmHash) {
         this.cdEncodingDcmHash = cdEncodingDcmHash;
@@ -210,8 +197,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdEncodingFileHash
-     *            the cdEncodingFileHash to set
+     * @param cdEncodingFileHash the cdEncodingFileHash to set
      */
     public void setCdEncodingFileHash(String cdEncodingFileHash) {
         this.cdEncodingFileHash = cdEncodingFileHash;
@@ -225,8 +211,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdEncodingGlobalHash
-     *            the cdEncodingGlobalHash to set
+     * @param cdEncodingGlobalHash the cdEncodingGlobalHash to set
      */
     public void setCdEncodingGlobalHash(String cdEncodingGlobalHash) {
         this.cdEncodingGlobalHash = cdEncodingGlobalHash;
@@ -240,8 +225,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdPatientId
-     *            the cdPatientId to set
+     * @param cdPatientId the cdPatientId to set
      */
     public void setCdPatientId(String cdPatientId) {
         this.cdPatientId = cdPatientId;
@@ -255,8 +239,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param cdPatientIdIssuer
-     *            the cdPatientIdIssuer to set
+     * @param cdPatientIdIssuer the cdPatientIdIssuer to set
      */
     public void setCdPatientIdIssuer(String cdPatientIdIssuer) {
         this.cdPatientIdIssuer = cdPatientIdIssuer;
@@ -270,8 +253,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dlListaModalityInStudy
-     *            the dlListaModalityInStudy to set
+     * @param dlListaModalityInStudy the dlListaModalityInStudy to set
      */
     public void setDlListaModalityInStudy(String dlListaModalityInStudy) {
         this.dlListaModalityInStudy = dlListaModalityInStudy;
@@ -285,8 +267,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dlListaSopClass
-     *            the dlListaSopClass to set
+     * @param dlListaSopClass the dlListaSopClass to set
      */
     public void setDlListaSopClass(String dlListaSopClass) {
         this.dlListaSopClass = dlListaSopClass;
@@ -300,8 +281,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dlStudyDescription
-     *            the dlStudyDescription to set
+     * @param dlStudyDescription the dlStudyDescription to set
      */
     public void setDlStudyDescription(String dlStudyDescription) {
         this.dlStudyDescription = dlStudyDescription;
@@ -315,8 +295,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsAccessionNumber
-     *            the dsAccessionNumber to set
+     * @param dsAccessionNumber the dsAccessionNumber to set
      */
     public void setDsAccessionNumber(String dsAccessionNumber) {
         this.dsAccessionNumber = dsAccessionNumber;
@@ -330,8 +309,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsDcmHash
-     *            the dsDcmHash to set
+     * @param dsDcmHash the dsDcmHash to set
      */
     public void setDsDcmHash(String dsDcmHash) {
         this.dsDcmHash = dsDcmHash;
@@ -345,8 +323,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsFileHash
-     *            the dsFileHash to set
+     * @param dsFileHash the dsFileHash to set
      */
     public void setDsFileHash(String dsFileHash) {
         this.dsFileHash = dsFileHash;
@@ -360,8 +337,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsGlobalHash
-     *            the dsGlobalHash to set
+     * @param dsGlobalHash the dsGlobalHash to set
      */
     public void setDsGlobalHash(String dsGlobalHash) {
         this.dsGlobalHash = dsGlobalHash;
@@ -375,8 +351,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsInstitutionName
-     *            the dsInstitutionName to set
+     * @param dsInstitutionName the dsInstitutionName to set
      */
     public void setDsInstitutionName(String dsInstitutionName) {
         this.dsInstitutionName = dsInstitutionName;
@@ -390,8 +365,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsPatientName
-     *            the dsPatientName to set
+     * @param dsPatientName the dsPatientName to set
      */
     public void setDsPatientName(String dsPatientName) {
         this.dsPatientName = dsPatientName;
@@ -405,8 +379,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsRefPhysicianName
-     *            the dsRefPhysicianName to set
+     * @param dsRefPhysicianName the dsRefPhysicianName to set
      */
     public void setDsRefPhysicianName(String dsRefPhysicianName) {
         this.dsRefPhysicianName = dsRefPhysicianName;
@@ -420,8 +393,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsStudyId
-     *            the dsStudyId to set
+     * @param dsStudyId the dsStudyId to set
      */
     public void setDsStudyId(String dsStudyId) {
         this.dsStudyId = dsStudyId;
@@ -435,8 +407,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dsStudyInstanceUid
-     *            the dsStudyInstanceUid to set
+     * @param dsStudyInstanceUid the dsStudyInstanceUid to set
      */
     public void setDsStudyInstanceUid(String dsStudyInstanceUid) {
         this.dsStudyInstanceUid = dsStudyInstanceUid;
@@ -450,8 +421,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dtPatientBirthDate
-     *            the dtPatientBirthDate to set
+     * @param dtPatientBirthDate the dtPatientBirthDate to set
      */
     public void setDtPatientBirthDate(Date dtPatientBirthDate) {
         this.dtPatientBirthDate = dtPatientBirthDate;
@@ -465,8 +435,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dtPresaInCarico
-     *            the dtPresaInCarico to set
+     * @param dtPresaInCarico the dtPresaInCarico to set
      */
     public void setDtPresaInCarico(Date dtPresaInCarico) {
         this.dtPresaInCarico = dtPresaInCarico;
@@ -480,8 +449,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param dtStudyDate
-     *            the dtStudyDate to set
+     * @param dtStudyDate the dtStudyDate to set
      */
     public void setDtStudyDate(Date dtStudyDate) {
         this.dtStudyDate = dtStudyDate;
@@ -495,8 +463,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param niStudyRelatedImages
-     *            the niStudyRelatedImages to set
+     * @param niStudyRelatedImages the niStudyRelatedImages to set
      */
     public void setNiStudyRelatedImages(BigDecimal niStudyRelatedImages) {
         this.niStudyRelatedImages = niStudyRelatedImages;
@@ -510,8 +477,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param niStudyRelatedSeries
-     *            the niStudyRelatedSeries to set
+     * @param niStudyRelatedSeries the niStudyRelatedSeries to set
      */
     public void setNiStudyRelatedSeries(BigDecimal niStudyRelatedSeries) {
         this.niStudyRelatedSeries = niStudyRelatedSeries;
@@ -525,8 +491,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param tiAlgoDcmHash
-     *            the tiAlgoDcmHash to set
+     * @param tiAlgoDcmHash the tiAlgoDcmHash to set
      */
     public void setTiAlgoDcmHash(String tiAlgoDcmHash) {
         this.tiAlgoDcmHash = tiAlgoDcmHash;
@@ -540,8 +505,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param tiAlgoFileHash
-     *            the tiAlgoFileHash to set
+     * @param tiAlgoFileHash the tiAlgoFileHash to set
      */
     public void setTiAlgoFileHash(String tiAlgoFileHash) {
         this.tiAlgoFileHash = tiAlgoFileHash;
@@ -555,8 +519,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param tiAlgoGlobalHash
-     *            the tiAlgoGlobalHash to set
+     * @param tiAlgoGlobalHash the tiAlgoGlobalHash to set
      */
     public void setTiAlgoGlobalHash(String tiAlgoGlobalHash) {
         this.tiAlgoGlobalHash = tiAlgoGlobalHash;
@@ -570,8 +533,7 @@ public class RicDiarioObjToRowBean {
     }
 
     /**
-     * @param tiPatientSex
-     *            the tiPatientSex to set
+     * @param tiPatientSex the tiPatientSex to set
      */
     public void setTiPatientSex(String tiPatientSex) {
         this.tiPatientSex = tiPatientSex;

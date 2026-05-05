@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -97,11 +93,13 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         int numRaccProc = 0;
         for (ObjectType objectType : objectTypes) {
             log.trace(objectType.toString());
-            File workFolder = new File(ctx.getWorkingPath() + File.separatorChar + objectType.getObjType());
+            File workFolder = new File(
+                    ctx.getWorkingPath() + File.separatorChar + objectType.getObjType());
             String tiCalcRegistroUd = objectType.getTiCalcRegistroUd(); // regola per registro ud
-                                                                        // (cd_registro_unita_doc)
+            // (cd_registro_unita_doc)
             String tiCalcAnnoUd = objectType.getTiCalcAnnoUd(); // regola per anno ud (aa_unita_doc)
-            String tiCalcKeyUd = objectType.getTiCalcKeyUd(); // regola per numero ud (cd_key_unita_doc)
+            String tiCalcKeyUd = objectType.getTiCalcKeyUd(); // regola per numero ud
+            // (cd_key_unita_doc)
             String tiCalcProfiloUd = objectType.getTiCalcProfiloUd();
             boolean flCreaZip = objectType.getFlCreaZip();
             File[] produttori = XAUtil.listFilesNewTX(xaDiskNativeFS, workFolder);
@@ -116,21 +114,24 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
                             session = xaDiskNativeFS.createSessionForLocalTransaction();
                             log.debug("trovato raccoglitore: " + raccoglitore.toString());
                             File v1New = new File(workFolder + DPIConstants.NEW_FOLDER);
-                            File prodRaccDir = new File(v1New, produttore.getName() + "-" + raccoglitore.getName());
+                            File prodRaccDir = new File(v1New,
+                                    produttore.getName() + "-" + raccoglitore.getName());
                             if (!XAUtil.fileExistsAndIsDirectory(session, prodRaccDir)) {
                                 log.debug("la cartella " + prodRaccDir + " non esiste... la creo");
                                 XAUtil.createDirectory(session, prodRaccDir);
 
-                                File xmlFile = new File(prodRaccDir, raccoglitore.getName() + ".xml");
-                                ChiaveType chiaveType = buildChiaveType(tiCalcRegistroUd, tiCalcAnnoUd, tiCalcKeyUd,
-                                        raccoglitore.getName(), produttore.getName());
+                                File xmlFile = new File(prodRaccDir,
+                                        raccoglitore.getName() + ".xml");
+                                ChiaveType chiaveType = buildChiaveType(tiCalcRegistroUd,
+                                        tiCalcAnnoUd, tiCalcKeyUd, raccoglitore.getName(),
+                                        produttore.getName());
                                 Files filesType = buildFiles(objectType.getTipoFile());
                                 File[] files = XAUtil.listFilesNewTX(xaDiskNativeFS, raccoglitore);
                                 File propertyFile = searchPropertyFile(files);
                                 try {
-                                    createXmlPingVers(session, xmlFile, chiaveType, filesType, propertyFile,
-                                            tiCalcProfiloUd, objectType.getObjType(), produttore.getName(),
-                                            raccoglitore.getName());
+                                    createXmlPingVers(session, xmlFile, chiaveType, filesType,
+                                            propertyFile, tiCalcProfiloUd, objectType.getObjType(),
+                                            produttore.getName(), raccoglitore.getName());
                                 } catch (UnexpectedPropertyException e) {
                                     log.error(
                                             "Errore durante la lettura dei valori dal file di property per il raccoglitore: '"
@@ -141,14 +142,18 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
                                     continue;
                                 }
                                 if (flCreaZip) {
-                                    // creo lo zip in V1_new prendendo i file dentro la cartella raccoglitore
-                                    final File zipFile = new File(prodRaccDir, raccoglitore.getName() + ".zip");
+                                    // creo lo zip in V1_new prendendo i file dentro la cartella
+                                    // raccoglitore
+                                    final File zipFile = new File(prodRaccDir,
+                                            raccoglitore.getName() + ".zip");
                                     createZip(session, zipFile, raccoglitore);
                                 } else {
                                     // non creo lo zip. Sposto i file da raccoglitore a V1_new
                                     for (File fileToMove : files) {
-                                        if (!fileToMove.getName().endsWith(DPIConstants.PROPERTY_FILE_EXT)) {
-                                            final File destDir = new File(prodRaccDir, fileToMove.getName());
+                                        if (!fileToMove.getName()
+                                                .endsWith(DPIConstants.PROPERTY_FILE_EXT)) {
+                                            final File destDir = new File(prodRaccDir,
+                                                    fileToMove.getName());
                                             XAUtil.moveFile(session, fileToMove, destDir);
                                         }
                                     }
@@ -156,7 +161,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
                             } else {
                                 // la cartella v1New esiste già. Segnalo l'accaduto e passo avanti.
                                 // La cartella sarà elaborata alla prossima esecuzione del job.
-                                audit.warn("Nel file system del DPI, è già definita la cartella " + prodRaccDir);
+                                audit.warn("Nel file system del DPI, è già definita la cartella "
+                                        + prodRaccDir);
                             }
                             if (session.fileExistsAndIsDirectory(raccoglitore)) {
                                 File[] filesToDelete = XAUtil.listFiles(session, raccoglitore);
@@ -170,7 +176,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
                         } catch (Exception e) {
                             try {
                                 if (!(e instanceof NoTransactionAssociatedException)) {
-                                    log.error("Si è verificato un errore durante la transazione." + e);
+                                    log.error("Si è verificato un errore durante la transazione."
+                                            + e);
                                     session.rollback();
                                 }
                             } catch (NoTransactionAssociatedException e1) {
@@ -188,14 +195,16 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
     }
 
     /*
-     * Costruisco la busta <ProfiloUnitaDocumentaria> con i tag <Oggetto> e <Data>. Se il file di property è presente
-     * <Oggetto> e <Data> li prendo rispettivamente da ProfiloUnitaDocumentaria.Oggetto e ProfiloUnitaDocumentaria.Data.
-     * Altrimenti se nel file di configurazione ho tipoObj.tiCalcProfiloUd.n=CALC_1 allora il tag Oggetto sarà uguale a
+     * Costruisco la busta <ProfiloUnitaDocumentaria> con i tag <Oggetto> e <Data>. Se il file di
+     * property è presente <Oggetto> e <Data> li prendo rispettivamente da
+     * ProfiloUnitaDocumentaria.Oggetto e ProfiloUnitaDocumentaria.Data. Altrimenti se nel file di
+     * configurazione ho tipoObj.tiCalcProfiloUd.n=CALC_1 allora il tag Oggetto sarà uguale a
      * "<tipoObj> del <produttore>" e il tag Data sarà uguale a <raccoglitore>
      *
      */
-    private void createXmlPingVers(Session session, File xmlDestFile, ChiaveType chiave, Files files, File propertyFile,
-            String tiCalcProfiloUd, String tipoOggetto, String produttore, String raccoglietore) throws Exception {
+    private void createXmlPingVers(Session session, File xmlDestFile, ChiaveType chiave,
+            Files files, File propertyFile, String tiCalcProfiloUd, String tipoOggetto,
+            String produttore, String raccoglietore) throws Exception {
         Properties prop = null;
         // creo la busta <UnitaDocumentaria> e gli setto <Chiave> e <Files>
         UnitaDocumentariaType uniDoc = buildUnitaDocumentaria(chiave, files);
@@ -210,10 +219,11 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
                     .createUnitaDocumentariaTypeDatiSpecifici(docDatiSpec.getDocumentElement());
             uniDoc.setDatiSpecifici(datiSpecificiJAXB);
         } else if (tiCalcProfiloUd.equals(DPIConstants.CALC_1)) {
-            profiloUnitaDocumentariaTag = createProfiloUnitaDocumentariaFromCalc1(tipoOggetto, produttore,
-                    raccoglietore);
+            profiloUnitaDocumentariaTag = createProfiloUnitaDocumentariaFromCalc1(tipoOggetto,
+                    produttore, raccoglietore);
         }
-        // setto l'oggetto profiloUnitaDocumentariaTag al padre UnitaDocumentariaType solo se oggetto e data sono
+        // setto l'oggetto profiloUnitaDocumentariaTag al padre UnitaDocumentariaType solo se
+        // oggetto e data sono
         // presenti
         if (profiloUnitaDocumentariaTag != null && (profiloUnitaDocumentariaTag.getOggetto() != null
                 || profiloUnitaDocumentariaTag.getData() != null)) {
@@ -236,7 +246,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         }
     }
 
-    private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromProperty(Properties prop) throws Exception {
+    private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromProperty(Properties prop)
+            throws Exception {
         // la busta ProfiloUnitaDocumentaria deve contenere i tag Oggetto e Data.
         ProfiloUnitaDocumentariaType profiloUD = null;
         profiloUD = new ProfiloUnitaDocumentariaType();
@@ -254,8 +265,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         return profiloUD;
     }
 
-    private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromCalc1(String tipoOggetto, String produttore,
-            String raccoglietore) throws Exception {
+    private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromCalc1(String tipoOggetto,
+            String produttore, String raccoglietore) throws Exception {
         // la busta ProfiloUnitaDocumentaria deve contenere i tag Oggetto e Data.
         ProfiloUnitaDocumentariaType profiloUD = null;
         profiloUD = new ProfiloUnitaDocumentariaType();
@@ -272,7 +283,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         return profiloUD;
     }
 
-    private Date formatDataProfilo(String dataProfilo, SimpleDateFormat formatter) throws UnexpectedPropertyException {
+    private Date formatDataProfilo(String dataProfilo, SimpleDateFormat formatter)
+            throws UnexpectedPropertyException {
         Date dataProfiloUd;
         try {
             dataProfiloUd = formatter.parse(dataProfilo);
@@ -289,7 +301,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         return dataProfiloUd;
     }
 
-    // private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromProperty(Properties prop) throws Exception
+    // private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromProperty(Properties
+    // prop) throws Exception
     // {
     // //la busta ProfiloUnitaDocumentaria deve contenere i tag Oggetto e Data.
     // ProfiloUnitaDocumentariaType profiloUD = null;
@@ -311,13 +324,15 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
     // profiloUD.setData(dataProfiloUd);
     // }
     // } catch (Exception e) {
-    // throw new UnexpectedPropertyException("Errore nella costruzione della busta ProfiloUnitaDocumentaria: la data
+    // throw new UnexpectedPropertyException("Errore nella costruzione della busta
+    // ProfiloUnitaDocumentaria: la data
     // profilo letta dal file di property non è corretta " + e);
     // }
     // return profiloUD;
     // }
 
-    // private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromCalc1(String tipoOggetto, String
+    // private ProfiloUnitaDocumentariaType createProfiloUnitaDocumentariaFromCalc1(String
+    // tipoOggetto, String
     // produttore, String raccoglietore) throws Exception {
     // //la busta ProfiloUnitaDocumentaria deve contenere i tag Oggetto e Data.
     // ProfiloUnitaDocumentariaType profiloUD = null;
@@ -337,7 +352,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
     // profiloUD.setData(dataProfiloUd);
     // }
     // } catch (Exception e) {
-    // throw new UnexpectedPropertyException("Errore nella costruzione della busta ProfiloUnitaDocumentaria" + e);
+    // throw new UnexpectedPropertyException("Errore nella costruzione della busta
+    // ProfiloUnitaDocumentaria" + e);
     // }
     // return profiloUD;
     // }
@@ -367,8 +383,7 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
     /**
      * Cerca tra i file in input il file di property.
      *
-     * @param filesArray
-     *            File tra i quali cercare quello di property
+     * @param filesArray File tra i quali cercare quello di property
      *
      * @return Il file di property
      */
@@ -383,10 +398,13 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         return propertyFile;
     }
 
-    private Properties retrieveItemFromPropertyFile(File propertyFile) throws UnexpectedPropertyException, IOException {
+    private Properties retrieveItemFromPropertyFile(File propertyFile)
+            throws UnexpectedPropertyException, IOException {
         log.debug("File .properties presente");
         Properties prop = new OrderedProperties();
-        prop.load(new FileInputStream(propertyFile));
+        try (FileInputStream fis = new FileInputStream(propertyFile)) {
+            prop.load(fis);
+        }
         log.debug("Elenco delle chiavi nel file property : " + prop.keySet().toString());
         log.debug("Elenco dei valori del file property : " + prop.values());
         checkItem(prop);
@@ -403,7 +421,8 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
             log.debug("checkItem: " + propKey + " = '" + prop.get(propKey) + "'");
             if (!propKey.startsWith(datiSpecPattern) && !propKey.startsWith(profiloUdOggettoPattern)
                     && !propKey.startsWith(profiloUdDataPattern)) {
-                throw new UnexpectedPropertyException("Chiave non ammessa nel file di property: " + propKey);
+                throw new UnexpectedPropertyException(
+                        "Chiave non ammessa nel file di property: " + propKey);
             }
         }
     }
@@ -411,17 +430,15 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
     /**
      * Crea un file zip
      *
-     * @param session
-     *            Sessione XADisk
-     * @param zipFile
-     *            File zip output
-     * @param inputDirPath
-     *            Directory contenente i file da inserire nell'archivio zip
+     * @param session      Sessione XADisk
+     * @param zipFile      File zip output
+     * @param inputDirPath Directory contenente i file da inserire nell'archivio zip
      *
      * @throws XAGenericException
      * @throws IOException
      */
-    private void createZip(Session session, File zipFile, File inputDirPath) throws XAGenericException, IOException {
+    private void createZip(Session session, File zipFile, File inputDirPath)
+            throws XAGenericException, IOException {
         try (OutputStream os = XAUtil.createFileOS(session, zipFile, true);
                 ZipOutputStream tmpZipOutputStream = new ZipOutputStream(os)) {
             File[] filesToZip = XAUtil.listFiles(session, inputDirPath);
@@ -438,12 +455,13 @@ public class GenericObjectCreatorJob extends AbstractWSClient implements JobInte
         }
     }
 
-    private ChiaveType buildChiaveType(String tiCalcRegistroUd, String tiCalcAnnoUd, String tiCalcKeyUd,
-            String raccoglitoreName, String produttoreName) {
+    private ChiaveType buildChiaveType(String tiCalcRegistroUd, String tiCalcAnnoUd,
+            String tiCalcKeyUd, String raccoglitoreName, String produttoreName) {
         // quando verranno introdotti nuovi tipi oggetto valutare come sostituire
         // PRODUTTORE, PRIMI_4_CRT e DA_5_A_8_CRT con espressioni regolari
         String cdRegistroUnitaDoc = null;
-        // TODO: vedere se aumentare il controllo sulla variabile seguente. Potrebbe passare un -1 nel caso non venisse
+        // TODO: vedere se aumentare il controllo sulla variabile seguente. Potrebbe passare un -1
+        // nel caso non venisse
         // settata?
         int aaUnitaDoc = -1;
         String cdKeyUnitaDoc = null;

@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dpi</artifactId>
-    <version>4.2.2-SNAPSHOT</version>
+    <version>5.0.0</version>
     <packaging>war</packaging>
     <name>Dpi Maven Webapp</name>
     <description>Progetto DPI</description>
@@ -9,7 +9,7 @@
     <parent>
         <groupId>it.eng.parer</groupId>
         <artifactId>parer-pom</artifactId>
-        <version>6.4.1</version>
+        <version>7.1.3</version>
     </parent>
 
 <scm>
@@ -27,18 +27,16 @@
         <web.session-config.cookie-config.http-only>true</web.session-config.cookie-config.http-only>
         <web.session-config.cookie-config.secure>true</web.session-config.cookie-config.secure>    
         <!-- spagofat bom -->
-        <spagofat.version>6.15.2</spagofat.version>
+        <spagofat.version>7.1.4</spagofat.version>
         <!-- third party lib -->		
         <tomcat-servlet-api.version>9.0.30</tomcat-servlet-api.version>
         <dcm4che2-core.version>2.0.29</dcm4che2-core.version>
         <dcm4che2-net.version>2.0.29</dcm4che2-net.version>
         <quartz.version>2.4.0</quartz.version>
-        <guava.version>32.0.1-jre</guava.version>
-        <aspectj.version>1.9.19</aspectj.version>
+        <aspectj.version>1.9.24</aspectj.version>
         <cglib-nodep.version>3.3.0</cglib-nodep.version>    
-        <dom4j.version>2.1.3</dom4j.version>    
-        <logback.version>1.3.15</logback.version>
-        <cxf-buildtools.version>4.0.2</cxf-buildtools.version>
+        <logback.version>1.5.18</logback.version>
+        <cxf-buildtools.version>4.1.1</cxf-buildtools.version>
     </properties>
 
 <distributionManagement>
@@ -69,6 +67,16 @@
                 <version>${spagofat.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>it.eng.parer</groupId>
+                <artifactId>spagofat-sl-web</artifactId>
+                <version>${spagofat.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>it.eng.parer</groupId>
+                <artifactId>spagofat-sl-ejb</artifactId>
+                <version>${spagofat.version}</version>
             </dependency>
             <!-- Spring (override managed spagofat)-->
             <dependency>
@@ -143,11 +151,6 @@
                 <version>${jackson-core.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.taglibs</groupId>
                 <artifactId>taglibs-standard-jstlel</artifactId>
                 <version>${taglibs-standard-jstlel.version}</version>
@@ -184,6 +187,7 @@
                 <artifactId>jaxb-api</artifactId>
                 <version>${jaxb.version}</version>
             </dependency> 
+            
         </dependencies>
     </dependencyManagement>
 
@@ -225,9 +229,23 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
+            <groupId>it.eng.parer</groupId>
+            <artifactId>spagofat-sl-web</artifactId>
+            <classifier>classes</classifier>
+        </dependency>
+        <dependency>
+            <groupId>it.eng.parer</groupId>
+            <artifactId>spagofat-sl-slg</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.eng.parer</groupId>
+            <artifactId>spagofat-sl-ejb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>it.eng.parer</groupId>
+            <artifactId>spagofat-sl-web</artifactId>
+            <type>war</type>
+            <scope>runtime</scope>
         </dependency>
         <!-- TODO: analizzare gli impatti di migrazione da dcm4che2 a dcm4che3  -->
         <dependency>
@@ -285,6 +303,7 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
         </dependency>
+<!--
         <dependency>
             <groupId>org.springframework.security.extensions</groupId>
             <artifactId>spring-security-saml2-core</artifactId>
@@ -307,6 +326,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
+-->        
+
+            <!-- OpenSaML -->
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-core</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-saml-api</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.opensaml</groupId>
+                <artifactId>opensaml-saml-impl</artifactId>
+            </dependency>            
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-saml2-service-provider</artifactId>
+            </dependency>
+            <!-- -->
+
         <!--  TODO: da verificare per cosa è utilizzato (?!) -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -356,7 +396,7 @@
             <artifactId>xadisk</artifactId>
             <version>1.2.2.5</version>
         </dependency>
-        <!-- TODO: indagare -->
+          <!-- XaDisk needed it -->
         <dependency>
             <groupId>javax.resource</groupId>
             <artifactId>connector-api</artifactId>
@@ -373,10 +413,6 @@
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
         </dependency>
         <!-- http://www.quartz-scheduler.org/documentation/2.4.0-SNAPSHOT/migration-guide.html -->
         <dependency>
@@ -431,21 +467,6 @@
             <groupId>it.eng.parer</groupId>
             <artifactId>spagofat-si-util</artifactId>
         </dependency>
-
-        <!-- TODO: indagare (legato a glassfish?) -->
-        <dependency>
-            <groupId>net.sf</groupId>
-            <artifactId>j2ep</artifactId>
-            <version>0.0.1</version>
-            <!--  reason http://commons.apache.org/proper/commons-beanutils/index.html -->
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <!-- new dependencies -->
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -470,6 +491,13 @@
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
             <version>2.3.5</version>
+        </dependency>
+        
+        <!-- Unit Test -->
+		<dependency>
+		    <groupId>org.junit.jupiter</groupId>
+		    <artifactId>junit-jupiter-api</artifactId>
+		    <scope>test</scope>
         </dependency>
     </dependencies>
 

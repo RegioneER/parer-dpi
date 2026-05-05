@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.dicom.scp;
@@ -83,7 +79,8 @@ public final class TxStoreSCP {
     private boolean acceptMoreSerie;
     // end MEV#34069
 
-    public TxStoreSCP(NetworkApplicationEntity ae, String[] sopClasses, QueryMoveService qrService) {
+    public TxStoreSCP(NetworkApplicationEntity ae, String[] sopClasses,
+            QueryMoveService qrService) {
         this.qrService = qrService;
         cStoreSCP = new CustomStorageService(sopClasses);
         log.info("Registering STORE SCP Service ...");
@@ -118,12 +115,14 @@ public final class TxStoreSCP {
          * org.dcm4che2.data.DicomObject, org.dcm4che2.net.PDVInputStream, java.lang.String)
          */
         /**
-         * Adapted from StorageService, with a few tweaks for better compliance with the standard: (see PS 3.7, section
-         * 9.3.1.2) + standard requires UID fields in C-STORE-RSP + standard requires Data Set Type (Null) in response (
+         * Adapted from StorageService, with a few tweaks for better compliance with the standard:
+         * (see PS 3.7, section 9.3.1.2) + standard requires UID fields in C-STORE-RSP + standard
+         * requires Data Set Type (Null) in response (
          */
         @Override
-        public void cstore(final Association as, final int pcid, final DicomObject rq, final PDVInputStream dataStream,
-                final String tsuid) throws DicomServiceException, IOException {
+        public void cstore(final Association as, final int pcid, final DicomObject rq,
+                final PDVInputStream dataStream, final String tsuid)
+                throws DicomServiceException, IOException {
             final boolean includeUIDs = CommandUtils.isIncludeUIDinRSP();
             CommandUtils.setIncludeUIDinRSP(true);
             final DicomObject rsp = CommandUtils.mkRSP(rq, CommandUtils.SUCCESS);
@@ -134,9 +133,9 @@ public final class TxStoreSCP {
         }
 
         @Override
-        protected void onCStoreRQ(final Association association, final int pcid, final DicomObject rq,
-                final PDVInputStream dataStream, final String transferSyntaxUID, final DicomObject dcmRspObj)
-                throws IOException {
+        protected void onCStoreRQ(final Association association, final int pcid,
+                final DicomObject rq, final PDVInputStream dataStream,
+                final String transferSyntaxUID, final DicomObject dcmRspObj) throws IOException {
             final AssociationBean assBean = associationDataMap.get(association);
             final Session session = assBean.getSession();
             final Map<String, CStoreBean> studyUIDs = assBean.getStudyUIDs();
@@ -149,11 +148,13 @@ public final class TxStoreSCP {
                 if (moveAET != null && moveAET.equals(association.getCalledAET())) {
                     isDPIMove = true;
                 }
-                final String pacsDir = getStorageRootDir().getPath() + File.separator + association.getCallingAET()
-                        + File.separator + (isDPIMove ? DPIConstants.CMOVE_DIR : DPIConstants.CSTORE_DIR);
+                final String pacsDir = getStorageRootDir().getPath() + File.separator
+                        + association.getCallingAET() + File.separator
+                        + (isDPIMove ? DPIConstants.CMOVE_DIR : DPIConstants.CSTORE_DIR);
 
                 if (!session.fileExistsAndIsDirectory(new File(pacsDir))) {
-                    log.error("Il nodo DICOM " + association.getCallingAET() + " non è configurato nel DPI");
+                    log.error("Il nodo DICOM " + association.getCallingAET()
+                            + " non è configurato nel DPI");
                 }
                 final BasicDicomObject fileMetaDcmObj = new BasicDicomObject();
                 fileMetaDcmObj.initFileMetaInformation(classUID, instanceUID, transferSyntaxUID);
@@ -196,14 +197,17 @@ public final class TxStoreSCP {
                                 + ", interrogo il PACS per conoscere il numero di serie e di immagini");
                         // chiedo il numero di serie e di istanze per lo studio;
                         QueryBean query = new QueryBean(QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST);
-                        query.addReturnKey(
-                                new int[] { Tag.NumberOfStudyRelatedSeries, Tag.NumberOfStudyRelatedInstances });
-                        query.addMatchingKey(new int[] { Tag.StudyInstanceUID }, suid);
+                        query.addReturnKey(new int[] {
+                                Tag.NumberOfStudyRelatedSeries,
+                                Tag.NumberOfStudyRelatedInstances });
+                        query.addMatchingKey(new int[] {
+                                Tag.StudyInstanceUID }, suid);
                         DicomNode node = getDicomNode(association.getCallingAET());
-                        List<DicomObject> study = qrService.doCFind(query, node.getHostname(), node.getPort(),
-                                node.getAet());
+                        List<DicomObject> study = qrService.doCFind(query, node.getHostname(),
+                                node.getPort(), node.getAet());
                         CStoreBean sb = new CStoreBean();
-                        sb.setNumImagesInStudy(study.get(0).getInt(Tag.NumberOfStudyRelatedInstances));
+                        sb.setNumImagesInStudy(
+                                study.get(0).getInt(Tag.NumberOfStudyRelatedInstances));
                         sb.setNumSeriesInStudy(study.get(0).getInt(Tag.NumberOfStudyRelatedSeries));
                         studyUIDs.put(suid, sb);
                         session.createFile(studyDir, true);
@@ -215,7 +219,8 @@ public final class TxStoreSCP {
                             studyUIDs.get(suid).incTransferedSeriesInStudy();
                         }
 
-                        final String dicomFileBaseName = instanceUID + DPIConstants.DICOM_FILE_EXTENSION;
+                        final String dicomFileBaseName = instanceUID
+                                + DPIConstants.DICOM_FILE_EXTENSION;
                         final File dicomImage = new File(studySeriesDir, dicomFileBaseName);
                         // Verifico che il file dell'immagine non esista ..
                         // questo più
@@ -228,7 +233,8 @@ public final class TxStoreSCP {
                             if (contaMultiframe) {
                                 Integer numOfFrames = data.getInt(Tag.NumberOfFrames);
                                 // log.debug("Numero di Frames complessivi: " +
-                                // studyUIDs.get(suid).getNumFramesInStudy() + "\n - Frame in imm corrente: " +
+                                // studyUIDs.get(suid).getNumFramesInStudy() + "\n - Frame in imm
+                                // corrente: " +
                                 // numOfFrames);
                                 if (numOfFrames != null && numOfFrames > 0) {
                                     studyUIDs.get(suid).incNumFramesInStudy(numOfFrames);
@@ -236,12 +242,15 @@ public final class TxStoreSCP {
                                     studyUIDs.get(suid).incNumImageNoFrame();
                                 }
                                 // log.debug("Frame in imm corrente: " + numOfFrames +
-                                // "\nNumero di Frames complessivi: " + studyUIDs.get(suid).getNumFramesInStudy() +
-                                // "\nNumero immagini NoFrame: " + studyUIDs.get(suid).getNumImageNoFrame());
+                                // "\nNumero di Frames complessivi: " +
+                                // studyUIDs.get(suid).getNumFramesInStudy() +
+                                // "\nNumero immagini NoFrame: " +
+                                // studyUIDs.get(suid).getNumImageNoFrame());
                             }
 
                             studyUIDs.get(suid).incTransferedImagesInStudy();
-                            final Integer instanceSerialNo = incrementAssociationCounter(association);
+                            final Integer instanceSerialNo = incrementAssociationCounter(
+                                    association);
                             if (instanceSerialNo % 10 == 0) {
                                 log.debug("Received instance no. " + instanceSerialNo);
                             }
@@ -330,9 +339,10 @@ public final class TxStoreSCP {
 
                         if (contaMultiframe) {
                             auditLog.append(studyBean.getTransferedImagesInStudy() + " (o "
-                                    + (studyBean.getNumImageNoFrame() + studyBean.getNumFramesInStudy())
-                                    + " nel caso di conteggio con frame) (di " + studyBean.getNumImagesInStudy()
-                                    + ") IMMAGINI");
+                                    + (studyBean.getNumImageNoFrame()
+                                            + studyBean.getNumFramesInStudy())
+                                    + " nel caso di conteggio con frame) (di "
+                                    + studyBean.getNumImagesInStudy() + ") IMMAGINI");
                         } else {
                             auditLog.append(studyBean.getTransferedImagesInStudy() + " (di "
                                     + studyBean.getNumImagesInStudy() + ") IMMAGINI");
@@ -378,7 +388,8 @@ public final class TxStoreSCP {
             log.debug("Procedo al rollback della transazione");
             session.rollback();
         } catch (NoTransactionAssociatedException e1) {
-            log.error("Non è possibile effettuare il rollback perchè non presente una transazione aperta");
+            log.error(
+                    "Non è possibile effettuare il rollback perchè non presente una transazione aperta");
         }
     }
 
@@ -387,7 +398,8 @@ public final class TxStoreSCP {
             log.debug("Procedo alla commit della transazione");
             session.commit();
         } catch (NoTransactionAssociatedException e) {
-            log.error("Non è possibile effettuare il rollback perchè non presente una transazione aperta");
+            log.error(
+                    "Non è possibile effettuare il rollback perchè non presente una transazione aperta");
         }
     }
 

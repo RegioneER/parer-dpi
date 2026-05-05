@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -56,8 +52,10 @@ public class PrelievoFTPJob implements JobInterface {
     public void init() {
         // disponibiliDir = new File(ctx.getWorkingPath() + DPIConstants.DISPONIBILI_FOLDER);
         // prelevatiDir = new File(ctx.getWorkingPath() + DPIConstants.PRELEVATI_FOLDER);
-        disponibiliDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.DISPONIBILI_FOLDER);
-        prelevatiDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.PRELEVATI_FOLDER);
+        disponibiliDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.DISPONIBILI_FOLDER);
+        prelevatiDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.PRELEVATI_FOLDER);
     }
 
     @Override
@@ -83,12 +81,16 @@ public class PrelievoFTPJob implements JobInterface {
                 XAUtil.createDirectory(session, dir);
                 String udFileName = "UD_" + globalHashFolder.getName() + ".zip";
                 String pcFileName = "PC_" + globalHashFolder.getName() + ".zip";
-                String[] filename = { udFileName, pcFileName };
-                try (OutputStream udOS = XAUtil.createFileOS(session, new File(dir, udFileName), true);
-                        OutputStream pcOS = XAUtil.createFileOS(session, new File(dir, pcFileName), true)) {
-                    boolean ok = FTPUtil.retrieveFile(filename, new OutputStream[] { udOS, pcOS },
-                            ctx.getFtpOutputFolder(), ctx.getFtpIP(), ctx.getFtpPort(), ctx.getFtpUser(),
-                            ctx.getFtpPassword(), ctx.getSecureFtp());
+                String[] filename = {
+                        udFileName, pcFileName };
+                try (OutputStream udOS = XAUtil.createFileOS(session, new File(dir, udFileName),
+                        true);
+                        OutputStream pcOS = XAUtil.createFileOS(session, new File(dir, pcFileName),
+                                true)) {
+                    boolean ok = FTPUtil.retrieveFile(filename, new OutputStream[] {
+                            udOS, pcOS }, ctx.getFtpOutputFolder(), ctx.getFtpIP(),
+                            ctx.getFtpPort(), ctx.getFtpUser(), ctx.getFtpPassword(),
+                            ctx.getSecureFtp());
                     if (!ok) {
                         session.rollback();
                     } else {

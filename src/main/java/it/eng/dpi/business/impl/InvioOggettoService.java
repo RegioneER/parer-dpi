@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business.impl;
@@ -64,8 +60,10 @@ public class InvioOggettoService extends AbstractWSClient {
 
     @PostConstruct
     public void postConstruct() {
-        outFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
-        warnFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
+        outFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
+        warnFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
         // outFolder = new File(ctx.getWorkingPath() + DPIConstants.OUT_FOLDER);
         // warnFolder = new File(ctx.getWorkingPath() + DPIConstants.WARN_FOLDER);
     }
@@ -85,10 +83,12 @@ public class InvioOggettoService extends AbstractWSClient {
             }
 
             for (File zipStudy : folder) {
-                String globalHash = zipStudy.getName().substring(0, zipStudy.getName().length() - 4);
+                String globalHash = zipStudy.getName().substring(0,
+                        zipStudy.getName().length() - 4);
                 File xmlFile = new File(warnFolder, globalHash + ".xml");
                 String xml = FileUtils.readFileToString(xmlFile, "UTF-8");
-                InvioOggettoAsincronoRisposta risposta = callWSInvioOggettoPreIngest(globalHash, xml);
+                InvioOggettoAsincronoRisposta risposta = callWSInvioOggettoPreIngest(globalHash,
+                        xml);
                 elaborateResponse(risposta, zipStudy, xmlFile);
             }
         }
@@ -107,24 +107,27 @@ public class InvioOggettoService extends AbstractWSClient {
                 try {
                     risposta = callWSInvioOggettoPreIngest(globalHash, xml);
                 } catch (Exception e) {
-                    throw new WebGenericException(
-                            messagesCtx.getServiceUnavailable(InvioOggettoAsincrono.class.getSimpleName()));
+                    throw new WebGenericException(messagesCtx
+                            .getServiceUnavailable(InvioOggettoAsincrono.class.getSimpleName()));
                 }
                 elaborateResponse(risposta, zipFile, xmlFile);
                 if (risposta.getCdEsito().equals(EsitoServizio.KO)) {
                     throw new WebGenericException(risposta.getCdErr(), risposta.getDsErr());
                 }
             } else {
-                throw new WebGenericException(messagesCtx.getGeneralError("File non presenti nella cartella warn"));
+                throw new WebGenericException(
+                        messagesCtx.getGeneralError("File non presenti nella cartella warn"));
             }
         }
     }
 
-    private void elaborateResponse(InvioOggettoAsincronoRisposta risposta, File zipStudy, File xmlFile)
-            throws WebGenericException {
+    private void elaborateResponse(InvioOggettoAsincronoRisposta risposta, File zipStudy,
+            File xmlFile) throws WebGenericException {
         if (risposta != null) {
             log.info("RISPOSTA DEL WS: " + risposta.getCdEsito() + " "
-                    + ((risposta.getCdErr() != null) ? risposta.getCdErr() + " " + risposta.getDsErr() : ""));
+                    + ((risposta.getCdErr() != null)
+                            ? risposta.getCdErr() + " " + risposta.getDsErr()
+                            : ""));
             Session xaSession = xaDiskNativeFS.createSessionForLocalTransaction();
             try {
                 switch (risposta.getCdEsito()) {
@@ -160,11 +163,12 @@ public class InvioOggettoService extends AbstractWSClient {
     private InvioOggettoAsincronoRisposta callWSInvioOggettoPreIngest(String globalHash, String xml)
             throws MalformedURLException {
         log.debug("Invoco il WS: InvioOggettoAsincrono - URL: " + ctx.getWsdlInvioOggettoUrl());
-        log.debug("Parametri: nmAmbiente: " + ctx.getNmAmbiente() + "\nnmVersatore: " + ctx.getNmVersatore()
-                + "\nglobalHash: " + globalHash + "\nflForzaWarning:" + flForzaWarning + "\nxml:" + xml);
+        log.debug("Parametri: nmAmbiente: " + ctx.getNmAmbiente() + "\nnmVersatore: "
+                + ctx.getNmVersatore() + "\nglobalHash: " + globalHash + "\nflForzaWarning:"
+                + flForzaWarning + "\nxml:" + xml);
         return client.invioOggettoAsincrono(ctx.getNmAmbiente(), ctx.getNmVersatore(), globalHash,
-                DPIConstants.WS_NM_TIPO_OBJECT, flFileCifrato, flForzaWarning, flForzaAccettazione, getMotivazione(),
-                DPIConstants.VERSIONE_XML_PREINGEST, xml);
+                DPIConstants.WS_NM_TIPO_OBJECT, flFileCifrato, flForzaWarning, flForzaAccettazione,
+                getMotivazione(), DPIConstants.VERSIONE_XML_PREINGEST, xml);
     }
 
     public String getMotivazione() {

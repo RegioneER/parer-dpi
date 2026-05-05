@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -73,8 +69,10 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
         // outFolder = new File(ctx.getWorkingPath() + DPIConstants.OUT_FOLDER);
         // warnFolder = new File(ctx.getWorkingPath() +
         // DPIConstants.WARN_FOLDER);
-        outFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
-        warnFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
+        outFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
+        warnFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
     }
 
     @Override
@@ -91,11 +89,14 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                 // DPIConstants.NEW_FOLDER, DPIConstants.CMOVE_DIR);
                 // File newFolderC = new File(ctx.getWorkingPath() +
                 // DPIConstants.NEW_FOLDER, DPIConstants.CSTORE_DIR);
-                File newFolderM = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.NEW_FOLDER,
+                File newFolderM = new File(
+                        ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.NEW_FOLDER,
                         DPIConstants.CMOVE_DIR);
-                File newFolderC = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.NEW_FOLDER,
+                File newFolderC = new File(
+                        ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.NEW_FOLDER,
                         DPIConstants.CSTORE_DIR);
-                processNewFolder(newFolderM, new Boolean(ctx.getFlForzaWarningCMove()), DPIConstants.CMOVE_DIR);
+                processNewFolder(newFolderM, new Boolean(ctx.getFlForzaWarningCMove()),
+                        DPIConstants.CMOVE_DIR);
                 processNewFolder(newFolderC, false, DPIConstants.CSTORE_DIR);
 
                 sendGenericObject();
@@ -118,10 +119,10 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
         for (ObjectType objectType : objectTypes) {
             log.debug("-" + objectType.toString());
             // determino le cartelle <produttore>-<raccoglitore> presenti in V1_new
-            newFolder = new File(
-                    ctx.getWorkingPath() + File.separatorChar + objectType.getObjType() + DPIConstants.NEW_FOLDER);
-            outFolder = new File(
-                    ctx.getWorkingPath() + File.separatorChar + objectType.getObjType() + DPIConstants.OUT_FOLDER);
+            newFolder = new File(ctx.getWorkingPath() + File.separatorChar + objectType.getObjType()
+                    + DPIConstants.NEW_FOLDER);
+            outFolder = new File(ctx.getWorkingPath() + File.separatorChar + objectType.getObjType()
+                    + DPIConstants.OUT_FOLDER);
             // ricavo i file
             File[] folders = XAUtil.listFilesNewTX(xaDiskNativeFS, newFolder);
             Counters counters = new Counters(folders.length, newFolder.getName());
@@ -141,7 +142,8 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                 InvioOggettoAsincronoRisposta risposta = null;
                 String xml = FileUtils.readFileToString(xmlFile, "UTF-8");
                 String nomeTipoOggetto = objectType.getObjType();
-                risposta = callWSInvioOggettoPreIngest(cdKeyObject, xml, flForzaWarning, nomeTipoOggetto);
+                risposta = callWSInvioOggettoPreIngest(cdKeyObject, xml, flForzaWarning,
+                        nomeTipoOggetto);
                 elaborateResponseGenericObj(risposta, folder, outFolder, xmlFile, counters);
             }
             audit.info("TIPO OGGETTO: " + objectType.getObjType() + " | " + counters.toString());
@@ -166,31 +168,36 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
             String xml = FileUtils.readFileToString(xmlFile, "UTF-8");
             String nomeTipoOggetto = DPIConstants.WS_NM_TIPO_OBJECT;
 
-            risposta = callWSInvioOggettoPreIngest(globalHash, xml, flForzaWarning, nomeTipoOggetto);
+            risposta = callWSInvioOggettoPreIngest(globalHash, xml, flForzaWarning,
+                    nomeTipoOggetto);
 
             elaborateResponse(risposta, zipStudy, xmlFile, counters, origFolder);
         }
         audit.info(counters.toString());
     }
 
-    private InvioOggettoAsincronoRisposta callWSInvioOggettoPreIngest(String cdKeyObject, String xml,
-            Boolean flForzaWarning, String nomeTipoOggetto) throws MalformedURLException {
+    private InvioOggettoAsincronoRisposta callWSInvioOggettoPreIngest(String cdKeyObject,
+            String xml, Boolean flForzaWarning, String nomeTipoOggetto)
+            throws MalformedURLException {
         log.debug("Invoco il WS: InvioOggettoAsincrono - URL: " + ctx.getWsdlInvioOggettoUrl());
-        log.debug("Parametri: nmAmbiente: " + ctx.getNmAmbiente() + "\nnmVersatore: " + ctx.getNmVersatore()
-                + "\ncdPassword: " + "\ncdKeyObject: " + cdKeyObject + "\nflForzaWarning:" + flForzaWarning + "\nxml:"
+        log.debug("Parametri: nmAmbiente: " + ctx.getNmAmbiente() + "\nnmVersatore: "
+                + ctx.getNmVersatore() + "\ncdPassword: " + "\ncdKeyObject: " + cdKeyObject
+                + "\nflForzaWarning:" + flForzaWarning + "\nxml:"
                 + StringUtils.abbreviate(xml, 10000));
         String motivazione = "";
 
-        return client.invioOggettoAsincrono(ctx.getNmAmbiente(), ctx.getNmVersatore(), cdKeyObject, nomeTipoOggetto,
-                flFileCifrato, flForzaWarning, flForzaAccettazione, motivazione, DPIConstants.VERSIONE_XML_PREINGEST,
-                xml);
+        return client.invioOggettoAsincrono(ctx.getNmAmbiente(), ctx.getNmVersatore(), cdKeyObject,
+                nomeTipoOggetto, flFileCifrato, flForzaWarning, flForzaAccettazione, motivazione,
+                DPIConstants.VERSIONE_XML_PREINGEST, xml);
     }
 
-    private void elaborateResponse(InvioOggettoAsincronoRisposta risposta, File zipObj, File xmlFile, Counters counters,
-            String origFolder) {
+    private void elaborateResponse(InvioOggettoAsincronoRisposta risposta, File zipObj,
+            File xmlFile, Counters counters, String origFolder) {
         if (risposta != null) {
             log.info("RISPOSTA DEL WS: " + risposta.getCdEsito() + " "
-                    + ((risposta.getCdErr() != null) ? risposta.getCdErr() + " " + risposta.getDsErr() : ""));
+                    + ((risposta.getCdErr() != null)
+                            ? risposta.getCdErr() + " " + risposta.getDsErr()
+                            : ""));
             Session xaSession = xaDiskNativeFS.createSessionForLocalTransaction();
             try {
                 switch (risposta.getCdEsito()) {
@@ -200,13 +207,15 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                     break;
                 case KO:
                     /*
-                     * AGGIUNTA LA SEGUENTE LOGICA per fixare un eventuale problema di timeout nella risposta di
-                     * preinget. Se infatti il dpi va in timeout il preingest potrebbe cmq aver committato ma il dpi
-                     * avrebbe rollbackato ed un 2° invio da parte del DPI eliminerebbe il file (la risposta sarebbe KO)
+                     * AGGIUNTA LA SEGUENTE LOGICA per fixare un eventuale problema di timeout nella
+                     * risposta di preinget. Se infatti il dpi va in timeout il preingest potrebbe
+                     * cmq aver committato ma il dpi avrebbe rollbackato ed un 2° invio da parte del
+                     * DPI eliminerebbe il file (la risposta sarebbe KO)
                      *
-                     * Se codErr == PING-SENDOBJ-OBJ-003 (Oggetto già in warning) eseguire la logica WARN (ma solo se i
-                     * file non esistono già nella destinazione) Se codErr == PING-SENDOBJ-OBJ-010 (oggetto già in
-                     * attesa file) eseguire la logica OK (ma solo se i file non esistono già nella destinazione)
+                     * Se codErr == PING-SENDOBJ-OBJ-003 (Oggetto già in warning) eseguire la logica
+                     * WARN (ma solo se i file non esistono già nella destinazione) Se codErr ==
+                     * PING-SENDOBJ-OBJ-010 (oggetto già in attesa file) eseguire la logica OK (ma
+                     * solo se i file non esistono già nella destinazione)
                      *
                      * Se codErr == 666 rollback
                      */
@@ -219,11 +228,16 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                                 XAUtil.deleteFile(xaSession, zipObj);
                                 XAUtil.deleteFile(xaSession, xmlFile);
                             } else {
-                                if (!XAUtil.fileExists(xaSession, new File(warnFolder, zipObj.getName()))
-                                        && !XAUtil.fileExists(xaSession, new File(warnFolder, xmlFile.getName()))) {
-                                    log.info("Oggetto già in stato WARNING sposto nella cartella warning i file .. ");
-                                    XAUtil.moveFile(xaSession, zipObj, new File(warnFolder, zipObj.getName()));
-                                    XAUtil.moveFile(xaSession, xmlFile, new File(warnFolder, xmlFile.getName()));
+                                if (!XAUtil.fileExists(xaSession,
+                                        new File(warnFolder, zipObj.getName()))
+                                        && !XAUtil.fileExists(xaSession,
+                                                new File(warnFolder, xmlFile.getName()))) {
+                                    log.info(
+                                            "Oggetto già in stato WARNING sposto nella cartella warning i file .. ");
+                                    XAUtil.moveFile(xaSession, zipObj,
+                                            new File(warnFolder, zipObj.getName()));
+                                    XAUtil.moveFile(xaSession, xmlFile,
+                                            new File(warnFolder, xmlFile.getName()));
                                 } else {
                                     log.info(
                                             "Oggetto già in stato WARNING ma sono già presenti nella cartella warning gli stessi file .. elimino i file");
@@ -233,17 +247,19 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                             }
                             break;
                         case "PING-SENDOBJ-OBJ-010": // (oggetto già in attesa
-                                                     // file)
+                            // file)
                             if (origFolder.equals(DPIConstants.CMOVE_DIR)) {
                                 log.info(
                                         "Oggetto già in stato IN_ATTESA_FILE ma lo studio proviene da una CMOVE, elimino i file .. ");
                                 XAUtil.deleteFile(xaSession, zipObj);
                                 XAUtil.deleteFile(xaSession, xmlFile);
                             } else {
-                                if (!XAUtil.fileExists(xaSession, new File(outFolder, zipObj.getName()))) {
+                                if (!XAUtil.fileExists(xaSession,
+                                        new File(outFolder, zipObj.getName()))) {
                                     log.info(
                                             "Oggetto già in stato IN_ATTESA_FILE sposto nella cartella out il file zip .. ");
-                                    XAUtil.moveFile(xaSession, zipObj, new File(outFolder, zipObj.getName()));
+                                    XAUtil.moveFile(xaSession, zipObj,
+                                            new File(outFolder, zipObj.getName()));
                                     XAUtil.deleteFile(xaSession, xmlFile);
                                 } else {
                                     log.info(
@@ -262,8 +278,8 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                             break;
                         }
                     } else { // Generico KO .. cancello senza codice errore (NON
-                             // DOVREBBE MAI CAPITARE, il preingest deve
-                             // sempre tornare un codice in caso di KO)
+                        // DOVREBBE MAI CAPITARE, il preingest deve
+                        // sempre tornare un codice in caso di KO)
                         XAUtil.deleteFile(xaSession, zipObj);
                         XAUtil.deleteFile(xaSession, xmlFile);
                     }
@@ -292,21 +308,19 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
     /**
      * Elabora la risposta ottenuta dall'invocazione di Preingest
      *
-     * @param risposta
-     *            Risposta ritornata da Sacer Preingest
-     * @param objFolder
-     *            Cartella <produttore>-<raccoglitore>
+     * @param risposta  Risposta ritornata da Sacer Preingest
+     * @param objFolder Cartella <produttore>-<raccoglitore>
+     * @param xmlFile   file xml contenuto in objFolder
      * @param xmlFile
-     *            file xml contenuto in objFolder
-     * @param xmlFile
-     * @param counters
-     *            contatore per gestire l'esito della risposta
+     * @param counters  contatore per gestire l'esito della risposta
      */
-    private void elaborateResponseGenericObj(InvioOggettoAsincronoRisposta risposta, File objFolder, File outFolder,
-            File xmlFile, Counters counters) {
+    private void elaborateResponseGenericObj(InvioOggettoAsincronoRisposta risposta, File objFolder,
+            File outFolder, File xmlFile, Counters counters) {
         if (risposta != null) {
             log.info("RISPOSTA DEL WS: " + risposta.getCdEsito() + " "
-                    + ((risposta.getCdErr() != null) ? risposta.getCdErr() + " " + risposta.getDsErr() : ""));
+                    + ((risposta.getCdErr() != null)
+                            ? risposta.getCdErr() + " " + risposta.getDsErr()
+                            : ""));
             Session xaSession = xaDiskNativeFS.createSessionForLocalTransaction();
             try {
                 switch (risposta.getCdEsito()) {
@@ -316,23 +330,26 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                     break;
                 case KO:
                     /*
-                     * AGGIUNTA LA SEGUENTE LOGICA per fixare un eventuale problema di timeout nella risposta di
-                     * preinget. Se infatti il dpi va in timeout il preingest potrebbe cmq aver committato ma il dpi
-                     * avrebbe rollbackato ed un 2° invio da parte del DPI eliminerebbe il file (la risposta sarebbe KO)
+                     * AGGIUNTA LA SEGUENTE LOGICA per fixare un eventuale problema di timeout nella
+                     * risposta di preinget. Se infatti il dpi va in timeout il preingest potrebbe
+                     * cmq aver committato ma il dpi avrebbe rollbackato ed un 2° invio da parte del
+                     * DPI eliminerebbe il file (la risposta sarebbe KO)
                      *
-                     * Se codErr == PING-SENDOBJ-OBJ-010 (oggetto già in attesa file) eseguire la logica OK (ma solo se
-                     * i file non esistono già nella destinazione)
+                     * Se codErr == PING-SENDOBJ-OBJ-010 (oggetto già in attesa file) eseguire la
+                     * logica OK (ma solo se i file non esistono già nella destinazione)
                      *
                      * Se codErr == 666 rollback
                      */
                     if (risposta.getCdErr() != null) {
                         switch (risposta.getCdErr()) {
                         case "PING-SENDOBJ-OBJ-010": // (oggetto già in attesa file)
-                            if (!XAUtil.fileExists(xaSession, new File(outFolder, objFolder.getName()))) {
+                            if (!XAUtil.fileExists(xaSession,
+                                    new File(outFolder, objFolder.getName()))) {
                                 log.info(
                                         "Oggetto già in stato IN_ATTESA_FILE sposto nella cartella out il/i file ed elimino l'xml .. ");
                                 XAUtil.deleteFile(xaSession, xmlFile);
-                                XAUtil.moveFile(xaSession, objFolder, new File(outFolder, objFolder.getName()));
+                                XAUtil.moveFile(xaSession, objFolder,
+                                        new File(outFolder, objFolder.getName()));
                             } else {
                                 log.info(
                                         "Oggetto già in stato IN_ATTESA_FILE ma sono già presenti nella cartella out gli stessi file .. elimino i file");
@@ -348,8 +365,8 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
                             break;
                         }
                     } else { // Generico KO .. cancello senza codice errore (NON
-                             // DOVREBBE MAI CAPITARE, il preingest deve
-                             // sempre tornare un codice in caso di KO)
+                        // DOVREBBE MAI CAPITARE, il preingest deve
+                        // sempre tornare un codice in caso di KO)
                         Util.rimuoviFileRicorsivamente(objFolder, xaSession);
                     }
                     break;
@@ -407,8 +424,8 @@ public class ObjectSenderJob extends AbstractWSClient implements JobInterface {
 
         @Override
         public String toString() {
-            return "CARTELLA: " + foldername + " | TOTALI: " + total + " | OK: " + success + " | KO: " + fail
-                    + " | WARN: " + warn + " | ERRORE: " + error;
+            return "CARTELLA: " + foldername + " | TOTALI: " + total + " | OK: " + success
+                    + " | KO: " + fail + " | WARN: " + warn + " | ERRORE: " + error;
         }
     }
 

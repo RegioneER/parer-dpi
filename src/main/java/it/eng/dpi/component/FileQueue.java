@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.component;
@@ -35,8 +31,9 @@ import it.eng.dpi.exception.XAGenericException;
 /**
  * Implementazione di una coda per processare file.
  *
- * La coda è un Set di ProcessableFile, non è possibile inserire due file con lo stesso percorso assoluto. In
- * ProcessableFile sono stati ridefiniti, infatti, i metodi hashcode e equals per basare l'uguaglianza sul percorso.
+ * La coda è un Set di ProcessableFile, non è possibile inserire due file con lo stesso percorso
+ * assoluto. In ProcessableFile sono stati ridefiniti, infatti, i metodi hashcode e equals per
+ * basare l'uguaglianza sul percorso.
  *
  *
  *
@@ -55,28 +52,32 @@ public class FileQueue {
         return queue.contains(new ProcessableFile(null, filePath, null, null));
     }
 
-    public synchronized boolean put(String consumerId, File filePath, String destinationSubDir, String pacsName)
-            throws XAGenericException {
+    public synchronized boolean put(String consumerId, File filePath, String destinationSubDir,
+            String pacsName) throws XAGenericException {
 
         if (!XAUtil.fileExistsNewTx(xaDiskNativeFS, filePath)) {
             log.debug("File non più esistente su filesystem. Path: " + filePath);
             return false;
         }
         if (queue.add(new ProcessableFile(consumerId, filePath, destinationSubDir, pacsName))) {
-            log.debug("Nuovo file aggiunto in coda. Path: " + filePath + " - Consumer: " + consumerId);
+            log.debug("Nuovo file aggiunto in coda. Path: " + filePath + " - Consumer: "
+                    + consumerId);
             return true;
         } else {
-            log.debug("File già presente in coda. Path: " + filePath + " - Consumer: " + consumerId);
+            log.debug(
+                    "File già presente in coda. Path: " + filePath + " - Consumer: " + consumerId);
             return false;
         }
     }
 
-    public synchronized boolean remove(String consumerId, File filePath, String destinationSubDir, String pacsName) {
+    public synchronized boolean remove(String consumerId, File filePath, String destinationSubDir,
+            String pacsName) {
         if (queue.remove(new ProcessableFile(consumerId, filePath, destinationSubDir, pacsName))) {
             log.debug("File rimosso dalla coda. Path: " + filePath + " - Consumer: " + consumerId);
             return true;
         } else {
-            log.debug("Rimozione fallita, file non presente in coda. Path: " + filePath + " - Consumer: " + consumerId);
+            log.debug("Rimozione fallita, file non presente in coda. Path: " + filePath
+                    + " - Consumer: " + consumerId);
             return false;
         }
     }

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.dicom.scu;
@@ -30,7 +26,8 @@ public class QRConstants {
         STUDY_STUDY_ROOT_FIRST("STUDY", STUDY_RETURN_KEYS, DPIConstants.STUDY_LEVEL_FIND_CUID,
                 // STUDY_LEVEL_GET_CUID,
                 DPIConstants.STUDY_LEVEL_MOVE_CUID),
-        STUDY_PAT_ROOT_FIRST("STUDY", STUDY_RETURN_KEYS, DPIConstants.STUDY_LEVEL_FIND_CUID_PAT_ROOT_FIRST,
+        STUDY_PAT_ROOT_FIRST("STUDY", STUDY_RETURN_KEYS,
+                DPIConstants.STUDY_LEVEL_FIND_CUID_PAT_ROOT_FIRST,
                 // STUDY_LEVEL_GET_CUID,
                 DPIConstants.STUDY_LEVEL_MOVE_CUID_PAT_ROOT_FIRST);
         // SERIES("SERIES", SERIES_RETURN_KEYS, SERIES_LEVEL_FIND_CUID,
@@ -75,21 +72,26 @@ public class QRConstants {
         }
     }
 
-    public static final int[] PATIENT_RETURN_KEYS = { Tag.PatientName, Tag.PatientID, Tag.PatientBirthDate,
-            Tag.PatientSex, Tag.NumberOfPatientRelatedStudies, Tag.NumberOfPatientRelatedSeries,
+    public static final int[] PATIENT_RETURN_KEYS = {
+            Tag.PatientName, Tag.PatientID, Tag.PatientBirthDate, Tag.PatientSex,
+            Tag.NumberOfPatientRelatedStudies, Tag.NumberOfPatientRelatedSeries,
             Tag.NumberOfPatientRelatedInstances };
 
-    public static final int[] STUDY_RETURN_KEYS = { Tag.StudyDate, Tag.StudyTime, Tag.AccessionNumber, Tag.StudyID,
-            Tag.StudyInstanceUID, Tag.NumberOfStudyRelatedSeries, Tag.NumberOfStudyRelatedInstances };
+    public static final int[] STUDY_RETURN_KEYS = {
+            Tag.StudyDate, Tag.StudyTime, Tag.AccessionNumber, Tag.StudyID, Tag.StudyInstanceUID,
+            Tag.NumberOfStudyRelatedSeries, Tag.NumberOfStudyRelatedInstances };
 
-    public static final int[] PATIENT_MATCHING_KEYS = { Tag.PatientName, Tag.PatientID, Tag.IssuerOfPatientID,
-            Tag.PatientBirthDate, Tag.PatientSex };
+    public static final int[] PATIENT_MATCHING_KEYS = {
+            Tag.PatientName, Tag.PatientID, Tag.IssuerOfPatientID, Tag.PatientBirthDate,
+            Tag.PatientSex };
 
-    public static final int[] STUDY_MATCHING_KEYS = { Tag.StudyDate, Tag.StudyTime, Tag.AccessionNumber,
-            Tag.ModalitiesInStudy, Tag.ReferringPhysicianName, Tag.StudyID, Tag.StudyInstanceUID };
+    public static final int[] STUDY_MATCHING_KEYS = {
+            Tag.StudyDate, Tag.StudyTime, Tag.AccessionNumber, Tag.ModalitiesInStudy,
+            Tag.ReferringPhysicianName, Tag.StudyID, Tag.StudyInstanceUID };
 
-    public static final int[] PATIENT_STUDY_MATCHING_KEYS = { Tag.StudyDate, Tag.StudyTime, Tag.AccessionNumber,
-            Tag.ModalitiesInStudy, Tag.ReferringPhysicianName, Tag.PatientName, Tag.PatientID, Tag.IssuerOfPatientID,
+    public static final int[] PATIENT_STUDY_MATCHING_KEYS = {
+            Tag.StudyDate, Tag.StudyTime, Tag.AccessionNumber, Tag.ModalitiesInStudy,
+            Tag.ReferringPhysicianName, Tag.PatientName, Tag.PatientID, Tag.IssuerOfPatientID,
             Tag.PatientBirthDate, Tag.PatientSex, Tag.StudyID, Tag.StudyInstanceUID };
 
     public static final int[] DPI_CUSTOM_RETURN_KEYS = {
@@ -108,7 +110,8 @@ public class QRConstants {
             // Accession Number
             Tag.AccessionNumber };
 
-    public static final int[] MOVE_KEYS = { Tag.QueryRetrieveLevel, Tag.PatientID, Tag.StudyInstanceUID,
-            Tag.SeriesInstanceUID, Tag.SOPInstanceUID };
+    public static final int[] MOVE_KEYS = {
+            Tag.QueryRetrieveLevel, Tag.PatientID, Tag.StudyInstanceUID, Tag.SeriesInstanceUID,
+            Tag.SOPInstanceUID };
 
 }

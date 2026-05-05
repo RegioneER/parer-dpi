@@ -2,9 +2,7 @@ var oTable;
 $(document).ready(start);
 
 function start() {
-	$("input:submit, a, button", ".demo").button();
 	fillDCM4CHEE();
-	$("input:radio").buttonset();
 	$("#studylevel").hide();
 	$("input:radio").click(function() {
 		if (this.value == "P") {
@@ -28,7 +26,7 @@ function start() {
 			}
 		}
 	});
-	$("button").click(function() {
+	$("button").on("click", function() {
 		if (this.value == "Query") {
 			doAjax("qr.do");
 		}
@@ -125,7 +123,7 @@ function doAjax(page) {
 			}else{
 				alert(data.message);				
 			}
-		}).error(function(d) {
+		}).fail(function(d) {
 			alert("error"); 
 		});
 	

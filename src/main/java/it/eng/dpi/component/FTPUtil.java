@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.component;
@@ -38,27 +34,20 @@ public class FTPUtil {
 
     /**
      *
-     * @param fileToSend
-     *            File da inviare
-     * @param filename
-     *            Nome da assegnare al file sul server FTP
-     * @param path
-     *            Percorso in cui copiare il file sul server FTP (il metodo provvede anche a creare le directory)
-     * @param IP
-     *            Indirizzo IP del server
-     * @param port
-     *            Porta del server
-     * @param user
-     *            Utente FTP
-     * @param pwd
-     *            Password utente
-     * @param isSSL
-     *            Connessione SSL/TSL
+     * @param fileToSend File da inviare
+     * @param filename   Nome da assegnare al file sul server FTP
+     * @param path       Percorso in cui copiare il file sul server FTP (il metodo provvede anche a
+     *                   creare le directory)
+     * @param IP         Indirizzo IP del server
+     * @param port       Porta del server
+     * @param user       Utente FTP
+     * @param pwd        Password utente
+     * @param isSSL      Connessione SSL/TSL
      *
      * @return Esito operazione
      */
-    public static boolean sendFile(File fileToSend, String filename, String path, String IP, String port, String user,
-            String pwd, boolean isSSL) {
+    public static boolean sendFile(File fileToSend, String filename, String path, String IP,
+            String port, String user, String pwd, boolean isSSL) {
         FTPClient ftp = createClient(isSSL);
         try {
             connectFTP(ftp, IP, port, user, pwd, isSSL);
@@ -77,7 +66,8 @@ public class FTPUtil {
                 if (file[0].getSize() == fileToSend.length()) {
                     return true;
                 } else {
-                    log.debug("Elimino il file " + filename + " su FTP perchè di dimensione differente");
+                    log.debug("Elimino il file " + filename
+                            + " su FTP perchè di dimensione differente");
                     ftp.deleteFile(filename);
                     log.info(ftp.getReplyString());
                 }
@@ -88,7 +78,8 @@ public class FTPUtil {
             log.info("Invio il file " + filename + " ...");
             long startTime = System.currentTimeMillis();
             int copiedBytes = -1;
-            try (InputStream is = new FileInputStream(fileToSend); OutputStream fout = ftp.storeFileStream(filename)) {
+            try (InputStream is = new FileInputStream(fileToSend);
+                    OutputStream fout = ftp.storeFileStream(filename)) {
                 copiedBytes = IOUtils.copy(is, fout);
             } catch (IOException e) {
                 log.error("Errore durante il trasferimento del file " + filename, e);
@@ -101,8 +92,9 @@ public class FTPUtil {
             log.debug(ftp.getReplyString());
             log.info("Invio il file " + filename + " ... inviato");
             float trRate = ((float) copiedBytes / (endTime - startTime));
-            log.info((copiedBytes / (1024 * 1024)) + " MB copiati in " + (float) (endTime - startTime) / 1000 + " s. "
-                    + trRate / 1000 + " MB/s - ~" + ((long) (trRate * 8) / 1000) + " Mbit/s");
+            log.info((copiedBytes / (1024 * 1024)) + " MB copiati in "
+                    + (float) (endTime - startTime) / 1000 + " s. " + trRate / 1000 + " MB/s - ~"
+                    + ((long) (trRate * 8) / 1000) + " Mbit/s");
             return true;
         } catch (Exception ex) {
             if (ftp.isConnected()) {
@@ -129,29 +121,22 @@ public class FTPUtil {
 
     /**
      *
-     * @param filename
-     *            Nome del file da recuperare
-     * @param path
-     *            Percorso sul server FTP in cui è presente il file
-     * @param localStream
-     *            OutputStream locale in cui copiare il file
-     * @param IP
-     *            Indirizzo IP del server
-     * @param port
-     *            Porta del server
-     * @param user
-     *            Utente FTP
-     * @param pwd
-     *            Password utente
-     * @param isSSL
-     *            Connessione SSL/TSL
+     * @param filename    Nome del file da recuperare
+     * @param path        Percorso sul server FTP in cui è presente il file
+     * @param localStream OutputStream locale in cui copiare il file
+     * @param IP          Indirizzo IP del server
+     * @param port        Porta del server
+     * @param user        Utente FTP
+     * @param pwd         Password utente
+     * @param isSSL       Connessione SSL/TSL
      *
      * @return Esito operazione
      */
-    public static boolean retrieveFile(String[] filename, OutputStream[] localStream, String path, String IP,
-            String port, String user, String pwd, boolean isSSL) {
+    public static boolean retrieveFile(String[] filename, OutputStream[] localStream, String path,
+            String IP, String port, String user, String pwd, boolean isSSL) {
         if (filename.length != localStream.length)
-            throw new IllegalArgumentException("Il numero di filename deve coincidere con il numero di localStream");
+            throw new IllegalArgumentException(
+                    "Il numero di filename deve coincidere con il numero di localStream");
         FTPClient ftp = createClient(isSSL);
         try {
             connectFTP(ftp, IP, port, user, pwd, isSSL);
@@ -167,7 +152,8 @@ public class FTPUtil {
                 FTPFile[] file = ftp.listFiles(filename[i]);
                 log.debug(ftp.getReplyString());
                 if (file == null || file.length == 0) {
-                    log.info("Il file " + filename[i] + " non è presente sul server nel percorso " + path);
+                    log.info("Il file " + filename[i] + " non è presente sul server nel percorso "
+                            + path);
                     return false;
                 }
                 log.info("Recupero il file " + filename[i]);
@@ -216,8 +202,8 @@ public class FTPUtil {
         return ftp;
     }
 
-    private static void connectFTP(FTPClient ftp, String IP, String port, String user, String pwd, boolean isSSL)
-            throws IOException {
+    private static void connectFTP(FTPClient ftp, String IP, String port, String user, String pwd,
+            boolean isSSL) throws IOException {
         InetAddress addr = InetAddress.getByName(IP);
         int portnum = Integer.parseInt(port);
         ftp.connect(addr, portnum);

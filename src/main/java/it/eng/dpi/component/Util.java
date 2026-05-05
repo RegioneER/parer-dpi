@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.component;
@@ -75,10 +71,8 @@ public class Util {
     /**
      * Metodo statico per ordinare un enum tramite il valore
      *
-     * @param <T>
-     *            generics enum
-     * @param enumValues
-     *            l'array di valori dell'enum
+     * @param <T>        generics enum
+     * @param enumValues l'array di valori dell'enum
      *
      * @return la collezione ordinata
      */
@@ -93,17 +87,15 @@ public class Util {
     /**
      * Metodo statico che verifica la presenza di un file all'interno di un archivio zip
      *
-     * @param zipPathName
-     *            il path del file zip
-     * @param pathFileInZip
-     *            il path del file all'interno dello zip
+     * @param zipPathName   il path del file zip
+     * @param pathFileInZip il path del file all'interno dello zip
      *
      * @return true se il file è presente
      *
-     * @throws IOException
-     *             eccezione generica
+     * @throws IOException eccezione generica
      */
-    public static boolean verificaPresenzaFileInZip(String zipPathName, String pathFileInZip) throws IOException {
+    public static boolean verificaPresenzaFileInZip(String zipPathName, String pathFileInZip)
+            throws IOException {
         boolean tmpResult = false;
         try (ZipFile tmpFile = new ZipFile(zipPathName)) {
             ZipArchiveEntry tmpZipArchiveEntry = tmpFile.getEntry(pathFileInZip);
@@ -117,17 +109,15 @@ public class Util {
     /**
      * Metodo statico che verifica la presenza di una directory all'interno di un archivio zip
      *
-     * @param zipPathName
-     *            il path del file zip
-     * @param pathDirInZip
-     *            il path della directory all'interno dello zip
+     * @param zipPathName  il path del file zip
+     * @param pathDirInZip il path della directory all'interno dello zip
      *
      * @return true se la directory è presente
      *
-     * @throws IOException
-     *             eccezione generica
+     * @throws IOException eccezione generica
      */
-    public static boolean verificaPresenzaDirInZip(String zipPathName, String pathDirInZip) throws IOException {
+    public static boolean verificaPresenzaDirInZip(String zipPathName, String pathDirInZip)
+            throws IOException {
         boolean tmpResult = false;
         if (!pathDirInZip.endsWith("/")) {
             pathDirInZip += '/';
@@ -149,19 +139,16 @@ public class Util {
     /**
      * Metodo che ritorna il file richiesto come parametro contenuto all'interno di un archivio zip
      *
-     * @param zipPathName
-     *            il path del file zip
-     * @param fileInZip
-     *            il path del file all'interno dello zip
-     * @param pathContenutoZip
-     *            il path su cui scrivere il file
+     * @param zipPathName      il path del file zip
+     * @param fileInZip        il path del file all'interno dello zip
+     * @param pathContenutoZip il path su cui scrivere il file
      *
      * @return il file salvato
      *
-     * @throws IOException
-     *             eccezione generica
+     * @throws IOException eccezione generica
      */
-    public static File estraFileDaZip(String zipPathName, String fileInZip, File pathContenutoZip) throws IOException {
+    public static File estraFileDaZip(String zipPathName, String fileInZip, File pathContenutoZip)
+            throws IOException {
         File tmpRetFile = null;
         if (verificaPresenzaFileInZip(zipPathName, fileInZip)) {
             tmpRetFile = File.createTempFile("out_", ".tmp", pathContenutoZip);
@@ -174,17 +161,15 @@ public class Util {
     }
 
     /**
-     * Metodo che ritorna il file richiesto come parametro contenuto all'interno di un archivio zip come byte array
+     * Metodo che ritorna il file richiesto come parametro contenuto all'interno di un archivio zip
+     * come byte array
      *
-     * @param zipPathName
-     *            il path del file zip
-     * @param fileInZip
-     *            il path del file all'interno dello zip
+     * @param zipPathName il path del file zip
+     * @param fileInZip   il path del file all'interno dello zip
      *
      * @return il byte[]
      *
-     * @throws IOException
-     *             eccezione generica
+     * @throws IOException eccezione generica
      */
     public static byte[] estraiFileDaZip(String zipPathName, String fileInZip) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -197,22 +182,19 @@ public class Util {
     }
 
     /**
-     * Metodo che ritorna un outputStream contenente il file richiesto come parametro all'interno di un archivio zip
+     * Metodo che ritorna un outputStream contenente il file richiesto come parametro all'interno di
+     * un archivio zip
      *
-     * @param zipPathName
-     *            il path del file zip
-     * @param fileInZip
-     *            il path del file all'interno dello zip
-     * @param out
-     *            l'outputStream su cui scrivere
+     * @param zipPathName il path del file zip
+     * @param fileInZip   il path del file all'interno dello zip
+     * @param out         l'outputStream su cui scrivere
      *
      * @return out oggetto {@link OutputStream}
      *
-     * @throws IOException
-     *             eccezione generica
+     * @throws IOException eccezione generica
      */
-    public static OutputStream estraFileDaZip(String zipPathName, String fileInZip, OutputStream out)
-            throws IOException {
+    public static OutputStream estraFileDaZip(String zipPathName, String fileInZip,
+            OutputStream out) throws IOException {
         byte[] buffer = new byte[512 * 1024]; // 1/2 megabyte di buffer
         try (ZipFile tmpZipFile = new ZipFile(zipPathName)) {
             ZipArchiveEntry tmpZipArchiveEntry = tmpZipFile.getEntry(fileInZip);
@@ -231,29 +213,22 @@ public class Util {
     }
 
     /**
-     * Metodo statico che va a scrivere nella directory outFolder i file contenuti nella directory pathDirInZip in
-     * transazione
+     * Metodo statico che va a scrivere nella directory outFolder i file contenuti nella directory
+     * pathDirInZip in transazione
      *
-     * @param zipFile
-     *            il file zip
-     * @param pathDirInZip
-     *            il path della directory da cui estrarre i file nello zip
-     * @param outFolder
-     *            la directory su cui scrivere i file
-     * @param session
-     *            la sessione in transazione
-     * @param mkdirs
-     *            true per ricreare lo stesso path del file nella directory di destinazione
+     * @param zipFile      il file zip
+     * @param pathDirInZip il path della directory da cui estrarre i file nello zip
+     * @param outFolder    la directory su cui scrivere i file
+     * @param session      la sessione in transazione
+     * @param mkdirs       true per ricreare lo stesso path del file nella directory di destinazione
      *
      * @return array di oggetti tipo {@link File}
      *
-     * @throws XAGenericException
-     *             eccezione generica
-     * @throws IOException
-     *             eccezione generica
+     * @throws XAGenericException eccezione generica
+     * @throws IOException        eccezione generica
      */
-    public static File[] estraiFileDaZipTx(File zipFile, String pathDirInZip, String outFolder, Session session,
-            boolean mkdirs) throws XAGenericException, IOException {
+    public static File[] estraiFileDaZipTx(File zipFile, String pathDirInZip, String outFolder,
+            Session session, boolean mkdirs) throws XAGenericException, IOException {
 
         byte[] buffer = new byte[512 * 1024]; // 1/2 megabyte di buffer
         List<File> fileList = new ArrayList<File>();
@@ -264,7 +239,8 @@ public class Util {
             pathDirInZip += '/';
         }
 
-        try (ZipArchiveInputStream is = new ZipArchiveInputStream(XAUtil.createFileIS(session, zipFile, false))) {
+        try (ZipArchiveInputStream is = new ZipArchiveInputStream(
+                XAUtil.createFileIS(session, zipFile, false))) {
             ZipArchiveEntry tmpZipArchiveEntry;
             while ((tmpZipArchiveEntry = is.getNextZipEntry()) != null) {
                 String fileName = tmpZipArchiveEntry.getName();
@@ -281,7 +257,8 @@ public class Util {
                         String tmpFileName = fileName.substring(index);
                         String tmpFilePath = fileName.substring(0, index);
                         if (mkdirs) {
-                            if (!XAUtil.fileExistsAndIsDirectory(session, new File(outFolder, tmpFilePath))) {
+                            if (!XAUtil.fileExistsAndIsDirectory(session,
+                                    new File(outFolder, tmpFilePath))) {
                                 File dir = new File(outFolder, tmpFilePath);
                                 XAUtil.createDirectory(session, dir);
                                 fileList.add(dir);
@@ -292,9 +269,11 @@ public class Util {
                         }
                         try (BufferedOutputStream out = new BufferedOutputStream(
                                 XAUtil.createFileOS(session, outFile, true));
-                                CloseShieldInputStream tmpInputStream = new CloseShieldInputStream(is)) {
+                                CloseShieldInputStream tmpInputStream = new CloseShieldInputStream(
+                                        is)) {
                             int numBytes;
-                            while ((numBytes = tmpInputStream.read(buffer, 0, buffer.length)) != -1) {
+                            while ((numBytes = tmpInputStream.read(buffer, 0,
+                                    buffer.length)) != -1) {
                                 out.write(buffer, 0, numBytes);
                             }
                             fileList.add(outFile);
@@ -309,29 +288,21 @@ public class Util {
     /**
      * Metodo statico che rimuove ricorsivamente i dati contenuti in una directory in transazione
      *
-     * @param dirPath
-     *            la directory
-     * @param xaSession
-     *            la sessione in transazione
+     * @param dirPath   la directory
+     * @param xaSession la sessione in transazione
      *
-     * @throws XAGenericException
-     *             eccezione generica
-     * @throws DirectoryNotEmptyException
-     *             eccezione generica
-     * @throws FileNotExistsException
-     *             eccezione generica
-     * @throws FileUnderUseException
-     *             eccezione generica
-     * @throws InsufficientPermissionOnFileException
-     *             eccezione generica
-     * @throws LockingFailedException
-     *             eccezione generica
-     * @throws NoTransactionAssociatedException
-     *             eccezione generica
+     * @throws XAGenericException                    eccezione generica
+     * @throws DirectoryNotEmptyException            eccezione generica
+     * @throws FileNotExistsException                eccezione generica
+     * @throws FileUnderUseException                 eccezione generica
+     * @throws InsufficientPermissionOnFileException eccezione generica
+     * @throws LockingFailedException                eccezione generica
+     * @throws NoTransactionAssociatedException      eccezione generica
      */
     public static void rimuoviFileRicorsivamente(File dirPath, Session xaSession)
-            throws XAGenericException, DirectoryNotEmptyException, FileNotExistsException, FileUnderUseException,
-            InsufficientPermissionOnFileException, LockingFailedException, NoTransactionAssociatedException {
+            throws XAGenericException, DirectoryNotEmptyException, FileNotExistsException,
+            FileUnderUseException, InsufficientPermissionOnFileException, LockingFailedException,
+            NoTransactionAssociatedException {
         File[] elencoFile = XAUtil.listFiles(xaSession, dirPath);
         if (elencoFile != null && elencoFile.length > 0) {
             for (File tmpFile : elencoFile) {
@@ -348,41 +319,33 @@ public class Util {
     /**
      * Metodo statico che elimina un'intera gerarchia di directory da un file zip
      *
-     * @param zipFile
-     *            lo zip
-     * @param dirPath
-     *            la directory da rimuovere dallo zip
-     * @param session
-     *            la sessione in transazione
+     * @param zipFile lo zip
+     * @param dirPath la directory da rimuovere dallo zip
+     * @param session la sessione in transazione
      *
-     * @throws IOException
-     *             eccezione generica
-     * @throws XAGenericException
-     *             eccezione generica
-     * @throws InterruptedException
-     *             eccezione generica
-     * @throws NoTransactionAssociatedException
-     *             eccezione generica
-     * @throws LockingFailedException
-     *             eccezione generica
-     * @throws InsufficientPermissionOnFileException
-     *             eccezione generica
-     * @throws FileNotExistsException
-     *             eccezione generica
-     * @throws FileAlreadyExistsException
-     *             eccezione generica
+     * @throws IOException                           eccezione generica
+     * @throws XAGenericException                    eccezione generica
+     * @throws InterruptedException                  eccezione generica
+     * @throws NoTransactionAssociatedException      eccezione generica
+     * @throws LockingFailedException                eccezione generica
+     * @throws InsufficientPermissionOnFileException eccezione generica
+     * @throws FileNotExistsException                eccezione generica
+     * @throws FileAlreadyExistsException            eccezione generica
      */
     public static void deleteZipEntryDirTx(File zipFile, String dirPath, Session session)
-            throws IOException, XAGenericException, FileAlreadyExistsException, FileNotExistsException,
-            InsufficientPermissionOnFileException, LockingFailedException, NoTransactionAssociatedException,
-            InterruptedException {
+            throws IOException, XAGenericException, FileAlreadyExistsException,
+            FileNotExistsException, InsufficientPermissionOnFileException, LockingFailedException,
+            NoTransactionAssociatedException, InterruptedException {
         // get a temp file
-        File tempFile = new File(FileUtils.getTempDirectory(), FILE_PREFIX + UUID.randomUUID().toString() + ".zip");
+        File tempFile = new File(FileUtils.getTempDirectory(),
+                FILE_PREFIX + UUID.randomUUID().toString() + ".zip");
 
         byte[] buf = new byte[1024];
 
-        try (ZipArchiveInputStream zin = new ZipArchiveInputStream(XAUtil.createFileIS(session, zipFile, false));
-                ZipOutputStream zout = new ZipOutputStream(XAUtil.createFileOS(session, tempFile, true))) {
+        try (ZipArchiveInputStream zin = new ZipArchiveInputStream(
+                XAUtil.createFileIS(session, zipFile, false));
+                ZipOutputStream zout = new ZipOutputStream(
+                        XAUtil.createFileOS(session, tempFile, true))) {
             ZipArchiveEntry tmpZipArchiveEntry;
             while ((tmpZipArchiveEntry = zin.getNextZipEntry()) != null) {
                 String name = tmpZipArchiveEntry.getName();
@@ -410,12 +373,9 @@ public class Util {
     /**
      * Get a diff between two dates
      *
-     * @param date1
-     *            the oldest date
-     * @param date2
-     *            the newest date
-     * @param timeUnit
-     *            the unit in which you want the diff
+     * @param date1    the oldest date
+     * @param date2    the newest date
+     * @param timeUnit the unit in which you want the diff
      *
      * @return the diff value, in the provided unit
      */

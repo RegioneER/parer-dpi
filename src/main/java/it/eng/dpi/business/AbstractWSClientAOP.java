@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business;
@@ -61,9 +57,11 @@ public abstract class AbstractWSClientAOP {
             T client = (T) factory.getProxy();
             Map<String, Object> requestContext = ((BindingProvider) client).getRequestContext();
             // Timeout in millis
-            requestContext.put("com.sun.xml.internal.ws.connect.timeout", Integer.parseInt(ctx.getWsTimeout()));
+            requestContext.put("com.sun.xml.internal.ws.connect.timeout",
+                    Integer.parseInt(ctx.getWsTimeout()));
             // Timeout in millis
-            requestContext.put("com.sun.xml.internal.ws.request.timeout", Integer.parseInt(ctx.getWsTimeout()));
+            requestContext.put("com.sun.xml.internal.ws.request.timeout",
+                    Integer.parseInt(ctx.getWsTimeout()));
             // Endpoint URL
             requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, wsURL);
             requestContext.put(AuthenticationHandlerConstants.USER, ctx.getUserPing());

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.controller;
@@ -81,7 +77,8 @@ public class AppInfos {
         }
     }
 
-    @GetMapping(value = { "/infos.do" }, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = {
+            "/infos.do" }, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Map<String, String>>> infos(HttpServletRequest req) {
 
         if (!isUserAuthenticated(req.getHeader("authorization"))) {
@@ -89,24 +86,26 @@ public class AppInfos {
         } else {
 
             // final result
-            final Map<String, Map<String, String>> infos = Collections.synchronizedMap(new LinkedHashMap<>());
+            final Map<String, Map<String, String>> infos = Collections
+                    .synchronizedMap(new LinkedHashMap<>());
             // props or root to skip
-            final String rootToSkip = StringUtils.defaultString(System.getProperty(SYS_CONFIG_ROOT_TO_SKIP),
-                    StringUtils.EMPTY);
-            final String propToSkip = StringUtils.defaultString(System.getProperty(SYS_CONFIG_PROP_TO_SKIP),
-                    StringUtils.EMPTY);
+            final String rootToSkip = StringUtils
+                    .defaultString(System.getProperty(SYS_CONFIG_ROOT_TO_SKIP), StringUtils.EMPTY);
+            final String propToSkip = StringUtils
+                    .defaultString(System.getProperty(SYS_CONFIG_PROP_TO_SKIP), StringUtils.EMPTY);
             // infos
             // git
             Map<String, String> git = gitproperties.entrySet().stream()
                     .filter(p -> !String.valueOf(p.getKey()).matches(propToSkip))
-                    .collect(Collectors.toMap(e -> String.valueOf(e.getKey()), e -> String.valueOf(e.getValue()),
-                            (prev, next) -> next, HashMap::new));
+                    .collect(Collectors.toMap(e -> String.valueOf(e.getKey()),
+                            e -> String.valueOf(e.getValue()), (prev, next) -> next, HashMap::new));
             // filter
             if (!ROOT_GIT.matches(rootToSkip)) {
                 infos.put(ROOT_GIT, git);
             }
             // env
-            Map<String, String> env = System.getenv().entrySet().stream().filter(p -> !p.getKey().matches(propToSkip))
+            Map<String, String> env = System.getenv().entrySet().stream()
+                    .filter(p -> !p.getKey().matches(propToSkip))
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
             // filter
             if (!ROOT_ENV.matches(rootToSkip)) {
@@ -115,21 +114,23 @@ public class AppInfos {
             // sys props
             Map<String, String> sysprops = System.getProperties().entrySet().stream()
                     .filter(p -> !String.valueOf(p.getKey()).matches(propToSkip))
-                    .collect(Collectors.toMap(e -> String.valueOf(e.getKey()), e -> String.valueOf(e.getValue()),
-                            (prev, next) -> next, HashMap::new));
+                    .collect(Collectors.toMap(e -> String.valueOf(e.getKey()),
+                            e -> String.valueOf(e.getValue()), (prev, next) -> next, HashMap::new));
             // filter
             if (!ROOT_SYSPROPS.matches(rootToSkip)) {
                 infos.put(ROOT_SYSPROPS, sysprops);
             }
 
-            return ResponseEntity.ok().lastModified(LocalDateTime.now().atZone(ZoneId.systemDefault())).eTag(ETAG)
+            return ResponseEntity.ok()
+                    .lastModified(LocalDateTime.now().atZone(ZoneId.systemDefault())).eTag(ETAG)
                     .body(infos);
         }
     }
 
     /*
-     * Basic Auth con credenziali da anagrafica. Nota: si ri-utilizza per semplificare il processo di gestione, il
-     * servizio di monitoraggio che è comunque da considerasi ad utilizzo esclusivo interno / amministrativo.
+     * Basic Auth con credenziali da anagrafica. Nota: si ri-utilizza per semplificare il processo
+     * di gestione, il servizio di monitoraggio che è comunque da considerasi ad utilizzo esclusivo
+     * interno / amministrativo.
      */
     private boolean isUserAuthenticated(String authString) {
         if (StringUtils.isBlank(authString))

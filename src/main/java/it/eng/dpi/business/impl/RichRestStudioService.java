@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business.impl;
@@ -56,23 +52,26 @@ public class RichRestStudioService extends AbstractWSClient {
     @PostConstruct
     public void postConstruct() {
         // richiesteDir = new File(ctx.getWorkingPath() + DPIConstants.RICHIESTE_FOLDER);
-        richiesteDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
+        richiesteDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
     }
 
     public void callWS(String cdKeyObject) throws WebGenericException {
         if (client == null) {
-            client = init(ctx.getWsdlRichiestaRestituzioneOggettoUrl(), RichiestaRestituzioneOggetto.class);
+            client = init(ctx.getWsdlRichiestaRestituzioneOggettoUrl(),
+                    RichiestaRestituzioneOggetto.class);
         }
         if (client == null) {
-            throw new WebGenericException(
-                    messagesCtx.getServiceUnavailable(RichiestaRestituzioneOggetto.class.getSimpleName()));
+            throw new WebGenericException(messagesCtx
+                    .getServiceUnavailable(RichiestaRestituzioneOggetto.class.getSimpleName()));
         }
         RichiestaRestituzioneOggettoRisposta resp;
         try {
-            resp = client.richiestaRestituzioneOggetto(ctx.getNmAmbiente(), ctx.getNmVersatore(), cdKeyObject);
+            resp = client.richiestaRestituzioneOggetto(ctx.getNmAmbiente(), ctx.getNmVersatore(),
+                    cdKeyObject);
         } catch (Exception e) {
-            throw new WebGenericException(
-                    messagesCtx.getServiceUnavailable(RichiestaRestituzioneOggetto.class.getSimpleName()), e);
+            throw new WebGenericException(messagesCtx
+                    .getServiceUnavailable(RichiestaRestituzioneOggetto.class.getSimpleName()), e);
         }
         if (resp != null) {
             log.debug("Risposta richiesta restituzione oggetto: " + resp.getCdEsito());
@@ -96,11 +95,12 @@ public class RichRestStudioService extends AbstractWSClient {
                     throw new WebGenericException(messagesCtx.getGeneralError(e.getMessage()));
                 }
             } else {
-                throw new WebGenericException(messagesCtx.getServiceError(resp.getCdErr(), resp.getDlErr()));
+                throw new WebGenericException(
+                        messagesCtx.getServiceError(resp.getCdErr(), resp.getDlErr()));
             }
         } else {
-            throw new WebGenericException(
-                    messagesCtx.getServiceUnavailable(RichiestaRestituzioneOggetto.class.getSimpleName()));
+            throw new WebGenericException(messagesCtx
+                    .getServiceUnavailable(RichiestaRestituzioneOggetto.class.getSimpleName()));
         }
 
     }

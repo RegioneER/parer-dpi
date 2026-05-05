@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.web.action;
@@ -85,7 +81,8 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
             refreshAllJobs();
         } catch (SchedulerException e) {
             log.error("Errore al caricamento dello scheduler dei job", e);
-            getMessageBox().addError(messagesCtx.getGeneralError("Impossibile caricare lo schedulatore dei job"));
+            getMessageBox().addError(
+                    messagesCtx.getGeneralError("Impossibile caricare lo schedulatore dei job"));
         }
         getForm().getQueryPacsPingQJobD().setEditMode();
         getForm().getQueryPacsPingQJobW().setEditMode();
@@ -120,7 +117,7 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
             if (jobCtx.getJobDetail().getKey().getGroup().equals(JobKey.DEFAULT_GROUP)) {
                 CheckBox<String> fl_attivo = (CheckBox<String>) ((Fields<Field>) getForm()
                         .getComponent(jobCtx.getJobDetail().getKey().getName()))
-                                .getComponent(AmministrazioneSistemaForm.ObjectCreatorQJob1.attivo);
+                        .getComponent(AmministrazioneSistemaForm.ObjectCreatorQJob1.attivo);
                 fl_attivo.setChecked(true);
             }
         }
@@ -135,18 +132,21 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
             Date nextFire = trigger.getNextFireTime();
             // Recupero i componenti della pagina in base al nome del
             // job che sto gestendo
-            Button<String> startButton = (Button<String>) ((Fields<Field>) getForm().getComponent(key.getName()))
-                    .getComponent("Start" + key.getName());
-            Button<String> stopButton = (Button<String>) ((Fields<Field>) getForm().getComponent(key.getName()))
-                    .getComponent("Stop" + key.getName());
-            Input<Timestamp> dt_last = (Input<Timestamp>) ((Fields<Field>) getForm().getComponent(key.getName()))
+            Button<String> startButton = (Button<String>) ((Fields<Field>) getForm()
+                    .getComponent(key.getName())).getComponent("Start" + key.getName());
+            Button<String> stopButton = (Button<String>) ((Fields<Field>) getForm()
+                    .getComponent(key.getName())).getComponent("Stop" + key.getName());
+            Input<Timestamp> dt_last = (Input<Timestamp>) ((Fields<Field>) getForm()
+                    .getComponent(key.getName()))
                     .getComponent(AmministrazioneSistemaForm.ObjectCreatorQJob1.dt_reg_log_job_ini);
             if (lastFire != null) {
                 dt_last.setValue(df.format(lastFire));
             }
-            Input<Timestamp> dt_next = (Input<Timestamp>) ((Fields<Field>) getForm().getComponent(key.getName()))
-                    .getComponent(AmministrazioneSistemaForm.ObjectCreatorQJob1.dt_prossima_attivazione);
-            if (nextFire != null && !sched.getTriggerState(trigger.getKey()).equals(Trigger.TriggerState.PAUSED)) {
+            Input<Timestamp> dt_next = (Input<Timestamp>) ((Fields<Field>) getForm()
+                    .getComponent(key.getName())).getComponent(
+                            AmministrazioneSistemaForm.ObjectCreatorQJob1.dt_prossima_attivazione);
+            if (nextFire != null && !sched.getTriggerState(trigger.getKey())
+                    .equals(Trigger.TriggerState.PAUSED)) {
                 getForm().getJobButtonList().getStopAllJobs().setHidden(false);
                 dt_next.setValue(df.format(nextFire));
                 startButton.setHidden(true);
@@ -235,10 +235,12 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
             sched.resumeTrigger(triggerKey);
             refreshJob(sched, job);
         } catch (SchedulerException e) {
-            log.error("Errore al caricamento dei trigger dello scheduler dei job in fase di avvio del job " + jobName,
+            log.error(
+                    "Errore al caricamento dei trigger dello scheduler dei job in fase di avvio del job "
+                            + jobName,
                     e);
-            getMessageBox()
-                    .addError(messagesCtx.getGeneralError("Impossibile caricare i trigger dello schedulatore dei job"));
+            getMessageBox().addError(messagesCtx
+                    .getGeneralError("Impossibile caricare i trigger dello schedulatore dei job"));
         }
         forwardToPublisher(getDefaultPublsherName());
     }
@@ -251,10 +253,12 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
             sched.pauseTrigger(triggerKey);
             refreshJob(sched, job);
         } catch (SchedulerException e) {
-            log.error("Errore al caricamento dei trigger dello scheduler dei job in fase di stop del job " + jobName,
+            log.error(
+                    "Errore al caricamento dei trigger dello scheduler dei job in fase di stop del job "
+                            + jobName,
                     e);
-            getMessageBox()
-                    .addError(messagesCtx.getGeneralError("Impossibile caricare i trigger dello schedulatore dei job"));
+            getMessageBox().addError(messagesCtx
+                    .getGeneralError("Impossibile caricare i trigger dello schedulatore dei job"));
         }
         forwardToPublisher(getDefaultPublsherName());
     }
@@ -303,7 +307,8 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
     public void startQueryPacsPingQJobD() throws EMFError {
         getRequest().setAttribute("confermaAttivazioneConfrontoBox", true);
         getRequest().setAttribute("nmConfrontoJob", Constants.QueryPacsPingQJobD);
-        getRequest().setAttribute("dsConfrontoJob", getForm().getQueryPacsPingQJobD().getDescription());
+        getRequest().setAttribute("dsConfrontoJob",
+                getForm().getQueryPacsPingQJobD().getDescription());
         forwardToPublisher(getDefaultPublsherName());
     }
 
@@ -316,7 +321,8 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
     public void startQueryPacsPingQJobW() throws EMFError {
         getRequest().setAttribute("confermaAttivazioneConfrontoBox", true);
         getRequest().setAttribute("nmConfrontoJob", Constants.QueryPacsPingQJobW);
-        getRequest().setAttribute("dsConfrontoJob", getForm().getQueryPacsPingQJobW().getDescription());
+        getRequest().setAttribute("dsConfrontoJob",
+                getForm().getQueryPacsPingQJobW().getDescription());
         forwardToPublisher(getDefaultPublsherName());
     }
 
@@ -329,7 +335,8 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
     public void startQueryPacsPingQJobM() throws EMFError {
         getRequest().setAttribute("confermaAttivazioneConfrontoBox", true);
         getRequest().setAttribute("nmConfrontoJob", Constants.QueryPacsPingQJobM);
-        getRequest().setAttribute("dsConfrontoJob", getForm().getQueryPacsPingQJobM().getDescription());
+        getRequest().setAttribute("dsConfrontoJob",
+                getForm().getQueryPacsPingQJobM().getDescription());
         forwardToPublisher(getDefaultPublsherName());
     }
 
@@ -376,9 +383,11 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
     // sched.resumeJobs(GroupMatcher.jobGroupEquals(JobKey.DEFAULT_GROUP));
     // refreshAllJobs();
     // } catch (SchedulerException e) {
-    // log.error("Errore al caricamento dei trigger dello scheduler dei job in fase di avvio di tutti i job",
+    // log.error("Errore al caricamento dei trigger dello scheduler dei job in fase di avvio di
+    // tutti i job",
     // e);
-    // getMessageBox().addError(messagesCtx.getGeneralError("Impossibile eseguire il riavvio dei job"));
+    // getMessageBox().addError(messagesCtx.getGeneralError("Impossibile eseguire il riavvio dei
+    // job"));
     // }
     // forwardToPublisher(getDefaultPublsherName());
     // }
@@ -388,7 +397,8 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
         try {
             pausedJobs = 0;
             Scheduler sched = scheduler.getScheduler();
-            for (TriggerKey key : sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(TriggerKey.DEFAULT_GROUP))) {
+            for (TriggerKey key : sched
+                    .getTriggerKeys(GroupMatcher.triggerGroupEquals(TriggerKey.DEFAULT_GROUP))) {
                 if (!sched.getTriggerState(key).equals(Trigger.TriggerState.PAUSED)) {
                     sched.pauseTrigger(key);
                 }
@@ -396,8 +406,11 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
             // sched.pauseTriggers(null);
             refreshAllJobs();
         } catch (SchedulerException e) {
-            log.error("Errore al caricamento dei trigger dello scheduler dei job in fase di stop di tutti i job", e);
-            getMessageBox().addError(messagesCtx.getGeneralError("Impossibile eseguire lo stop dei job"));
+            log.error(
+                    "Errore al caricamento dei trigger dello scheduler dei job in fase di stop di tutti i job",
+                    e);
+            getMessageBox()
+                    .addError(messagesCtx.getGeneralError("Impossibile eseguire lo stop dei job"));
         }
         forwardToPublisher(getDefaultPublsherName());
     }
@@ -405,8 +418,7 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
     /**
      * Carica la lista dei livelli di log
      *
-     * @throws EMFError
-     *             eccezione generica
+     * @throws EMFError eccezione generica
      */
     public void loadLoggerLevels() throws EMFError {
         getUser().getMenu().reset();
@@ -475,7 +487,8 @@ public class AmministrazioneSistemaAction extends AmministrazioneSistemaAbstract
         String[] names = getRequest().getParameterValues("loggers");
         for (int i = 0; i < names.length; i++) {
             String thisLevel = getRequest().getParameter("loggerlevel_" + (i + 1));
-            ch.qos.logback.classic.Logger tmpLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(names[i]);
+            ch.qos.logback.classic.Logger tmpLogger = (ch.qos.logback.classic.Logger) LoggerFactory
+                    .getLogger(names[i]);
             tmpLogger.setLevel(Level.toLevel(thisLevel));
         }
         getMessageBox().addInfo(messagesCtx.getLoggerLevelsOk());

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business.impl;
@@ -100,8 +96,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     private JAXBSingleton jaxbSingleton;
 
     @Override
-    public Map<String, DicomElement> readDicomValues(List<String> dcmHashDicomTag, List<File> dicomInstances)
-            throws IOException {
+    public Map<String, DicomElement> readDicomValues(List<String> dcmHashDicomTag,
+            List<File> dicomInstances) throws IOException {
         Map<String, DicomElement> map = new LinkedHashMap<String, DicomElement>();
         for (File dicomInstance : dicomInstances) {
             try (DicomInputStream din = new DicomInputStream(dicomInstance)) {
@@ -113,7 +109,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
         return map;
     }
 
-    public void getDicomValues(List<String> dcmHashDicomTag, DicomObject dcmObj, Map<String, DicomElement> map) {
+    public void getDicomValues(List<String> dcmHashDicomTag, DicomObject dcmObj,
+            Map<String, DicomElement> map) {
         for (String tag : dcmHashDicomTag) {
             DicomElement de = map.get(tag);
             if (de == null || de.isEmpty()) {
@@ -134,7 +131,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
             if (entryDec.equals(Tag.NumberOfStudyRelatedInstances) && entry.getValue() == null) {
                 val = String.valueOf(numberOfImages);
             } else if (entry.getValue() != null) {
-                val = entry.getValue().getValueAsString(new SpecificCharacterSet("UTF-8"), Integer.MAX_VALUE);
+                val = entry.getValue().getValueAsString(new SpecificCharacterSet("UTF-8"),
+                        Integer.MAX_VALUE);
                 val = val != null ? val : "";
                 if (entryDec.equals(Tag.StudyTime)) {
                     // se la stringa contiene i decimali li elimino
@@ -182,7 +180,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
      *
      */
     @Override
-    public String calculateHash(String fileString) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public String calculateHash(String fileString)
+            throws NoSuchAlgorithmException, UnsupportedEncodingException {
         MessageDigest md = MessageDigest.getInstance(DPIConstants.HASH_ALGO);
         md.update(fileString.getBytes("UTF-8"), 0, fileString.length());
         byte[] pwdHash = md.digest();
@@ -190,7 +189,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     }
 
     @Override
-    public String calculateHash(File file, boolean readAllFileInMemory) throws NoSuchAlgorithmException, IOException {
+    public String calculateHash(File file, boolean readAllFileInMemory)
+            throws NoSuchAlgorithmException, IOException {
         if (readAllFileInMemory) {
             MessageDigest md = MessageDigest.getInstance(DPIConstants.HASH_ALGO);
             byte[] fileArray = FileUtils.readFileToByteArray(file);
@@ -205,8 +205,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     }
 
     /**
-     * Calcola l'hash di un file: è utilizzato per il calcolo del hash del file zip provvede a chiudere lo stream
-     * passato in input
+     * Calcola l'hash di un file: è utilizzato per il calcolo del hash del file zip provvede a
+     * chiudere lo stream passato in input
      *
      */
     private String calculateHash(InputStream is) throws NoSuchAlgorithmException, IOException {
@@ -262,9 +262,10 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
                 deleteStudyFolder(session, studypath);
                 session.deleteFile(studypath);
             } else {
-                log.debug("Studio con global-hash " + globalHash + " già esistente nella folder /new");
-                audit.info("PACS: " + datiSpecificiDICOM.getAETNodoDicom() + " GLOBAL-HASH: " + globalHash
-                        + " Studio già presente");
+                log.debug("Studio con global-hash " + globalHash
+                        + " già esistente nella folder /new");
+                audit.info("PACS: " + datiSpecificiDICOM.getAETNodoDicom() + " GLOBAL-HASH: "
+                        + globalHash + " Studio già presente");
             }
             session.commit();
             return true;
@@ -275,7 +276,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
             try {
                 session.rollback();
             } catch (NoTransactionAssociatedException e1) {
-                log.error("Si è verificato un errore durante il rollback della transazione. Transazione non esistente.",
+                log.error(
+                        "Si è verificato un errore durante il rollback della transazione. Transazione non esistente.",
                         e1);
             }
         }
@@ -307,7 +309,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
         }
     }
 
-    private void createZip(Session session, File zipStudy, File studypath, DatiSpecificiType datiSpecificiDICOM)
+    private void createZip(Session session, File zipStudy, File studypath,
+            DatiSpecificiType datiSpecificiDICOM)
             throws XAGenericException, IOException, DatatypeConfigurationException {
 
         try (OutputStream os = XAUtil.createFileOS(session, zipStudy, true);
@@ -324,11 +327,13 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
                 firstElementInSeries.setValue(true);
 
                 for (File instance : serieFolder) {
-                    ZipEntry tmpEntry = new ZipEntry(seriesFile.getName() + "/" + instance.getName());
+                    ZipEntry tmpEntry = new ZipEntry(
+                            seriesFile.getName() + "/" + instance.getName());
                     tmpZipOutputStream.putNextEntry(tmpEntry);
 
                     try (InputStream is = XAUtil.createFileIS(session, instance, false);
-                            DicomInputStream dis = new DicomInputStream(new BufferedInputStream(is, BUFFER_SIZE))) {
+                            DicomInputStream dis = new DicomInputStream(
+                                    new BufferedInputStream(is, BUFFER_SIZE))) {
 
                         dis.setHandler(new StopTagInputHandler(Tag.PixelData));
                         DicomObject dcmObj = dis.readDicomObject();
@@ -336,7 +341,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
                     }
 
                     try (InputStream is = XAUtil.createFileIS(session, instance, false);
-                            DicomInputStream dis = new DicomInputStream(new BufferedInputStream(is, BUFFER_SIZE))) {
+                            DicomInputStream dis = new DicomInputStream(
+                                    new BufferedInputStream(is, BUFFER_SIZE))) {
 
                         byte[] buffer = new byte[BUFFER_SIZE];
                         IOUtils.copyLarge(dis, outStream, buffer);
@@ -363,23 +369,21 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
         if (datiSpecificiDICOM.getSOPClassList() == null) {
             datiSpecificiDICOM.setSOPClassList(new SOPClassList());
         }
-        addAttribute(datiSpecificiDICOM.getSOPClassList().getSOPClass(), getDicomValue(dcmObj, cs, Tag.SOPClassUID));
+        addAttribute(datiSpecificiDICOM.getSOPClassList().getSOPClass(),
+                getDicomValue(dcmObj, cs, Tag.SOPClassUID));
     }
 
     /**
      * Effettuo il merge dei parametri che non sono stati ancora settati nei datiSpecificiDICOM
      *
-     * @param dcmObj
-     *            Oggetto dicom di origine
-     * @param cs
-     *            CharacterSet
-     * @param datiSpecificiDICOM
-     *            dati specifici da aggiornare
+     * @param dcmObj             Oggetto dicom di origine
+     * @param cs                 CharacterSet
+     * @param datiSpecificiDICOM dati specifici da aggiornare
      *
      * @throws DatatypeConfigurationException
      */
-    private void mergeParams(DicomObject dcmObj, SpecificCharacterSet cs, DatiSpecificiType datiSpecificiDICOM)
-            throws DatatypeConfigurationException {
+    private void mergeParams(DicomObject dcmObj, SpecificCharacterSet cs,
+            DatiSpecificiType datiSpecificiDICOM) throws DatatypeConfigurationException {
         if (datiSpecificiDICOM.getStudyDate() == null) {
             Date studyDate = dcmObj.getDate(Tag.StudyDate);
             Date studyTime = dcmObj.getDate(Tag.StudyTime);
@@ -394,7 +398,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
                 calendarDate.set(Calendar.MILLISECOND, calendarTime.get(Calendar.MILLISECOND));
                 GregorianCalendar combined = new GregorianCalendar();
                 combined.setTime(calendarDate.getTime());
-                XMLGregorianCalendar studyDateTime = DatatypeFactory.newInstance().newXMLGregorianCalendar(combined);
+                XMLGregorianCalendar studyDateTime = DatatypeFactory.newInstance()
+                        .newXMLGregorianCalendar(combined);
                 datiSpecificiDICOM.setStudyDate(studyDateTime);
             }
         }
@@ -405,18 +410,21 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
             datiSpecificiDICOM.setInstitutionName(getDicomValue(dcmObj, cs, Tag.InstitutionName));
         }
         if (datiSpecificiDICOM.getReferringPhysicianName() == null) {
-            datiSpecificiDICOM.setReferringPhysicianName(getDicomValue(dcmObj, cs, Tag.ReferringPhysicianName));
+            datiSpecificiDICOM.setReferringPhysicianName(
+                    getDicomValue(dcmObj, cs, Tag.ReferringPhysicianName));
         }
         if (datiSpecificiDICOM.getStudyDescription() == null) {
             datiSpecificiDICOM.setStudyDescription(getDicomValue(dcmObj, cs, Tag.StudyDescription));
         }
         // if (datiSpecificiDICOM.getPatientName() == null) {
-        // datiSpecificiDICOM.setPatientName(getDicomValue(dcmObj, cs, Tag.PatientName) != null ? getDicomValue(dcmObj,
+        // datiSpecificiDICOM.setPatientName(getDicomValue(dcmObj, cs, Tag.PatientName) != null ?
+        // getDicomValue(dcmObj,
         // cs, Tag.PatientName) : "");
         // }
         if (datiSpecificiDICOM.getPatientName() == null) {
             String patientName = getDicomValue(dcmObj, cs, Tag.PatientName) != null
-                    ? getDicomValue(dcmObj, cs, Tag.PatientName) : "";
+                    ? getDicomValue(dcmObj, cs, Tag.PatientName)
+                    : "";
             if (patientName.isEmpty() && replaceEmptyTag) {
                 datiSpecificiDICOM.setPatientName(DPIConstants.NON_TRASMESSO_DA_PACS);
                 log.warn("Il tag PatientName non è stato trasmesso dal PACS");
@@ -425,12 +433,14 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
             }
         }
         // if (datiSpecificiDICOM.getPatientId() == null) {
-        // datiSpecificiDICOM.setPatientId(getDicomValue(dcmObj, cs, Tag.PatientID) != null ? getDicomValue(dcmObj, cs,
+        // datiSpecificiDICOM.setPatientId(getDicomValue(dcmObj, cs, Tag.PatientID) != null ?
+        // getDicomValue(dcmObj, cs,
         // Tag.PatientID) : "");
         // }
         if (datiSpecificiDICOM.getPatientId() == null) {
             String patientId = getDicomValue(dcmObj, cs, Tag.PatientID) != null
-                    ? getDicomValue(dcmObj, cs, Tag.PatientID) : "";
+                    ? getDicomValue(dcmObj, cs, Tag.PatientID)
+                    : "";
             if (patientId.isEmpty() && replaceEmptyTag) {
                 datiSpecificiDICOM.setPatientId(DPIConstants.NON_TRASMESSO_DA_PACS);
                 log.warn("Il tag PatientID non è stato trasmesso dal PACS");
@@ -452,7 +462,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
         }
         if (datiSpecificiDICOM.getPatientSex() == null) {
             datiSpecificiDICOM.setPatientSex(getDicomValue(dcmObj, cs, Tag.PatientSex) != null
-                    ? getDicomValue(dcmObj, cs, Tag.PatientSex).toUpperCase() : null);
+                    ? getDicomValue(dcmObj, cs, Tag.PatientSex).toUpperCase()
+                    : null);
         }
 
         // if (datiSpecificiDICOM.getStudyInstanceUID() == null) {
@@ -496,11 +507,12 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     // Filtra solo per tag in cui è possibile inserire valori a mano.
     public static String escapeControlCharacter(String stringToParse, int tag) {
         /*
-         * Questi sono i tag sui quali l'utente può intervenire a mono. Comunicati da Cesena. Poiché il dpi ne considera
-         * meno. La sostituzione viene fatta solo su quelli in DicomTagToFilter 0008 0080 Instituion_name 0008 1040
-         * institution_department_name 0008 1030 study_description 0008 0090 referring_physician_name 0008 1050
-         * attending_physician_name 0008 0081 institution_address 0008 0070 manufacturer 0008 1090
-         * manufacturer_mode_name 0018 1030 protocol_name 0032 1060 requested_procedure_description 0040 0254
+         * Questi sono i tag sui quali l'utente può intervenire a mono. Comunicati da Cesena. Poiché
+         * il dpi ne considera meno. La sostituzione viene fatta solo su quelli in DicomTagToFilter
+         * 0008 0080 Instituion_name 0008 1040 institution_department_name 0008 1030
+         * study_description 0008 0090 referring_physician_name 0008 1050 attending_physician_name
+         * 0008 0081 institution_address 0008 0070 manufacturer 0008 1090 manufacturer_mode_name
+         * 0018 1030 protocol_name 0032 1060 requested_procedure_description 0040 0254
          * performed_procedure_step_description 0008 1010 station_name 0008 103e series_description
          */
         for (int i = 0; i < DPIConstants.DicomTagToFilter.length; i++) {
@@ -523,7 +535,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
                     if (!stringToParse.equals(convertedString)) {
                         log.warn("Il tag '" + tag
                                 + "' contiene un carattere di controllo ed è stato sostituito: stringa originale: '"
-                                + stringToParse + "' stringa convertita: '" + convertedString + "'");
+                                + stringToParse + "' stringa convertita: '" + convertedString
+                                + "'");
                         return convertedString;
                     }
                 }
@@ -537,7 +550,8 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     // String value = null;
     // DicomElement elem = dcmObj.get(tag);
     // if (elem != null) {
-    // SpecificCharacterSet cs = SpecificCharacterSet.valueOf(dcmObj.get(Tag.SpecificCharacterSet).getStrings(null,
+    // SpecificCharacterSet cs =
+    // SpecificCharacterSet.valueOf(dcmObj.get(Tag.SpecificCharacterSet).getStrings(null,
     // false));
     // if(cs == null) {
     // cs = SpecificCharacterSet.valueOf(new String[]{""});
@@ -550,9 +564,11 @@ public class SacerPingObjectCreator implements DicomReaderInterface, StudyArchiv
     public SpecificCharacterSet calculateSpecificCharacterSet(DicomObject dcmObj) {
         SpecificCharacterSet cs = null;
         if (dcmObj.get(Tag.SpecificCharacterSet) != null) {
-            cs = SpecificCharacterSet.valueOf(dcmObj.get(Tag.SpecificCharacterSet).getStrings(null, false));
+            cs = SpecificCharacterSet
+                    .valueOf(dcmObj.get(Tag.SpecificCharacterSet).getStrings(null, false));
         } else {
-            cs = SpecificCharacterSet.valueOf(new String[] { "" });
+            cs = SpecificCharacterSet.valueOf(new String[] {
+                    "" });
         }
         return cs;
     }

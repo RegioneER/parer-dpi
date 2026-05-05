@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -63,7 +59,8 @@ public class FTPTransfertJob extends AbstractWSClient implements JobInterface {
     @PostConstruct
     public void postConstruct() {
         // outFolder = new File(ctx.getWorkingPath() + DPIConstants.OUT_FOLDER);
-        outFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
+        outFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
     }
 
     @Override
@@ -91,8 +88,8 @@ public class FTPTransfertJob extends AbstractWSClient implements JobInterface {
         File outFolder;
         for (ObjectType objectType : objectTypes) {
             log.debug(objectType.toString());
-            outFolder = new File(
-                    ctx.getWorkingPath() + File.separatorChar + objectType.getObjType() + DPIConstants.OUT_FOLDER);
+            outFolder = new File(ctx.getWorkingPath() + File.separatorChar + objectType.getObjType()
+                    + DPIConstants.OUT_FOLDER);
             File[] folders = XAUtil.listFilesNewTX(xaDiskNativeFS, outFolder);
             Counters counters = new Counters(folders.length, outFolder.getName());
             // ciclo su ogni cartella folder=<produttore>-<raccoglitore>
@@ -105,8 +102,9 @@ public class FTPTransfertJob extends AbstractWSClient implements JobInterface {
                 ListaFileDepositatoType lista = new ListaFileDepositatoType();
 
                 for (File file : files) {
-                    if (!FTPUtil.sendFile(file, file.getName(), ctx.getFtpInputFolder() + "/" + cdKeyObject,
-                            ctx.getFtpIP(), ctx.getFtpPort(), ctx.getFtpUser(), ctx.getFtpPassword(),
+                    if (!FTPUtil.sendFile(file, file.getName(),
+                            ctx.getFtpInputFolder() + "/" + cdKeyObject, ctx.getFtpIP(),
+                            ctx.getFtpPort(), ctx.getFtpUser(), ctx.getFtpPassword(),
                             ctx.getSecureFtp())) {
                         fileSended = false;
                         break;
@@ -117,11 +115,15 @@ public class FTPTransfertJob extends AbstractWSClient implements JobInterface {
                     lista.getFileDepositato().add(fileDepositato);
                 }
                 if (fileSended) {
-                    NotificaTrasferimentoRisposta risposta = callWSNotifyFileTransfert(folder, cdKeyObject, lista);
+                    NotificaTrasferimentoRisposta risposta = callWSNotifyFileTransfert(folder,
+                            cdKeyObject, lista);
                     log.info("RISPOSTA DEL WS: " + risposta.getCdEsito() + " "
-                            + ((risposta.getCdErr() != null) ? risposta.getCdErr() + " " + risposta.getDsErr() : ""));
-                    if (risposta.getCdEsito().equals(EsitoServizio.KO.name()) && risposta.getCdErr() != null
-                            && (risposta.getCdErr().equals("666") || risposta.getCdErr().equals("PING-NOT-006"))) {
+                            + ((risposta.getCdErr() != null)
+                                    ? risposta.getCdErr() + " " + risposta.getDsErr()
+                                    : ""));
+                    if (risposta.getCdEsito().equals(EsitoServizio.KO.name())
+                            && risposta.getCdErr() != null && (risposta.getCdErr().equals("666")
+                                    || risposta.getCdErr().equals("PING-NOT-006"))) {
                         log.info("Errore nella notifica, non elimino il file " + folder);
                     } else {
                         XAUtil.deleteFolderNewTx(xaDiskNativeFS, folder);
@@ -139,24 +141,29 @@ public class FTPTransfertJob extends AbstractWSClient implements JobInterface {
         Counters counters = new Counters(folder.length, outFolder.getName());
         for (File zipStudy : folder) {
             // if(zipStudy.length()>Integer.MAX_VALUE){
-            // log.warn("File "+zipStudy.getName()+" più grande di 2GB, per ora non lo invio in FTP.");
+            // log.warn("File "+zipStudy.getName()+" più grande di 2GB, per ora non lo invio in
+            // FTP.");
             // continue;
             // }
             String globalHash = zipStudy.getName().substring(0, zipStudy.getName().length() - 4);
             boolean fileSended = FTPUtil.sendFile(zipStudy, globalHash + ".zip",
-                    ctx.getFtpInputFolder() + "/" + globalHash, ctx.getFtpIP(), ctx.getFtpPort(), ctx.getFtpUser(),
-                    ctx.getFtpPassword(), ctx.getSecureFtp());
+                    ctx.getFtpInputFolder() + "/" + globalHash, ctx.getFtpIP(), ctx.getFtpPort(),
+                    ctx.getFtpUser(), ctx.getFtpPassword(), ctx.getSecureFtp());
             if (fileSended) {
                 FileDepositatoType file = new FileDepositatoType();
                 file.setNmTipoFile(DPIConstants.WS_NM_TIPO_OBJECT);
                 file.setNmNomeFile(globalHash + ".zip");
                 ListaFileDepositatoType lista = new ListaFileDepositatoType();
                 lista.getFileDepositato().add(file);
-                NotificaTrasferimentoRisposta risposta = callWSNotifyFileTransfert(zipStudy, globalHash, lista);
+                NotificaTrasferimentoRisposta risposta = callWSNotifyFileTransfert(zipStudy,
+                        globalHash, lista);
                 log.info("RISPOSTA DEL WS: " + risposta.getCdEsito() + " "
-                        + ((risposta.getCdErr() != null) ? risposta.getCdErr() + " " + risposta.getDsErr() : ""));
-                if (risposta.getCdEsito().equals(EsitoServizio.KO.name()) && risposta.getCdErr() != null
-                        && (risposta.getCdErr().equals("666") || risposta.getCdErr().equals("PING-NOT-006"))) {
+                        + ((risposta.getCdErr() != null)
+                                ? risposta.getCdErr() + " " + risposta.getDsErr()
+                                : ""));
+                if (risposta.getCdEsito().equals(EsitoServizio.KO.name())
+                        && risposta.getCdErr() != null && (risposta.getCdErr().equals("666")
+                                || risposta.getCdErr().equals("PING-NOT-006"))) {
                     log.info("Errore nella notifica, non elimino il file " + zipStudy);
                 } else {
                     XAUtil.deleteFileNewTx(xaDiskNativeFS, zipStudy);
@@ -172,9 +179,10 @@ public class FTPTransfertJob extends AbstractWSClient implements JobInterface {
             ListaFileDepositatoType lista) throws MalformedURLException {
 
         log.debug("Invoco il WS: NotificaTrasferimento - URL: " + ctx.getWsdlNotificaUrl());
-        log.debug("Parametri: nmAmbiente: " + ctx.getNmAmbiente() + "\nnmVersatore: " + ctx.getNmVersatore()
-                + "\ncdKeyObject: " + cdKeyObject);
-        return client.notificaAvvenutoTrasferimentoFile(ctx.getNmAmbiente(), ctx.getNmVersatore(), cdKeyObject, lista);
+        log.debug("Parametri: nmAmbiente: " + ctx.getNmAmbiente() + "\nnmVersatore: "
+                + ctx.getNmVersatore() + "\ncdKeyObject: " + cdKeyObject);
+        return client.notificaAvvenutoTrasferimentoFile(ctx.getNmAmbiente(), ctx.getNmVersatore(),
+                cdKeyObject, lista);
     }
 
     private final class Counters {

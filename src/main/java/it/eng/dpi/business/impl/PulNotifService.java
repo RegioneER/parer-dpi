@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business.impl;
@@ -44,13 +40,15 @@ public class PulNotifService extends AbstractWSClient {
         }
         if (client == null) {
             log.debug("Servizio del Pre Ingest non disponibile");
-            throw new WebGenericException(messagesCtx.getServiceUnavailable(PuliziaNotificato.class.getSimpleName()));
+            throw new WebGenericException(
+                    messagesCtx.getServiceUnavailable(PuliziaNotificato.class.getSimpleName()));
         }
         PuliziaNotificatoRisposta resp;
         try {
             resp = client.puliziaNotificato(ctx.getNmAmbiente(), ctx.getNmVersatore(), cdKeyObject);
         } catch (Exception e) {
-            throw new WebGenericException(messagesCtx.getServiceUnavailable(PuliziaNotificato.class.getSimpleName()));
+            throw new WebGenericException(
+                    messagesCtx.getServiceUnavailable(PuliziaNotificato.class.getSimpleName()));
         }
         elaborateResponse(resp);
     }
@@ -58,7 +56,8 @@ public class PulNotifService extends AbstractWSClient {
     private void elaborateResponse(PuliziaNotificatoRisposta risposta) throws WebGenericException {
         if (risposta != null) {
             if (risposta.getCdEsito().equals(EsitoServizio.KO)) {
-                throw new WebGenericException(messagesCtx.getServiceError(risposta.getCdErr(), risposta.getDlErr()));
+                throw new WebGenericException(
+                        messagesCtx.getServiceError(risposta.getCdErr(), risposta.getDlErr()));
             }
         }
     }

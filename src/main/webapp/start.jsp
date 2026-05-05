@@ -1,3 +1,20 @@
+<%--
+ Engineering Ingegneria Informatica S.p.A.
+
+ Copyright (C) 2023 Regione Emilia-Romagna
+ <p/>
+ This program is free software: you can redistribute it and/or modify it under the terms of
+ the GNU Affero General Public License as published by the Free Software Foundation,
+ either version 3 of the License, or (at your option) any later version.
+ <p/>
+ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ See the GNU Affero General Public License for more details.
+ <p/>
+ You should have received a copy of the GNU Affero General Public License along with this program.
+ If not, see <https://www.gnu.org/licenses/>.
+ --%>
+
 <%@page import="org.dcm4che2.data.ElementDictionary"%>
 <%@page import="it.eng.dpi.dicom.scu.QRConstants"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -7,21 +24,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link type="text/css" href="css/theme/jquery-ui-1.8.21.custom.css" rel="Stylesheet" />
+<link type="text/css" media="screen" rel="stylesheet" href="css/custom/jquery-ui-custom/1.13.3/jquery-ui.min.css"   />
 <style type="text/css" title="currentStyle">
-@import "dpi/css/demo_page.css";
+@import "css/demo_page.css";
 
-@import "dpi/css/demo_table_jui.css";
+@import "css/demo_table_jui.css";
 
-@import "dpi/css/jquery.dataTables.css";
+@import "css/jquery.dataTables.css";
 </style>
-<link rel="stylesheet" type="text/css" href="dpi/css/flexigrid.css">
-<script type="text/javascript" src="js/jQuery/jquery-3.7.1.min.js"></script>
-<script type="text/javascript" src="js/jQuery/jquery-ui-1.9.2.custom.min.js"></script>
-<script type="text/javascript" src="dpi/js/jquery.cookie.js"></script>
-<script type="text/javascript" src="dpi/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="dpi/js/flexigrid.js"></script>
-<script type="text/javascript" src="dpi/js/dpi.js"></script>
+<link rel="stylesheet" type="text/css" href="css/flexigrid.css">
+<script type="text/javascript" src="webjars/jquery/3.7.1/jquery.min.js"></script
+<script type="text/javascript" src="webjars/jquery-ui/1.13.3/jquery-ui.min.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/flexigrid.js"></script>
+<script type="text/javascript" src="js/dpi.js"></script>
 <title>Test</title>
 </head>
 <body style="font-size: 12px; font-family: Arial;">

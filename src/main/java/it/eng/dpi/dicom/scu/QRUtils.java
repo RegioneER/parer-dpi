@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.dicom.scu;
@@ -45,16 +41,17 @@ public class QRUtils {
 
     private static final Logger log = LoggerFactory.getLogger(QRSCU.class);
 
-    public static TransferCapability selectFindTransferCapability(NetworkApplicationEntity remoteAE, Association assoc,
-            QueryBean query) throws NoPresentationContextException {
+    public static TransferCapability selectFindTransferCapability(NetworkApplicationEntity remoteAE,
+            Association assoc, QueryBean query) throws NoPresentationContextException {
         TransferCapability tc;
         if ((tc = selectTransferCapability(assoc, query.getPrivateFind())) != null)
             return tc;
-        if ((tc = selectTransferCapability(assoc, query.getQueryLevel().getFindClassUids())) != null)
+        if ((tc = selectTransferCapability(assoc,
+                query.getQueryLevel().getFindClassUids())) != null)
             return tc;
         throw new NoPresentationContextException(
-                UIDDictionary.getDictionary().prompt(query.getQueryLevel().getFindClassUids()[0]) + " not supported by "
-                        + remoteAE.getAETitle());
+                UIDDictionary.getDictionary().prompt(query.getQueryLevel().getFindClassUids()[0])
+                        + " not supported by " + remoteAE.getAETitle());
     }
 
     public static String selectTransferSyntax(TransferCapability tc) {
@@ -74,7 +71,8 @@ public class QRUtils {
         return null;
     }
 
-    public static TransferCapability selectTransferCapability(Association assoc, List<String> cuid) {
+    public static TransferCapability selectTransferCapability(Association assoc,
+            List<String> cuid) {
         TransferCapability tc;
         for (int i = 0, n = cuid.size(); i < n; i++) {
             tc = assoc.getTransferCapabilityAsSCU(cuid.get(i));
@@ -84,8 +82,8 @@ public class QRUtils {
         return null;
     }
 
-    public static List<DicomObject> queryUpperLevelUIDs(String cuid, String tsuid, Association assoc, QueryBean query)
-            throws IOException, InterruptedException {
+    public static List<DicomObject> queryUpperLevelUIDs(String cuid, String tsuid,
+            Association assoc, QueryBean query) throws IOException, InterruptedException {
         QueryRetrieveLevel qrLevel = query.getQueryLevel();
         List<DicomObject> keylist = new ArrayList<DicomObject>();
         if (Arrays.asList(DPIConstants.PATIENT_LEVEL_FIND_CUID).contains(cuid)) {
@@ -103,13 +101,14 @@ public class QRUtils {
         }
         // if (qrlevel == QueryRetrieveLevel.IMAGE) {
         // keylist = queryStudyOrSeriesIUIDs(cuid, tsuid, keylist,
-        // Tag.SeriesInstanceUID, QRConstants.SERIES_MATCHING_KEYS, QRConstants.QueryRetrieveLevel.SERIES);
+        // Tag.SeriesInstanceUID, QRConstants.SERIES_MATCHING_KEYS,
+        // QRConstants.QueryRetrieveLevel.SERIES);
         // }
         return keylist;
     }
 
-    public static List<DicomObject> queryPatientIDs(String cuid, String tsuid, Association assoc, QueryBean query)
-            throws IOException, InterruptedException {
+    public static List<DicomObject> queryPatientIDs(String cuid, String tsuid, Association assoc,
+            QueryBean query) throws IOException, InterruptedException {
         int priority = CommandUtils.HIGH;
         List<DicomObject> keylist = new ArrayList<DicomObject>();
         DicomObject keys = query.getKeys();
@@ -128,7 +127,8 @@ public class QRUtils {
             patLevelQuery.putNull(Tag.PatientID, VR.LO);
             patLevelQuery.putNull(Tag.IssuerOfPatientID, VR.LO);
             patLevelQuery.putString(Tag.QueryRetrieveLevel, VR.CS, "PATIENT");
-            log.info("Send Query Request using " + UIDDictionary.getDictionary().prompt(cuid) + ":\n" + patLevelQuery);
+            log.info("Send Query Request using " + UIDDictionary.getDictionary().prompt(cuid)
+                    + ":\n" + patLevelQuery);
             DimseRSP rsp = assoc.cfind(cuid, priority, patLevelQuery, tsuid, Integer.MAX_VALUE);
             for (int i = 0; rsp.next(); ++i) {
                 DicomObject cmd = rsp.getCommand();
@@ -151,9 +151,9 @@ public class QRUtils {
         return keylist;
     }
 
-    public static List<DicomObject> queryStudyOrSeriesIUIDs(String cuid, String tsuid, List<DicomObject> upperLevelIDs,
-            int uidTag, int[] matchingKeys, Association assoc, QueryBean query)
-            throws IOException, InterruptedException {
+    public static List<DicomObject> queryStudyOrSeriesIUIDs(String cuid, String tsuid,
+            List<DicomObject> upperLevelIDs, int uidTag, int[] matchingKeys, Association assoc,
+            QueryBean query) throws IOException, InterruptedException {
         int priority = CommandUtils.HIGH;
         DicomObject keys = query.getKeys();
         QueryRetrieveLevel qrLevel = query.getQueryLevel();
@@ -171,7 +171,8 @@ public class QRUtils {
                 upperLevelID.copyTo(keys2);
                 keys2.putNull(uidTag, VR.UI);
                 keys2.putString(Tag.QueryRetrieveLevel, VR.CS, qrLevel.getCode());
-                log.info("Send Query Request using " + UIDDictionary.getDictionary().prompt(cuid) + ":\n" + keys2);
+                log.info("Send Query Request using " + UIDDictionary.getDictionary().prompt(cuid)
+                        + ":\n" + keys2);
                 DimseRSP rsp = assoc.cfind(cuid, priority, keys2, tsuid, Integer.MAX_VALUE);
                 for (int i = 0; rsp.next(); ++i) {
                     DicomObject cmd = rsp.getCommand();

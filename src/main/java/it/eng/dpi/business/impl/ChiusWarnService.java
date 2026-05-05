@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.business.impl;
@@ -54,7 +50,8 @@ public class ChiusWarnService extends AbstractWSClient {
     @PostConstruct
     public void postConstruct() {
         // warnFolder = new File(ctx.getWorkingPath() + DPIConstants.WARN_FOLDER);
-        warnFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
+        warnFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
 
     }
 
@@ -63,24 +60,24 @@ public class ChiusWarnService extends AbstractWSClient {
             client = init(ctx.getWsdlRichiestaChiusuraWarningUrl(), RichiestaChiusuraWarning.class);
         }
         if (client == null) {
-            throw new WebGenericException(
-                    messagesCtx.getServiceUnavailable(RichiestaChiusuraWarning.class.getSimpleName()));
+            throw new WebGenericException(messagesCtx
+                    .getServiceUnavailable(RichiestaChiusuraWarning.class.getSimpleName()));
         }
         RichiestaChiusuraWarningRisposta resp;
         try {
-            resp = client.richiestaChiusuraWarning(ctx.getNmAmbiente(), ctx.getNmVersatore(), cdKeyObject,
-                    dlMotivazione);
+            resp = client.richiestaChiusuraWarning(ctx.getNmAmbiente(), ctx.getNmVersatore(),
+                    cdKeyObject, dlMotivazione);
         } catch (Exception e) {
-            throw new WebGenericException(
-                    messagesCtx.getServiceUnavailable(RichiestaChiusuraWarning.class.getSimpleName()));
+            throw new WebGenericException(messagesCtx
+                    .getServiceUnavailable(RichiestaChiusuraWarning.class.getSimpleName()));
         }
         File xmlFile = new File(warnFolder, cdKeyObject + ".xml");
         File zipFile = new File(warnFolder, cdKeyObject + ".zip");
         elaborateResponse(resp, zipFile, xmlFile);
     }
 
-    private void elaborateResponse(RichiestaChiusuraWarningRisposta risposta, File zipStudy, File xmlFile)
-            throws WebGenericException {
+    private void elaborateResponse(RichiestaChiusuraWarningRisposta risposta, File zipStudy,
+            File xmlFile) throws WebGenericException {
         if (risposta != null) {
             if (risposta.getCdEsito().equals(EsitoServizio.OK)) {
                 Session xaSession = xaDiskNativeFS.createSessionForLocalTransaction();

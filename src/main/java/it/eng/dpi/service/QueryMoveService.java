@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.service;
@@ -75,8 +71,8 @@ public class QueryMoveService {
 
     }
 
-    public void doCMove(List<DicomObject> result, QueryBean query, String hostname, int port, String aet)
-            throws IOException, ConfigurationException, InterruptedException {
+    public void doCMove(List<DicomObject> result, QueryBean query, String hostname, int port,
+            String aet) throws IOException, ConfigurationException, InterruptedException {
         NetworkApplicationEntity remoteAE = qrScu.createRemoteAE(hostname, port, aet);
         Association assoc = null;
         try {
@@ -93,23 +89,16 @@ public class QueryMoveService {
     /**
      * Utilizzato dal testController
      *
-     * @param query
-     *            bean rappresentante la query da eseguire {@link QueryBean}
-     * @param hostname
-     *            nome host
-     * @param port
-     *            porta
-     * @param aet
-     *            indirizzo aet
+     * @param query    bean rappresentante la query da eseguire {@link QueryBean}
+     * @param hostname nome host
+     * @param port     porta
+     * @param aet      indirizzo aet
      *
      * @return lista oggetti di tipo {@link Patient}
      *
-     * @throws IOException
-     *             eccezione generica
-     * @throws ConfigurationException
-     *             eccezione generica
-     * @throws InterruptedException
-     *             eccezione generica
+     * @throws IOException            eccezione generica
+     * @throws ConfigurationException eccezione generica
+     * @throws InterruptedException   eccezione generica
      */
     public List<Patient> doCFindPatLevel(QueryBean query, String hostname, int port, String aet)
             throws IOException, ConfigurationException, InterruptedException {
@@ -124,23 +113,16 @@ public class QueryMoveService {
     /**
      * Utilizzato dal testController
      *
-     * @param query
-     *            bean rappresentante la query da eseguire {@link QueryBean}
-     * @param hostname
-     *            nome host
-     * @param port
-     *            porta
-     * @param aet
-     *            indirizzo aet
+     * @param query    bean rappresentante la query da eseguire {@link QueryBean}
+     * @param hostname nome host
+     * @param port     porta
+     * @param aet      indirizzo aet
      *
      * @return lista oggetti di tipo {@link Study}
      *
-     * @throws IOException
-     *             eccezione generica
-     * @throws ConfigurationException
-     *             eccezione generica
-     * @throws InterruptedException
-     *             eccezione generica
+     * @throws IOException            eccezione generica
+     * @throws ConfigurationException eccezione generica
+     * @throws InterruptedException   eccezione generica
      */
     public List<Study> doCFindStudyLevel(QueryBean query, String hostname, int port, String aet)
             throws IOException, ConfigurationException, InterruptedException {

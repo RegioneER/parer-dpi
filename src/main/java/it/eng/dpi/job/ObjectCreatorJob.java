@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -87,20 +83,25 @@ public class ObjectCreatorJob implements JobInterface {
         int studyCounter = 0;
         for (ProcessableFile pFile : fileList) {
             try {
-                processStudy(pFile.getFilePath(), pFile.getDestinationSubDir(), pFile.getPacsName());
-                fileQueue.remove(jobId, pFile.getFilePath(), pFile.getDestinationSubDir(), pFile.getPacsName());
+                processStudy(pFile.getFilePath(), pFile.getDestinationSubDir(),
+                        pFile.getPacsName());
+                fileQueue.remove(jobId, pFile.getFilePath(), pFile.getDestinationSubDir(),
+                        pFile.getPacsName());
                 studyCounter++;
             } catch (IOException | DPIException e) {
-                log.error("Si è verificato un errore processando lo studio " + pFile.getFilePath().getName()
-                        + " del Pacs " + pFile.getPacsName() + " | JOBID: " + jobId);
+                log.error("Si è verificato un errore processando lo studio "
+                        + pFile.getFilePath().getName() + " del Pacs " + pFile.getPacsName()
+                        + " | JOBID: " + jobId);
             }
 
         }
-        audit.info("STUDI TOTALI: " + fileList.size() + " | STUDI PROCESSATI: " + studyCounter + " | JOBID: " + jobId);
+        audit.info("STUDI TOTALI: " + fileList.size() + " | STUDI PROCESSATI: " + studyCounter
+                + " | JOBID: " + jobId);
     }
 
     /**
-     * 1- Creo DCM File 2- Calcolo DCM Hash 3- Creo Global File 4- Calcolo Global Hash 5- Creo ZIP 6- Creo XML
+     * 1- Creo DCM File 2- Calcolo DCM Hash 3- Creo Global File 4- Calcolo Global Hash 5- Creo ZIP
+     * 6- Creo XML
      *
      * @param studyPath
      * @param destinationSubDir
@@ -126,8 +127,8 @@ public class ObjectCreatorJob implements JobInterface {
             GregorianCalendar calendarDate = new GregorianCalendar();
             calendarDate.setTime(new Date(studyPath.lastModified()));
             try {
-                datiSpecificiDICOM
-                        .setDataPresaInCarico(DatatypeFactory.newInstance().newXMLGregorianCalendar(calendarDate));
+                datiSpecificiDICOM.setDataPresaInCarico(
+                        DatatypeFactory.newInstance().newXMLGregorianCalendar(calendarDate));
             } catch (DatatypeConfigurationException e2) {
                 log.error("Non sarebbe mai dovuto accadere", e2);
             }
@@ -135,21 +136,24 @@ public class ObjectCreatorJob implements JobInterface {
             log.info("Creo l'oggetto Sacer per lo studio contenuto in " + studyPath);
 
             // 3
-            String globalFile = sacerObjectCreator.generateGlobalFile(studyPath, datiSpecificiDICOM);
+            String globalFile = sacerObjectCreator.generateGlobalFile(studyPath,
+                    datiSpecificiDICOM);
             log.debug("GLOBAL_FILE:\n" + StringUtils.abbreviate(globalFile, 10000));
             // 4
             String globalHash = sacerObjectCreator.calculateHash(globalFile);
             log.debug("GLOBAL_HASH:" + globalHash);
 
-            // 1 - Ottengo tutte le prime immagini di ogni serie in modo da processare i tag del DCM HASH per ogni
+            // 1 - Ottengo tutte le prime immagini di ogni serie in modo da processare i tag del DCM
+            // HASH per ogni
             // serie.
-            // Potrebbe capitare infatti che all'interno di uno studio alcune serie non contengano tutti i tag
+            // Potrebbe capitare infatti che all'interno di uno studio alcune serie non contengano
+            // tutti i tag
             List<File> firstInstancesInSeries = new ArrayList<File>();
             for (File serie : series) {
                 firstInstancesInSeries.add(XAUtil.listFilesNewTX(xaDiskNativeFS, serie)[0]);
             }
-            Map<String, DicomElement> orderedMap = sacerObjectCreator.readDicomValues(dcmHashDicomTag,
-                    firstInstancesInSeries);
+            Map<String, DicomElement> orderedMap = sacerObjectCreator
+                    .readDicomValues(dcmHashDicomTag, firstInstancesInSeries);
             String dcmFile = sacerObjectCreator.generateDcmFile(orderedMap,
                     datiSpecificiDICOM.getNumberStudyRelatedImages());
             log.debug("DCM_FILE:\n" + dcmFile);
@@ -165,13 +169,16 @@ public class ObjectCreatorJob implements JobInterface {
             datiSpecificiDICOM.setGLOBALHash(globalHash);
             datiSpecificiDICOM.setGLOBALHashAlgo(DPIConstants.HASH_ALGO);
             datiSpecificiDICOM.setGLOBALHashEncoding(DPIConstants.HASH_ENCODING);
-            datiSpecificiDICOM.setGLOBALHashDescrizione(sacerObjectCreator.encodeFileString(globalFile));
+            datiSpecificiDICOM
+                    .setGLOBALHashDescrizione(sacerObjectCreator.encodeFileString(globalFile));
 
-            // String destDir = ctx.getWorkingPath() + DPIConstants.NEW_FOLDER + File.separator + destinationSubDir;
-            String destDir = ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.NEW_FOLDER + File.separator
-                    + destinationSubDir;
+            // String destDir = ctx.getWorkingPath() + DPIConstants.NEW_FOLDER + File.separator +
+            // destinationSubDir;
+            String destDir = ctx.getWorkingPath() + ctx.getStudioDicomPath()
+                    + DPIConstants.NEW_FOLDER + File.separator + destinationSubDir;
             // 5 //6
-            if (!sacerObjectCreator.makeSacerPINGArchive(studyPath, globalHash, destDir, datiSpecificiDICOM)) {
+            if (!sacerObjectCreator.makeSacerPINGArchive(studyPath, globalHash, destDir,
+                    datiSpecificiDICOM)) {
                 throw new DPIException("E' stato eseguito il rollback della transazione");
             }
         }

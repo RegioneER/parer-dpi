@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -136,7 +132,8 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
             if (client == null) {
                 audit.info(DPIConstants.AUDIT_JOB_ERROR + " WEB-SERVICE NON INIZIALIZZATO");
             } else {
-                doWork(Integer.parseInt(ctx.getDailyDelay()), Integer.parseInt(ctx.getDailyHourBefore()));
+                doWork(Integer.parseInt(ctx.getDailyDelay()),
+                        Integer.parseInt(ctx.getDailyHourBefore()));
                 audit.info(DPIConstants.AUDIT_JOB_STOP);
             }
         } catch (Exception e) {
@@ -154,7 +151,8 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
                 audit.info(DPIConstants.AUDIT_JOB_ERROR + " WEB-SERVICE NON INIZIALIZZATO");
                 client = init(ctx.getWsdlRicercaDiarioUrl(), RicercaDiario.class);
             } else {
-                doWork(Integer.parseInt(ctx.getWeeklyDelay()), Integer.parseInt(ctx.getWeeklyHourBefore()));
+                doWork(Integer.parseInt(ctx.getWeeklyDelay()),
+                        Integer.parseInt(ctx.getWeeklyHourBefore()));
                 audit.info(DPIConstants.AUDIT_JOB_STOP);
             }
         } catch (Exception e) {
@@ -172,7 +170,8 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
                 audit.info(DPIConstants.AUDIT_JOB_ERROR + " WEB-SERVICE NON INIZIALIZZATO");
                 client = init(ctx.getWsdlRicercaDiarioUrl(), RicercaDiario.class);
             } else {
-                doWork(Integer.parseInt(ctx.getMonthlyDelay()), Integer.parseInt(ctx.getMonthlyHourBefore()));
+                doWork(Integer.parseInt(ctx.getMonthlyDelay()),
+                        Integer.parseInt(ctx.getMonthlyHourBefore()));
                 audit.info(DPIConstants.AUDIT_JOB_STOP);
             }
         } catch (Exception e) {
@@ -182,8 +181,8 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
         // }
     }
 
-    private void doWork(Integer filtroGiorniDelay, Integer filtroOreBefore)
-            throws IOException, ConfigurationException, InterruptedException, NoSuchAlgorithmException {
+    private void doWork(Integer filtroGiorniDelay, Integer filtroOreBefore) throws IOException,
+            ConfigurationException, InterruptedException, NoSuchAlgorithmException {
         Calendar to = Calendar.getInstance();
         to.add(Calendar.DATE, (-1) * (filtroGiorniDelay));
         Date toDate = to.getTime();
@@ -194,12 +193,14 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
         String toString = null;
         if (fromDate.before(startDate)) {
             log.info("La data di avvio DA calcolata: " + fromDate
-                    + " è antecedente alla data di avvio impostata nella configurazione: " + startDate);
+                    + " è antecedente alla data di avvio impostata nella configurazione: "
+                    + startDate);
             fromDate = startDate;
         }
         if (toDate.before(startDate)) {
             log.info("La data di avvio A calcolata: " + toDate
-                    + " è antecedente alla data di avvio impostata nella configurazione: " + startDate);
+                    + " è antecedente alla data di avvio impostata nella configurazione: "
+                    + startDate);
             toDate = startDate;
         }
         fromString = dateFormat.format(fromDate).toString();
@@ -207,25 +208,29 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
 
         log.debug("Ricerca temporale su pacs dal: " + fromDate + " al: " + toDate);
 
-        log.debug("StudyDate query TAG: " + Tag.StudyDate + " VALUE: " + fromString + "-" + toString);
+        log.debug(
+                "StudyDate query TAG: " + Tag.StudyDate + " VALUE: " + fromString + "-" + toString);
 
         for (DicomNode pacs : dicomNodes) {
             try {
                 echoService.doCEcho(pacs.getHostname(), pacs.getPort(), pacs.getAet());
             } catch (IOException e) {
                 log.error("Impossibile contattare il nodo DICOM", e);
-                audit.error("PACS: " + pacs.getAet() + " | ERRORE NEL COMANDO ECHO: " + e.getMessage());
+                audit.error(
+                        "PACS: " + pacs.getAet() + " | ERRORE NEL COMANDO ECHO: " + e.getMessage());
                 continue;
             }
             QueryBean query = new QueryBean(QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST);
             query.addReturnKey(dcmDecodedValues);
-            query.addMatchingKey(new int[] { Tag.StudyDate }, fromString + "-" + toString);
+            query.addMatchingKey(new int[] {
+                    Tag.StudyDate }, fromString + "-" + toString);
             List<DicomObject> studies = null;
             try {
-                studies = qrService.doCFind(query, pacs.getHostname(), pacs.getPort(), pacs.getAet());
+                studies = qrService.doCFind(query, pacs.getHostname(), pacs.getPort(),
+                        pacs.getAet());
             } catch (Exception e) {
-                audit.error("PACS: " + pacs.getAet() + " | RANGE DI DATE: " + fromString + "-" + toString
-                        + " | ERRORE INTERROGANDO IL PACS");
+                audit.error("PACS: " + pacs.getAet() + " | RANGE DI DATE: " + fromString + "-"
+                        + toString + " | ERRORE INTERROGANDO IL PACS");
                 log.error("Errore interrogando il Pacs " + pacs.getAet(), e);
                 continue;
             }
@@ -243,14 +248,15 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
                     + pacsStudyToMoveHashMap.size());
             try {
                 if (pacsStudyToMoveHashMap.size() > 0) {
-                    qrService.doCMove(new ArrayList<DicomObject>(pacsStudyToMoveHashMap.values()), query,
-                            pacs.getHostname(), pacs.getPort(), pacs.getAet());
-                    audit.info("PACS: " + pacs.getAet() + " | IMMAGINI RECUPERATE: " + query.getCompleted()
-                            + " | IMMAGINI NON RECUPERATI: " + query.getFailed());
+                    qrService.doCMove(new ArrayList<DicomObject>(pacsStudyToMoveHashMap.values()),
+                            query, pacs.getHostname(), pacs.getPort(), pacs.getAet());
+                    audit.info("PACS: " + pacs.getAet() + " | IMMAGINI RECUPERATE: "
+                            + query.getCompleted() + " | IMMAGINI NON RECUPERATI: "
+                            + query.getFailed());
                 }
             } catch (Exception e) {
-                audit.error("PACS: " + pacs.getAet() + " | RANGE DI DATE: " + fromString + "-" + toString
-                        + " | ERRORE CMOVE SUL PACS");
+                audit.error("PACS: " + pacs.getAet() + " | RANGE DI DATE: " + fromString + "-"
+                        + toString + " | ERRORE CMOVE SUL PACS");
                 log.error("Errore cmove sul Pacs " + pacs.getAet(), e);
                 continue;
             }
@@ -286,10 +292,11 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
                 sacerDCMHashSet.addAll(getSacerDCMHash(dcmHashString.toString()));
             } catch (Exception e) {
                 log.error("Errore interrogando il WS Ricerca Diario", e);
-                throw new DPIException("Errore interrogando il WS Ricerca Diario in SACER PREINGEST");
+                throw new DPIException(
+                        "Errore interrogando il WS Ricerca Diario in SACER PREINGEST");
             }
-            pacsStudyToMoveHashMap
-                    .putAll(Maps.filterKeys(pacsStudyHashMap, Predicates.not(Predicates.in(sacerDCMHashSet))));
+            pacsStudyToMoveHashMap.putAll(Maps.filterKeys(pacsStudyHashMap,
+                    Predicates.not(Predicates.in(sacerDCMHashSet))));
 
         }
         return pacsStudyToMoveHashMap;
@@ -329,10 +336,11 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
         // niRecordResultSet, xmlDatiSpecOutput, xmlDatiSpecFiltri,
         // xmlDatiSpecOrder)
         RicercaDiarioRisposta risp = client.ricercaDiario(ctx.getNmAmbiente(), ctx.getNmVersatore(),
-                DPIConstants.WS_NM_TIPO_OBJECT, null, null, null, false, 1, 9999, swXmlOut.toString(),
-                swXmlFiltri.toString(), null);
+                DPIConstants.WS_NM_TIPO_OBJECT, null, null, null, false, 1, 9999,
+                swXmlOut.toString(), swXmlFiltri.toString(), null);
         Set<String> sacerPingDCMHashSet = new HashSet<>();
-        Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType().createUnmarshaller();
+        Unmarshaller um = jaxbSingleton.getContextListaValoriDatiSpecificiType()
+                .createUnmarshaller();
         ListaOggRicDiarioType listaOggetti = risp.getListaOggetti();
         for (OggettoRicDiarioType ogg : listaOggetti.getOggetto()) {
             if (!ogg.getTiStatoSessione().startsWith("CHIUSO_ERR")) {
@@ -376,12 +384,14 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
         String toString = null;
         if (fromDate.before(startDate)) {
             log.info("La data di avvio DA calcolata: " + fromDate
-                    + " è antecedente alla data di avvio impostata nella configurazione: " + startDate);
+                    + " è antecedente alla data di avvio impostata nella configurazione: "
+                    + startDate);
             fromDate = startDate;
         }
         if (toDate.before(startDate)) {
             log.info("La data di avvio A calcolata: " + toDate
-                    + " è antecedente alla data di avvio impostata nella configurazione: " + startDate);
+                    + " è antecedente alla data di avvio impostata nella configurazione: "
+                    + startDate);
             toDate = startDate;
         }
         fromString = dateFormat.format(fromDate).toString();
@@ -389,7 +399,8 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
 
         log.debug("Ricerca temporale su pacs dal: " + fromDate + " al: " + toDate);
 
-        log.debug("StudyDate query TAG: " + Tag.StudyDate + " VALUE: " + fromString + "-" + toString);
+        log.debug(
+                "StudyDate query TAG: " + Tag.StudyDate + " VALUE: " + fromString + "-" + toString);
 
         for (DicomNode pacs : dicomNodes) {
             CompareBean cb = new CompareBean();
@@ -398,18 +409,21 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
                 echoService.doCEcho(pacs.getHostname(), pacs.getPort(), pacs.getAet());
             } catch (IOException e) {
                 log.error("Impossibile contattare il nodo DICOM", e);
-                log.error("PACS: " + pacs.getAet() + " | ERRORE NEL COMANDO ECHO: " + e.getMessage());
+                log.error(
+                        "PACS: " + pacs.getAet() + " | ERRORE NEL COMANDO ECHO: " + e.getMessage());
                 continue;
             }
             QueryBean query = new QueryBean(QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST);
             query.addReturnKey(dcmDecodedValues);
-            query.addMatchingKey(new int[] { Tag.StudyDate }, fromString + "-" + toString);
+            query.addMatchingKey(new int[] {
+                    Tag.StudyDate }, fromString + "-" + toString);
             List<DicomObject> studies = null;
             try {
-                studies = qrService.doCFind(query, pacs.getHostname(), pacs.getPort(), pacs.getAet());
+                studies = qrService.doCFind(query, pacs.getHostname(), pacs.getPort(),
+                        pacs.getAet());
             } catch (Exception e) {
-                log.error("PACS: " + pacs.getAet() + " | RANGE DI DATE: " + fromString + "-" + toString
-                        + " | ERRORE INTERROGANDO IL PACS");
+                log.error("PACS: " + pacs.getAet() + " | RANGE DI DATE: " + fromString + "-"
+                        + toString + " | ERRORE INTERROGANDO IL PACS");
                 log.error("Errore interrogando il Pacs " + pacs.getAet(), e);
                 continue;
             }
@@ -446,7 +460,8 @@ public class QueryPacsPingJob extends AbstractWSClient implements JobInterface {
                 doWork(filtroGiorniDelay, filtroOreBefore);
             }
             audit.info(DPIConstants.AUDIT_JOB_STOP);
-        } catch (NoSuchAlgorithmException | IOException | ConfigurationException | InterruptedException e) {
+        } catch (NoSuchAlgorithmException | IOException | ConfigurationException
+                | InterruptedException e) {
             audit.info(DPIConstants.AUDIT_JOB_ERROR + " " + e.getMessage());
             log.error("Errore durante l'esecuzione del job", e);
         }

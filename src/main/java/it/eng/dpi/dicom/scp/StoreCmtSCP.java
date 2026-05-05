@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.dicom.scp;
@@ -48,7 +44,8 @@ public final class StoreCmtSCP {
 
     private File storageRootDir;
 
-    // private static final ExecutorService executor = new ThreadPoolExecutor(100, 100, 1, TimeUnit.MINUTES, new
+    // private static final ExecutorService executor = new ThreadPoolExecutor(100, 100, 1,
+    // TimeUnit.MINUTES, new
     // LinkedBlockingQueue<Runnable>());
     private NetworkApplicationEntity ae;
     private final StgCmtSCP stgCmt = new StgCmtSCP();
@@ -66,12 +63,14 @@ public final class StoreCmtSCP {
     private final class StgCmtSCP extends StorageCommitmentService {
 
         @Override
-        protected void onNActionRQ(Association as, int pcid, DicomObject rq, DicomObject info, DicomObject rsp) {
+        protected void onNActionRQ(Association as, int pcid, DicomObject rq, DicomObject info,
+                DicomObject rsp) {
 
         }
 
         @Override
-        protected void onNActionRSP(Association as, int pcid, DicomObject rq, DicomObject info, DicomObject rsp) {
+        protected void onNActionRSP(Association as, int pcid, DicomObject rq, DicomObject info,
+                DicomObject rsp) {
             try {
                 sendStgCmtResult(createRemoteAE(as), mkStgCmtResult(as, info));
             } catch (Exception e) {
@@ -90,8 +89,8 @@ public final class StoreCmtSCP {
         NetworkApplicationEntity remoteAE = new NetworkApplicationEntity();
         remoteAE.setNetworkConnection(remoteConn);
         remoteAE.setAETitle(as.getRemoteAET());
-        remoteAE.setTransferCapability(
-                new TransferCapability[] { new TransferCapability(UID.StorageCommitmentPushModelSOPClass,
+        remoteAE.setTransferCapability(new TransferCapability[] {
+                new TransferCapability(UID.StorageCommitmentPushModelSOPClass,
                         DPIConstants.transferSyntaxes, TransferCapability.SCU) });
         return remoteAE;
     }
@@ -100,11 +99,14 @@ public final class StoreCmtSCP {
             throws ConfigurationException, IOException, InterruptedException {
         final DimseRSPHandler nEventReportRspHandler = new DimseRSPHandler();
         synchronized (ae) {
-            ae.setReuseAssocationFromAETitle(new String[] { stgcmtAE.getAETitle() });
-            ae.setReuseAssocationToAETitle(new String[] { stgcmtAE.getAETitle() });
+            ae.setReuseAssocationFromAETitle(new String[] {
+                    stgcmtAE.getAETitle() });
+            ae.setReuseAssocationToAETitle(new String[] {
+                    stgcmtAE.getAETitle() });
             Association as = ae.connect(stgcmtAE, executor);
-            as.nevent(UID.StorageCommitmentPushModelSOPClass, UID.StorageCommitmentPushModelSOPInstance,
-                    eventTypeIdOf(result), result, UID.ImplicitVRLittleEndian, nEventReportRspHandler);
+            as.nevent(UID.StorageCommitmentPushModelSOPClass,
+                    UID.StorageCommitmentPushModelSOPInstance, eventTypeIdOf(result), result,
+                    UID.ImplicitVRLittleEndian, nEventReportRspHandler);
             // as.release(true);
         }
     }
@@ -128,8 +130,8 @@ public final class StoreCmtSCP {
             // resultItem.putString(Tag.RetrieveAETitle, VR.AE, stgcmtRetrieveAETs);
 
             // File f = new File(dir, uid);
-            if (FileUtils.listFiles(dir, FileFilterUtils.nameFileFilter(uid + ".dcm"), TrueFileFilter.INSTANCE)
-                    .size() > 0) {
+            if (FileUtils.listFiles(dir, FileFilterUtils.nameFileFilter(uid + ".dcm"),
+                    TrueFileFilter.INSTANCE).size() > 0) {
                 resultsq.addDicomObject(resultItem);
             } else {
                 resultItem.putInt(Tag.FailureReason, VR.US, NO_SUCH_OBJECT_INSTANCE);

@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -58,8 +54,10 @@ public class NotificaInAttesaPrelievoJob extends AbstractWSClient implements Job
     public void postConstruct() {
         // richiesteDir = new File(ctx.getWorkingPath() + DPIConstants.RICHIESTE_FOLDER);
         // disponibiliDir = new File(ctx.getWorkingPath() + DPIConstants.DISPONIBILI_FOLDER);
-        richiesteDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
-        disponibiliDir = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.DISPONIBILI_FOLDER);
+        richiesteDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.RICHIESTE_FOLDER);
+        disponibiliDir = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.DISPONIBILI_FOLDER);
     }
 
     @Override
@@ -67,10 +65,12 @@ public class NotificaInAttesaPrelievoJob extends AbstractWSClient implements Job
         try {
             audit.info(DPIConstants.AUDIT_JOB_START);
             if (ricercaRecuperatiClient == null) {
-                ricercaRecuperatiClient = init(ctx.getWsdlRicercaRecuperatiUrl(), RicercaRecuperati.class);
+                ricercaRecuperatiClient = init(ctx.getWsdlRicercaRecuperatiUrl(),
+                        RicercaRecuperati.class);
             }
             if (notificaInAttesaClient == null) {
-                notificaInAttesaClient = init(ctx.getWsdlNotificaInAttesaPrelievoUrl(), NotificaInAttesaPrelievo.class);
+                notificaInAttesaClient = init(ctx.getWsdlNotificaInAttesaPrelievoUrl(),
+                        NotificaInAttesaPrelievo.class);
             }
             if (notificaInAttesaClient == null || ricercaRecuperatiClient == null) {
                 audit.info(DPIConstants.AUDIT_JOB_ERROR + " WEB-SERVICE NON INIZIALIZZATO");
@@ -89,7 +89,8 @@ public class NotificaInAttesaPrelievoJob extends AbstractWSClient implements Job
         log.debug("Ricerco gli studi RECUPERATI");
         RicercaRecuperatiRisposta resp = null;
         try {
-            resp = ricercaRecuperatiClient.ricercaRecuperati(ctx.getNmAmbiente(), ctx.getNmVersatore());
+            resp = ricercaRecuperatiClient.ricercaRecuperati(ctx.getNmAmbiente(),
+                    ctx.getNmVersatore());
         } catch (Exception e) {
             log.error("Si è verificato un'errore nella comunicazione con PRE-INGEST", e);
             audit.info(
@@ -112,15 +113,16 @@ public class NotificaInAttesaPrelievoJob extends AbstractWSClient implements Job
         log.debug("Procedo alla notifica in attesa prelievo per lo studio " + cdKeyObject);
         NotificaInAttesaPrelievoRisposta resp = null;
         try {
-            resp = notificaInAttesaClient.notificaInAttesaPrelievo(ctx.getNmAmbiente(), ctx.getNmVersatore(),
-                    cdKeyObject);
+            resp = notificaInAttesaClient.notificaInAttesaPrelievo(ctx.getNmAmbiente(),
+                    ctx.getNmVersatore(), cdKeyObject);
         } catch (Exception e) {
             log.error("Si è verificato un'errore nella comunicazione con PRE-INGEST", e);
             audit.info("SACER PreIngest non risponde alla notifica che lo studio " + cdKeyObject
                     + " è in attesa di prelievo");
         }
         if (resp != null && resp.getCdEsito().equals(EsitoServizio.OK)) {
-            log.debug("Risposta OK dal servizio di notifica in attesa prelievo, procedo allo spostamento del file");
+            log.debug(
+                    "Risposta OK dal servizio di notifica in attesa prelievo, procedo allo spostamento del file");
             // Crea directory
             Session session = xaDiskNativeFS.createSessionForLocalTransaction();
             try {
@@ -144,11 +146,13 @@ public class NotificaInAttesaPrelievoJob extends AbstractWSClient implements Job
                 }
             }
         } else if (resp != null && resp.getCdErr().equals("666")) {
-            audit.info("SACER PreIngest non è riuscito ad registrare / aggiornare la sessione di recupero dello studio "
-                    + cdKeyObject);
+            audit.info(
+                    "SACER PreIngest non è riuscito ad registrare / aggiornare la sessione di recupero dello studio "
+                            + cdKeyObject);
         } else if (resp != null) {
-            audit.info("Esito KO per notifica che lo studio " + cdKeyObject + " è in attesa di prelievo - ERRORE: "
-                    + resp.getCdEsito() + " - " + resp.getDlErr());
+            audit.info("Esito KO per notifica che lo studio " + cdKeyObject
+                    + " è in attesa di prelievo - ERRORE: " + resp.getCdEsito() + " - "
+                    + resp.getDlErr());
 
             // Elimina directory
             Session session = xaDiskNativeFS.createSessionForLocalTransaction();

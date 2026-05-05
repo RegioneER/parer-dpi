@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.controller;
@@ -109,15 +105,17 @@ public class TestController {
             throws IOException, ConfigurationException, InterruptedException {
 
         Map<String, Object> response = new TreeMap<>();
-        QueryBean query = new QueryBean(qrlevel.equals("P") ? QueryRetrieveLevel.PATIENT : (qrlevel.equals("SSR")
-                ? QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST : QueryRetrieveLevel.STUDY_PAT_ROOT_FIRST));
+        QueryBean query = new QueryBean(qrlevel.equals("P") ? QueryRetrieveLevel.PATIENT
+                : (qrlevel.equals("SSR") ? QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST
+                        : QueryRetrieveLevel.STUDY_PAT_ROOT_FIRST));
         if (ext != null) {
             query.addReturnKey(QRConstants.PATIENT_RETURN_KEYS);
         }
         log.info("Query level: " + query.getQueryLevel().name());
         if (tagname != null && tagval != null) {
             for (int i = 0; i < tagname.length; i++) {
-                query.addMatchingKey(new int[] { Integer.parseInt(tagname[i]) }, tagval[i]);
+                query.addMatchingKey(new int[] {
+                        Integer.parseInt(tagname[i]) }, tagval[i]);
             }
         }
 
@@ -146,21 +144,24 @@ public class TestController {
             @RequestParam(value = "extkey", required = false) String ext)
             throws IOException, ConfigurationException, InterruptedException {
 
-        QueryBean query = new QueryBean(qrlevel.equals("P") ? QueryRetrieveLevel.PATIENT : (qrlevel.equals("SSR")
-                ? QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST : QueryRetrieveLevel.STUDY_PAT_ROOT_FIRST));
+        QueryBean query = new QueryBean(qrlevel.equals("P") ? QueryRetrieveLevel.PATIENT
+                : (qrlevel.equals("SSR") ? QueryRetrieveLevel.STUDY_STUDY_ROOT_FIRST
+                        : QueryRetrieveLevel.STUDY_PAT_ROOT_FIRST));
         log.info("Query level: " + query.getQueryLevel().name());
         if (ext != null) {
             query.addReturnKey(QRConstants.PATIENT_RETURN_KEYS);
         }
         if (tagname != null && tagval != null) {
             for (int i = 0; i < tagname.length; i++) {
-                query.addMatchingKey(new int[] { Integer.parseInt(tagname[i]) }, tagval[i]);
+                query.addMatchingKey(new int[] {
+                        Integer.parseInt(tagname[i]) }, tagval[i]);
             }
         }
 
         qrService.doCFindCMove(query, hostname, port, aet);
         Map<String, String> response = new TreeMap<String, String>();
-        response.put("message", "Trasferiti :" + query.getCompleted() + " - Falliti :" + query.getFailed());
+        response.put("message",
+                "Trasferiti :" + query.getCompleted() + " - Falliti :" + query.getFailed());
         return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
 
     }
@@ -182,8 +183,9 @@ public class TestController {
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet,
-            @RequestParam(value = "studyRoot", required = true) String studyRoot) throws IOException,
-            ConfigurationException, InterruptedException, XAGenericException, NoTransactionAssociatedException {
+            @RequestParam(value = "studyRoot", required = true) String studyRoot)
+            throws IOException, ConfigurationException, InterruptedException, XAGenericException,
+            NoTransactionAssociatedException {
         Map<String, String> response = new TreeMap<>();
         File studyRootDir = new File(studyRoot);
         if (!studyRootDir.isDirectory()) {
@@ -193,8 +195,8 @@ public class TestController {
         Session session = xaDiskNativeFS.createSessionForLocalTransaction();
         CStoreBean result = sendService.doTxCStore(hostname, port, aet, studyRootDir, session);
         session.commit();
-        response.put("message",
-                "Inviate " + result.getTransferedImagesInStudy() + " immagini su " + result.getNumImagesInStudy());
+        response.put("message", "Inviate " + result.getTransferedImagesInStudy() + " immagini su "
+                + result.getNumImagesInStudy());
         return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
     }
 
@@ -203,8 +205,9 @@ public class TestController {
             @RequestParam(value = "pacshost", required = true) String hostname,
             @RequestParam(value = "pacsport", required = true) int port,
             @RequestParam(value = "pacsAET", required = true) String aet,
-            @RequestParam(value = "studyRoot", required = true) String studyRoot) throws IOException,
-            ConfigurationException, InterruptedException, XAGenericException, NoTransactionAssociatedException {
+            @RequestParam(value = "studyRoot", required = true) String studyRoot)
+            throws IOException, ConfigurationException, InterruptedException, XAGenericException,
+            NoTransactionAssociatedException {
         Map<String, String> response = new TreeMap<>();
         File studyRootDir = new File(studyRoot);
         if (!studyRootDir.isDirectory()) {
@@ -214,8 +217,8 @@ public class TestController {
 
         CStoreBean result = sendService.doCStore(hostname, port, aet, studyRootDir);
 
-        response.put("message",
-                "Inviate " + result.getTransferedImagesInStudy() + " immagini su " + result.getNumImagesInStudy());
+        response.put("message", "Inviate " + result.getTransferedImagesInStudy() + " immagini su "
+                + result.getNumImagesInStudy());
         return ResponseEntity.ok().header(HEADER_NAME, HEADER_VALUES).body(response);
     }
 
@@ -229,7 +232,8 @@ public class TestController {
     }
 
     @GetMapping("/stopJobs.do")
-    public ResponseEntity<Map<String, String>> stopJobs(final HttpServletResponse res) throws SchedulerException {
+    public ResponseEntity<Map<String, String>> stopJobs(final HttpServletResponse res)
+            throws SchedulerException {
         Scheduler sched = scheduler.getScheduler();
         for (String groupName : sched.getTriggerGroupNames()) {
             Set<TriggerKey> keys = sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(groupName));
@@ -241,7 +245,8 @@ public class TestController {
     }
 
     @GetMapping("/infoJobs.do")
-    public ResponseEntity<Map<String, String>> infoJobs(final HttpServletResponse res) throws SchedulerException {
+    public ResponseEntity<Map<String, String>> infoJobs(final HttpServletResponse res)
+            throws SchedulerException {
         Scheduler sched = scheduler.getScheduler();
         Map<String, String> m = new HashMap<>();
         for (String groupName : sched.getTriggerGroupNames()) {
@@ -249,8 +254,10 @@ public class TestController {
             Set<TriggerKey> keys = sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(groupName));
             for (TriggerKey triggerKey : keys) {
                 Trigger t = sched.getTrigger(triggerKey);
-                m.put(triggerKey.getName(), "Job: " + triggerKey.getName() + " - Ultima esecuzione: "
-                        + t.getPreviousFireTime() + " - Prossima esecuzione: " + t.getNextFireTime());
+                m.put(triggerKey.getName(),
+                        "Job: " + triggerKey.getName() + " - Ultima esecuzione: "
+                                + t.getPreviousFireTime() + " - Prossima esecuzione: "
+                                + t.getNextFireTime());
             }
 
         }
@@ -258,7 +265,8 @@ public class TestController {
     }
 
     @GetMapping("/startJobs.do")
-    public ResponseEntity<Map<String, String>> startJobs(final HttpServletResponse res) throws SchedulerException {
+    public ResponseEntity<Map<String, String>> startJobs(final HttpServletResponse res)
+            throws SchedulerException {
         Scheduler sched = scheduler.getScheduler();
         for (String groupName : sched.getTriggerGroupNames()) {
             Set<TriggerKey> keys = sched.getTriggerKeys(GroupMatcher.triggerGroupEquals(groupName));

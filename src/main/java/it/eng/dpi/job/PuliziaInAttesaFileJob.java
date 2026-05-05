@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.job;
@@ -71,8 +67,10 @@ public class PuliziaInAttesaFileJob extends AbstractWSClient implements JobInter
     public void postConstruct() {
         // warnFolder = new File(ctx.getWorkingPath() + DPIConstants.WARN_FOLDER);
         // outFolder = new File(ctx.getWorkingPath() + DPIConstants.OUT_FOLDER);
-        warnFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
-        outFolder = new File(ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
+        warnFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.WARN_FOLDER);
+        outFolder = new File(
+                ctx.getWorkingPath() + ctx.getStudioDicomPath() + DPIConstants.OUT_FOLDER);
     }
 
     @Override
@@ -94,7 +92,8 @@ public class PuliziaInAttesaFileJob extends AbstractWSClient implements JobInter
         }
     }
 
-    private void processWarnFolder() throws MalformedURLException, XAGenericException, JAXBException {
+    private void processWarnFolder()
+            throws MalformedURLException, XAGenericException, JAXBException {
         File[] folder = XAUtil.listFilesNewTX(xaDiskNativeFS, warnFolder);
         Set<String> globalHashWarnSet = new HashSet<String>();
         for (File study : folder) {
@@ -109,7 +108,8 @@ public class PuliziaInAttesaFileJob extends AbstractWSClient implements JobInter
 
             StringBuilder stringaIN = new StringBuilder();
             String sep = "";
-            for (int i = 0; i < DPIConstants.JOB_CLEAN_WARN_LIMIT && globalHashWarnIterator.hasNext(); i++) {
+            for (int i = 0; i < DPIConstants.JOB_CLEAN_WARN_LIMIT
+                    && globalHashWarnIterator.hasNext(); i++) {
                 stringaIN.append(sep);
                 if (i == 0) {
                     sep = ",";
@@ -136,13 +136,15 @@ public class PuliziaInAttesaFileJob extends AbstractWSClient implements JobInter
                                 File zipStudyInOut = new File(outFolder, cdKeyObject + ".zip");
                                 if (!XAUtil.fileExists(xaSession, zipStudyInOut)) {
                                     XAUtil.moveFile(xaSession, zipStudyInWarn, zipStudyInOut);
-                                    XAUtil.deleteFile(xaSession, new File(warnFolder, cdKeyObject + ".xml"));
+                                    XAUtil.deleteFile(xaSession,
+                                            new File(warnFolder, cdKeyObject + ".xml"));
                                     audit.info("Oggetto spostato in OUT " + cdKeyObject);
                                 }
                                 xaSession.commit();
                             } catch (Exception e) {
                                 try {
-                                    log.error("Si è verificato un errore durante la transazione.", e);
+                                    log.error("Si è verificato un errore durante la transazione.",
+                                            e);
                                     xaSession.rollback();
                                 } catch (NoTransactionAssociatedException e1) {
                                     log.error(
@@ -154,8 +156,9 @@ public class PuliziaInAttesaFileJob extends AbstractWSClient implements JobInter
                     }
                     break;
                 case KO:
-                    audit.info("Risposta KO del WS RicercaDiario ricercando i global hash " + stringaIN + "\nCODICE:"
-                            + risposta.getCdErr() + "\nDESC:" + risposta.getDsErr());
+                    audit.info("Risposta KO del WS RicercaDiario ricercando i global hash "
+                            + stringaIN + "\nCODICE:" + risposta.getCdErr() + "\nDESC:"
+                            + risposta.getDsErr());
                     break;
                 }
             }
@@ -185,7 +188,9 @@ public class PuliziaInAttesaFileJob extends AbstractWSClient implements JobInter
                 .createListaFiltri(xmlfiltri);
         m.marshal(xmlFiltriJAXB, swXmlFiltri);
 
-        return client.ricercaDiario(ctx.getNmAmbiente(), ctx.getNmVersatore(), DPIConstants.WS_NM_TIPO_OBJECT, null,
-                null, Constants.StatoStudio.IN_ATTESA_FILE.name(), false, 1, 500, null, swXmlFiltri.toString(), null);
+        return client.ricercaDiario(ctx.getNmAmbiente(), ctx.getNmVersatore(),
+                DPIConstants.WS_NM_TIPO_OBJECT, null, null,
+                Constants.StatoStudio.IN_ATTESA_FILE.name(), false, 1, 500, null,
+                swXmlFiltri.toString(), null);
     }
 }

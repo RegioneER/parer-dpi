@@ -1,18 +1,14 @@
 /*
  * Engineering Ingegneria Informatica S.p.A.
  *
- * Copyright (C) 2023 Regione Emilia-Romagna
- * <p/>
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU Affero General Public License as published by the Free Software Foundation,
- * either version 3 of the License, or (at your option) any later version.
- * <p/>
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Affero General Public License for more details.
- * <p/>
- * You should have received a copy of the GNU Affero General Public License along with this program.
- * If not, see <https://www.gnu.org/licenses/>.
+ * Copyright (C) 2023 Regione Emilia-Romagna <p/> This program is free software: you can
+ * redistribute it and/or modify it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version. <p/> This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Affero General Public License for more details. <p/> You should
+ * have received a copy of the GNU Affero General Public License along with this program. If not,
+ * see <https://www.gnu.org/licenses/>.
  */
 
 package it.eng.dpi.service;
@@ -43,7 +39,8 @@ public class DicomServer {
     // a smaller core pool
     // does not seem to work, so keep the two numbers in sync)
 
-    public DicomServer(List<String> validAET, String[] sopClasses, Integer reaperTO, Integer connTO) {
+    public DicomServer(List<String> validAET, String[] sopClasses, Integer reaperTO,
+            Integer connTO) {
 
         initNetworkAESCP(aeStoreSCP, getTcStoreScp(sopClasses), validAET);
         initNetworkAESCU(aeSCU, getTcScu(), validAET);
@@ -52,7 +49,8 @@ public class DicomServer {
         networkConnection.setAcceptTimeout(connTO);
         networkConnection.setRequestTimeout(connTO);
         device.setAssociationReaperPeriod(reaperTO);
-        device.setNetworkApplicationEntity(new NetworkApplicationEntity[] { aeStoreSCP, aeSCU, aeStoreSCU });
+        device.setNetworkApplicationEntity(new NetworkApplicationEntity[] {
+                aeStoreSCP, aeSCU, aeStoreSCU });
         device.setNetworkConnection(networkConnection);
 
     }
@@ -60,10 +58,12 @@ public class DicomServer {
     // TransferSyntax per la echo
     // private TransferCapability[] getTcEchoScp() {
     // // TC per la storage
-    // final TransferCapability[] tcs = new TransferCapability[DPIConstants.verificationSOPClasses.length];
+    // final TransferCapability[] tcs = new
+    // TransferCapability[DPIConstants.verificationSOPClasses.length];
     // int i = 0;
     // for (String cuid : DPIConstants.verificationSOPClasses){
-    // tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes,TransferCapability.SCP);
+    // tcs[i++] = new TransferCapability(cuid,
+    // DPIConstants.transferSyntaxes,TransferCapability.SCP);
     // }
     // return tcs;
     //
@@ -75,13 +75,14 @@ public class DicomServer {
                 + DPIConstants.verificationSOPClasses.length];
         int i = 0;
         for (String cuid : sopClasses) {
-            tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes, TransferCapability.SCP);
+            tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes,
+                    TransferCapability.SCP);
         }
         for (String cuid : DPIConstants.verificationSOPClasses) {
             tcs[i++] = new TransferCapability(cuid, DPIConstants.EVLE_TS, TransferCapability.SCP);
         }
-        tcs[i++] = new TransferCapability(UID.StorageCommitmentPushModelSOPClass, DPIConstants.transferSyntaxes,
-                TransferCapability.SCP);
+        tcs[i++] = new TransferCapability(UID.StorageCommitmentPushModelSOPClass,
+                DPIConstants.transferSyntaxes, TransferCapability.SCP);
         return tcs;
 
     }
@@ -92,7 +93,8 @@ public class DicomServer {
                 + DPIConstants.verificationSOPClasses.length];
         int i = 0;
         for (String cuid : sopClasses) {
-            tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes, TransferCapability.SCU);
+            tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes,
+                    TransferCapability.SCU);
         }
         for (String cuid : DPIConstants.verificationSOPClasses) {
             tcs[i++] = new TransferCapability(cuid, DPIConstants.EVLE_TS, TransferCapability.SCU);
@@ -115,9 +117,11 @@ public class DicomServer {
         for (String cuid : DPIConstants.verificationSOPClasses)
             tcs[i++] = new TransferCapability(cuid, DPIConstants.EVLE_TS, TransferCapability.SCU);
         // for (String cuid : DPIConstants.PATIENT_LEVEL_FIND_CUID)
-        // tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes,TransferCapability.SCU);
+        // tcs[i++] = new TransferCapability(cuid,
+        // DPIConstants.transferSyntaxes,TransferCapability.SCU);
         // for (String cuid : DPIConstants.PATIENT_LEVEL_MOVE_CUID)
-        // tcs[i++] = new TransferCapability(cuid, DPIConstants.transferSyntaxes,TransferCapability.SCU);
+        // tcs[i++] = new TransferCapability(cuid,
+        // DPIConstants.transferSyntaxes,TransferCapability.SCU);
         for (String cuid : DPIConstants.STUDY_LEVEL_FIND_CUID)
             tcs[i++] = new TransferCapability(cuid, DPIConstants.EVLE_TS, TransferCapability.SCU);
         for (String cuid : DPIConstants.STUDY_LEVEL_MOVE_CUID)
@@ -180,7 +184,8 @@ public class DicomServer {
         return aeStoreSCU;
     }
 
-    private void initNetworkAESCP(NetworkApplicationEntity nae, TransferCapability[] tc, List<String> validAET) {
+    private void initNetworkAESCP(NetworkApplicationEntity nae, TransferCapability[] tc,
+            List<String> validAET) {
         nae.setNetworkConnection(networkConnection);
         nae.setAssociationAcceptor(true);
         nae.setAssociationInitiator(false);
@@ -189,7 +194,8 @@ public class DicomServer {
         nae.setPreferredCallingAETitle(validAET.toArray(new String[validAET.size()]));
     }
 
-    private void initNetworkAESCU(NetworkApplicationEntity nae, TransferCapability[] tc, List<String> validAET) {
+    private void initNetworkAESCU(NetworkApplicationEntity nae, TransferCapability[] tc,
+            List<String> validAET) {
         nae.setNetworkConnection(networkConnection);
         nae.setAssociationAcceptor(false);
         nae.setAssociationInitiator(true);
